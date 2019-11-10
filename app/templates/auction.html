@@ -1,0 +1,19 @@
+<table>
+  <tr valign="top">
+    <td><img src="{{ auction.image(256) }}"></td>
+    <td>
+      <h1>{{ auction.auction_title }}</h1>
+      <hr>
+      <p>Time left: {{ auction.time_left() }} hours</p>
+      <hr>
+      <p>Current Price: <b>US ${{ auction.current_price }}</b></p>
+      <hr>
+      <form action="", method="post">
+        {{ form.hidden_tag() }}
+        <p>bid: US ${{ form.bid_amount }}</p>
+        <p>Enter US ${{ auction.next_price() }} or more</p>
+        <p>{{ form.submit() }}</p>
+      </form>
+    </td>
+  </tr>
+</table>
