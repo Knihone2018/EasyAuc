@@ -40,8 +40,15 @@ def test7():
 	print(p4.content)
 
 
-if __name__ == "__main__":
-    client(port)
+def test8():
+	p5 = requests.post(url="http://127.0.0.1:{}/additemstoboughtlist".format(port), json={"userId":1, "value":[(12, 1), (14, 2)]})
+	print(p5.content)
+
+	p6 = requests.get(url="http://127.0.0.1:{}/getallboughtitems".format(port), json={"userId":1})
+	print(p6.content)
+
+
+#test8()
 
 
     

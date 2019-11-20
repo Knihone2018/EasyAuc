@@ -12,6 +12,7 @@ class DatabaseControl:
         self.Getdb()
         self.CreateCartTable()
         self.CreateAccountTable()
+        self.CreateBoughtItemsTable()
 
 
     def Getdb(self):
@@ -60,6 +61,10 @@ class DatabaseControl:
         self.db.commit()
 
 
+    def CreateBoughtItemsTable(self):
+        self.db.cursor().execute("create table if not exists BoughtItems (userId int, itemId int, quantity int);")
+
+
 class AccountControl(DatabaseControl):
 
     def addAccount(self, email, firstname, lastname, password, address, zipcode, city, state, bankAccountNumber, isBlocked, isDeleted, isAdmin, ratingSum, numOfRates):
@@ -72,7 +77,7 @@ class AccountControl(DatabaseControl):
             # if the account is deleted
             isDeleted = self.checkDeleteByUserId(userId)
             if isDeleted:
-                cursor.execute("update Account set isDeleted = False where userId = %s;", (int(userId)))
+                cursor.execute("update Account set isDeleted = False where userId = %s;", (int(userId),))
                 db.commit()
                 return userId
 
@@ -107,7 +112,7 @@ class AccountControl(DatabaseControl):
     def getUserIdByEmail(self, email):
         db = self.Getdb()
         cursor = db.cursor()
-        cursor.execute("select userId from Account where email = %s;", (email))
+        cursor.execute("select userId from Account where email = %s;", (email,))
         res = cursor.fetchone()
         if res:
             return res[0]
@@ -121,7 +126,7 @@ class AccountControl(DatabaseControl):
         if isDeleted:
             return False
         else:
-            cursor.execute("update Account set isDeleted = True where userId = %s;", (int(userId)))
+            cursor.execute("update Account set isDeleted = True where userId = %s;", (int(userId),))
             db.commit()
             return userId
         return False
@@ -134,7 +139,7 @@ class AccountControl(DatabaseControl):
         if isBlocked:
             return "User Already Deleted"
         else:
-            cursor.execute("update Account set isBlocked = True where userId = %s;", (int(userId)))
+            cursor.execute("update Account set isBlocked = True where userId = %s;", (int(userId),))
             db.commit()
             return True
         return False
@@ -144,7 +149,7 @@ class AccountControl(DatabaseControl):
         try:
             db = self.Getdb()
             cursor = db.cursor(buffered = True)
-            cursor.execute("select isDeleted from Account where userId = %s;", int(userId))
+            cursor.execute("select isDeleted from Account where userId = %s;", (int(userId),))
             res = cursor.fetchone()
             return res[0]
         except:
@@ -155,7 +160,7 @@ class AccountControl(DatabaseControl):
         try:
             db = self.Getdb()
             cursor = db.cursor(buffered = True)
-            cursor.execute("select isBlocked from Account where userId = %s;", int(userId))
+            cursor.execute("select isBlocked from Account where userId = %s;", (int(userId),))
             res = cursor.fetchone()
             return res[0]
         except:
@@ -165,7 +170,7 @@ class AccountControl(DatabaseControl):
     def getUserEmailbyUserId(self, userId):
         db = self.Getdb()
         cursor = db.cursor(buffered = True)
-        cursor.execute("select email from Account where userId = %s;", int(userId))
+        cursor.execute("select email from Account where userId = %s;", (int(userId),))
         res = cursor.fetchone()
         if res:
             return res[0]
@@ -187,7 +192,7 @@ class AccountControl(DatabaseControl):
     def getUserFirstname(self, userId):
         db = self.Getdb()
         cursor = db.cursor(buffered = True)
-        cursor.execute("select firstname from Account where userId = %s;", int(userId))
+        cursor.execute("select firstname from Account where userId = %s;", (int(userId),))
         res = cursor.fetchone()
         if res:
             return res[0]
@@ -208,7 +213,7 @@ class AccountControl(DatabaseControl):
     def getUserLastname(self, userId):
         db = self.Getdb()
         cursor = db.cursor(buffered = True)
-        cursor.execute("select lastname from Account where userId = %s;", int(userId))
+        cursor.execute("select lastname from Account where userId = %s;", (int(userId),))
         res = cursor.fetchone()
         if res:
             return res[0]
@@ -228,7 +233,7 @@ class AccountControl(DatabaseControl):
     def getUserPassword(self, userId):
         db = self.Getdb()
         cursor = db.cursor(buffered = True)
-        cursor.execute("select password from Account where userId = %s;", int(userId))
+        cursor.execute("select password from Account where userId = %s;", (int(userId),))
         res = cursor.fetchone()
         if res:
             return res[0]
@@ -248,7 +253,7 @@ class AccountControl(DatabaseControl):
     def getUserAddress(self, userId):
         db = self.Getdb()
         cursor = db.cursor(buffered = True)
-        cursor.execute("select address from Account where userId = %s;", int(userId))
+        cursor.execute("select address from Account where userId = %s;", (int(userId),))
         res = cursor.fetchone()
         if res:
             return res[0]
@@ -269,7 +274,7 @@ class AccountControl(DatabaseControl):
     def getUserZipcode(self, userId):
         db = self.Getdb()
         cursor = db.cursor(buffered = True)
-        cursor.execute("select zipcode from Account where userId = %s;", int(userId))
+        cursor.execute("select zipcode from Account where userId = %s;", (int(userId),))
         res = cursor.fetchone()
         if res:
             return res[0]
@@ -289,7 +294,7 @@ class AccountControl(DatabaseControl):
     def getUserCity(self, userId):
         db = self.Getdb()
         cursor = db.cursor(buffered = True)
-        cursor.execute("select city from Account where userId = %s;", int(userId))
+        cursor.execute("select city from Account where userId = %s;", (int(userId),))
         res = cursor.fetchone()
         if res:
             return res[0]
@@ -310,7 +315,7 @@ class AccountControl(DatabaseControl):
     def getUserState(self, userId):
         db = self.Getdb()
         cursor = db.cursor(buffered = True)
-        cursor.execute("select state from Account where userId = %s;", int(userId))
+        cursor.execute("select state from Account where userId = %s;", (int(userId),))
         res = cursor.fetchone()
         if res:
             return res[0]
@@ -332,7 +337,7 @@ class AccountControl(DatabaseControl):
         try:
             db = self.Getdb()
             cursor = db.cursor(buffered = True)
-            cursor.execute("select bankAccountNumber from Account where userId = %s;", int(userId))
+            cursor.execute("select bankAccountNumber from Account where userId = %s;", (int(userId),))
             res = cursor.fetchone()
             if res:
                 return res[0]
@@ -397,7 +402,7 @@ class CartControl(DatabaseControl):
         try:
             db = self.Getdb()
             mycursor = db.cursor()
-            mycursor.execute("delete from Cart where userId = %s;", int(userId))
+            mycursor.execute("delete from Cart where userId = %s;", (int(userId),))
             db.commit()
             return True
         except:
@@ -422,7 +427,7 @@ class CartControl(DatabaseControl):
             db = self.Getdb()
             cursor = db.cursor(buffered = True)
 
-            cursor.execute("select * from Cart where userId = %s and itemId = %s;", (int(userId), int(itemId)))
+            cursor.execute("select itemId, quantity, isBid from Cart where userId = %s and itemId = %s;", (int(userId), int(itemId)))
             res = cursor.fetchone()
             if res:
                 return res
@@ -436,13 +441,41 @@ class CartControl(DatabaseControl):
             db = self.Getdb()
             cursor = db.cursor(buffered = True)
 
-            cursor.execute("select * from Cart where userId = %s;", int(userId))
+            cursor.execute("select itemId, quantity, isBid from Cart where userId = %s;", (int(userId),))
             res = cursor.fetchall()
             if res:
                 return res
             return False
         except:
             return False
+
+
+class BoughtItemsControl(DatabaseControl):
+
+    def addItemToBoughtList(self, userId, itemId, quantity):
+        db = self.Getdb()
+        cursor = db.cursor(buffered = True)
+        cursor.execute("insert into BoughtItems (userId, itemId, quantity) values (%s, %s, %s);", (int(userId), int(itemId), int(quantity)))
+        db.commit()
+        return True
+
+
+    def getAllBoughtItems(self, userId):
+        try:
+            db = self.Getdb()
+            cursor = db.cursor(buffered = True)
+
+            cursor.execute("select itemId, quantity from BoughtItems where userId = %s;", (int(userId),))
+            res = cursor.fetchall()
+            if res:
+                return res
+            return False
+        except:
+            return False
+
+
+
+
 
 
 

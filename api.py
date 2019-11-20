@@ -629,6 +629,56 @@ def getAllItemInfoInCart():
 
 
 
+######################
+# Getters for BoughtItems Database
+######################
+
+
+"""
+Incoming json requirement:
+    userId: int
+Response:
+    a response class of Flask
+        value: a list of tuple
+"""
+@app.route("/getallboughtitems", methods=["GET"])
+def getAllBoughtItems():
+    userId = request.json.get('userId')
+    ctl = BoughtItemsControl()
+    res = ctl.getAllBoughtItems(userId)
+    if res:
+        return Response(json.dumps({'userId': userId, 'value': res}), status = 200)
+    return "There has been an error"
+
+
+
+######################
+# Setters for BoughtItems Database
+######################
+
+
+"""
+Incoming json requirement:
+    userId: int
+    value: [(itemId1, quantity1), (itemId2, quantity2), ... ]
+Response:
+    a response class of Flask
+        value: a list of tuple
+"""
+@app.route("/additemstoboughtlist", methods=["POST"])
+def addItemToBoughtList():
+    userId = request.json.get('userId')
+    val = request.json.get('value')
+    ctl = BoughtItemsControl()
+    for pair in val:
+        res = ctl.addItemToBoughtList(userId, pair[0], pair[1])
+        if not res:
+            return "There has been an error"
+    return Response(json.dumps({'userId': userId, "value": val}), status = 200)
+
+
+
+
 # Run the Flask application as a server
 if __name__ == "__main__":
     DBctl = DatabaseControl()
