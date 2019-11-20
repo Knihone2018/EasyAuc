@@ -1,8 +1,8 @@
-"""auction bid tables
+"""add end_time
 
-Revision ID: b00e1c453f4b
+Revision ID: 45e9e48ecf96
 Revises: 
-Create Date: 2019-11-08 17:45:49.438517
+Create Date: 2019-11-20 11:50:08.927996
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'b00e1c453f4b'
+revision = '45e9e48ecf96'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,18 +21,12 @@ def upgrade():
     op.create_table('auction',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('item_id', sa.Integer(), nullable=True),
-    sa.Column('auction_title', sa.String(length=100), nullable=True),
-    sa.Column('seller_id', sa.Integer(), nullable=True),
-    sa.Column('start_time', sa.DateTime(), nullable=True),
     sa.Column('end_time', sa.DateTime(), nullable=True),
+    sa.Column('completed', sa.Boolean(), nullable=True),
     sa.Column('current_price', sa.Float(), nullable=True),
-    sa.Column('price_step', sa.Float(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('item_id'),
-    sa.UniqueConstraint('seller_id')
+    sa.UniqueConstraint('item_id')
     )
-    op.create_index(op.f('ix_auction_end_time'), 'auction', ['end_time'], unique=False)
-    op.create_index(op.f('ix_auction_start_time'), 'auction', ['start_time'], unique=False)
     op.create_table('bid',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('auction_id', sa.Integer(), nullable=True),
@@ -53,7 +47,5 @@ def downgrade():
     op.drop_index(op.f('ix_bid_bidder_name'), table_name='bid')
     op.drop_index(op.f('ix_bid_bidder_id'), table_name='bid')
     op.drop_table('bid')
-    op.drop_index(op.f('ix_auction_start_time'), table_name='auction')
-    op.drop_index(op.f('ix_auction_end_time'), table_name='auction')
     op.drop_table('auction')
     # ### end Alembic commands ###

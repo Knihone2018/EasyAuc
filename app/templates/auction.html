@@ -1,19 +1,54 @@
 <table>
   <tr valign="top">
-    <td><img src="{{ auction.image(256) }}"></td>
+    <td><img src="{{ item.item_image }}"></td>
     <td>
-      <h1>{{ auction.auction_title }}</h1>
+      <h1>{{ item.item_name }}</h1>
       <hr>
-      <p>Time left: {{ auction.time_left() }} hours</p>
-      <hr>
-      <p>Current Price: <b>US ${{ auction.current_price }}</b></p>
-      <hr>
-      <form action="", method="post">
-        {{ form.hidden_tag() }}
-        <p>bid: US ${{ form.bid_amount }}</p>
-        <p>Enter US ${{ auction.next_price() }} or more</p>
-        <p>{{ form.submit() }}</p>
-      </form>
+      {% if not item.buy_now %}
+        {% if not auction.completed %}
+          <p>Time left: {{ auction.time_left() }} seconds</p>
+          <hr>
+          <p>Current Price: <b>US ${{ auction.current_price }}</b></p>
+          <hr>
+          <form action="", method="post">
+            {{ form.hidden_tag() }}
+            <p>bid: US ${{ form.bid_amount }}&nbsp<a href={{ url_for( 'bids', auction_id=auction.id ) }}>[{{ auction.n_bids() }} bids]</a></p>
+            <p>Enter US ${{ auction.next_price(item.price_step) }} or more</p>
+            <p>{{ form.submit() }}</p>
+          </form>
+        {% else %}
+          <p>Ended: {{ auction.end_time }}</p>
+          {% if auction.n_bids() > 0 %}
+            <p>Winning bid: US ${{ auction.current_price }}&nbsp<a href={{ url_for( 'bids', auction_id=auction.id ) }}>[{{ auction.n_bids() }} bids]</a></p>
+          {% else %}
+           <p>Starting bid: US ${{ auction.current_price }}&nbsp<a href={{ url_for( 'bids', auction_id=auction.id ) }}>[{{ auction.n_bids() }} bids]</a></p>
+          {% endif %}  
+        {% endif %}
+      {% else %}
+        <p>Price: <b>US ${{ auction.current_price }}</b></p>
+        <hr>
+        {% if not auction.completed %}
+          <form action="", method="post">
+            {{ form.hidden_tag() }}
+            <p>Quantity: {{ form.quantity }} &nbsp{{ item.quantity }} available </p>
+            <p>{{ form.submit() }}</p>
+          </form>
+        {% else %}
+          <p>Ended: {{ auction.end_time }}</p>
+        {% endif %}
+      {% endif %}
     </td>
   </tr>
 </table>
+
+<a href={{ url_for( 'add_to_watchlist', auction_id=auction.id, user_id=curr_user_id )}}><input type="button" value="Add to Watchlist"></a>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}

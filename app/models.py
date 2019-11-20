@@ -1,30 +1,25 @@
 from app import db
 from datetime import datetime
-from hashlib import md5
-
 
 class Auction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     item_id = db.Column(db.Integer, unique=True)
-    auction_title = db.Column(db.String(100))
-    seller_id = db.Column(db.Integer, unique=True)
-    start_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    end_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    end_time = db.Column(db.DateTime)
+    completed = db.Column(db.Boolean, default=False)
     current_price = db.Column(db.Float)
-    price_step = db.Column(db.Float)
+    # bids return all the bids on this auction
+    # target can return all the bids that a user has bid on
     bids = db.relationship('Bid', backref='target', lazy='dynamic')
 
-    def image(self, size):
-        digest = md5(str(self.item_id).encode('utf-8')).hexdigest()
-        return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(
-            digest, size)
-
     def time_left(self):
-        seconds = (self.end_time - datetime.utcnow()).total_seconds()
-        return divmod(seconds, 3600)[0]
+        delta = self.end_time - datetime.utcnow()
+        return delta.total_seconds()
 
-    def next_price(self):
-        return self.current_price + self.price_step
+    def next_price(self, price_step):
+        return self.current_price + price_step
+
+    def n_bids(self):
+        return self.bids.count()
 
 
 class Bid(db.Model):
