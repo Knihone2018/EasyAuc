@@ -24,12 +24,16 @@ class Test(object):
         if self.corr_id == props.correlation_id:
             self.response = body
 
+
+    # parameter of body: 
+    #        a string of json object
+    #        e.g: '{"userId":2}'
     def call(self, n):
         self.response = None
         self.corr_id = str(uuid.uuid4())
         self.channel.basic_publish(
             exchange='',
-            routing_key='rpc_get_user_email_queue',
+            routing_key='rpc_get_user_deleted_or_blocked_queue',
             properties=pika.BasicProperties(
                 reply_to=self.callback_queue,
                 correlation_id=self.corr_id,

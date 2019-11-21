@@ -1,13 +1,13 @@
 import pika, json
 from user import *
 
+#docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management
+
 connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 channel = connection.channel()
 channel.queue_declare(queue='rpc_get_user_deleted_or_blocked_queue')
 
 # a function to check the validity of the user: if the user is deleted or blocked, send True; otherwise send False
-#        a string of json object
-#        e.g: '{"userId":2}'
 def check_user_valid_request(ch, method, props, body):
     b = json.loads(body)
     userId = b['userId']
@@ -31,9 +31,6 @@ channel.basic_consume(queue='rpc_get_user_deleted_or_blocked_queue', on_message_
 
 
 # a function to return the email of the user
-# parameter of body: 
-#        a string of json object
-#        e.g: '{"userId":2}'
 channel.queue_declare(queue='rpc_get_user_email_queue')
 def get_user_email(ch, method, props, body):
     b = json.loads(body)

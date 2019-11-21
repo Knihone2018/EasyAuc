@@ -77,7 +77,7 @@ class AccountControl(DatabaseControl):
             # if the account is deleted
             isDeleted = self.checkDeleteByUserId(userId)
             if isDeleted:
-                cursor.execute("update Account set isDeleted = False where userId = %s;", (int(userId),))
+                cursor.execute("update Account set isDeleted = 0 where userId = %s;", (int(userId),))
                 db.commit()
                 return userId
 
@@ -126,7 +126,7 @@ class AccountControl(DatabaseControl):
         if isDeleted:
             return False
         else:
-            cursor.execute("update Account set isDeleted = True where userId = %s;", (int(userId),))
+            cursor.execute("update Account set isDeleted = 1 where userId = %s;", (int(userId),))
             db.commit()
             return userId
         return False
@@ -139,7 +139,7 @@ class AccountControl(DatabaseControl):
         if isBlocked:
             return "User Already Deleted"
         else:
-            cursor.execute("update Account set isBlocked = True where userId = %s;", (int(userId),))
+            cursor.execute("update Account set isBlocked = 1 where userId = %s;", (int(userId),))
             db.commit()
             return True
         return False
@@ -473,15 +473,6 @@ class BoughtItemsControl(DatabaseControl):
         except:
             return False
 
-
-
-
-
-
-
-
-# if an item in cart is checked out, update this to Item microservice
-#def updateQuantityToItem(quantity):
 
 
 

@@ -13,7 +13,7 @@ def test2():
 
 def test3():
 	e = {"userId":"123","itemId":"456"}
-	p2 = requests.get(url="http://127.0.0.1:{}/getallitemincart".format(port), json = e)
+	p2 = requests.get(url="http://127.0.0.1:{}/getoneitemincart".format(port), json = e)
 	print(p2.content)
 
 def test4():
@@ -48,7 +48,12 @@ def test8():
 	print(p6.content)
 
 
-#test8()
+def test9():
+	p7 = requests.get(url="http://127.0.0.1:{}/getitemisbid".format(port), json={"userId":"123","itemId":"456"})
+	print(p7.content)
+
+
+test9()
 
 
     

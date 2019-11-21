@@ -1,7 +1,6 @@
 from flask import Flask, request, Response, jsonify
 from flasgger import Swagger
 from nameko.standalone.rpc import ClusterRpcProxy
-import pika
 from user import *
 
 
@@ -9,7 +8,6 @@ from user import *
 app = Flask(__name__)
 Swagger(app)
 Port = 5672
-#CONFIG = {'AMQP_URI': "amqp://guest:guest@localhost"}
 
 
 
@@ -557,6 +555,7 @@ Response:
 def emptyShoppingCart():
     userId = request.json.get('userId')
     ctl = CartControl()
+    # update the quantity to item microservice
     res = ctl.emptyCart(userId)
     if res:
         ## need to call restful api in Item to update quantity!
