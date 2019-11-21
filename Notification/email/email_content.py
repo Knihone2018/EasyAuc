@@ -1,33 +1,15 @@
 #!/usr/bin/python3
 
-import pymongo
-
-client = pymongo.MongoClient(host='localhost', port=27017)
-db = client.email_content
-
-titleList = db.eTitle
-contentList = db.eContent
-
-toSellerTitle = {
-    'type': 'toSeller',
-    'title': 'Item you sell got bid'
-}
-toBiderTitle = {
-    'type': 'toBider',
-    'title': 'A higher bid'
-}
-oneDayCountDownTitle = {
-    'type': 'oneDayCountDown',
-    'title': 'Only one day left'
-}
-oneHourCountDownTitle = {
-    'type': 'oneHourCountDown',
-    'title': 'Only one hour left'
+title = {
+    'toSeller': 'Item you sell got bid',
+    'toBider': 'A higher bid',
+    'oneDayCountDown': 'Only one day left',
+    'oneHourCountDown': 'Only one hour left',
+    'watchlist': 'A new item added into your watchlist'
 }
 
-toSellerContent = {
-    'type': 'toSeller',
-    'content': """\
+content = {
+    'toSeller': """\
         <html>
             <body>
                 <p>Hi!<br>
@@ -39,11 +21,8 @@ toSellerContent = {
                 </p>
             </body>
         </html>
-        """
-}
-toBiderContent = {
-    'type': "toBider",
-    'content': """\
+        """, 
+    "toBider":"""\
             <html>
                 <body>
                     <p>Hi!<br>
@@ -55,11 +34,8 @@ toBiderContent = {
                     </p>
                 </body>
             </html>
-            """
-}
-oneDayCountDownContent = {
-    'type': "oneDayCountDown",
-    'content': """\
+            """,
+    "oneDayCountDown": """\
             <html>
                 <body>
                     <p>Hi!<br>
@@ -71,11 +47,8 @@ oneDayCountDownContent = {
                     </p>
                 </body>
             </html>
-            """
-}
-oneHourCountDownContent = {
-    'type': "oneHourCountDown",
-    'content': """\
+            """,
+    "oneHourCountDown": """\
             <html>
                 <body>
                     <p>Hi!<br>
@@ -87,8 +60,18 @@ oneHourCountDownContent = {
                     </p>
                 </body>
             </html>
+            """,
+    "watchlist": """\
+            <html>
+                <body>
+                    <p>Hi!<br>
+                    <br>
+                    A new item has been added into your watchlist!<br>
+                    Click <a href="{}">here</a> to have a look now!<br>
+                    <br>
+                    Thanks for using EasyAuc!
+                    </p>
+                </body>
+            </html>
             """
 }
-
-titleList.insert_many([toSellerTitle, toBiderTitle, oneDayCountDownTitle, oneHourCountDownTitle])
-contentList.insert_many([toSellerContent, toBiderContent, oneDayCountDownContent, oneHourCountDownContent])
