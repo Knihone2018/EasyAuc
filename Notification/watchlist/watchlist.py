@@ -3,6 +3,7 @@
 from flask import Flask, jsonify, request
 import pymongo
 import uuid
+# from getItemDetail import GetItemDetail
 
 watchlist = Flask(__name__)
 
@@ -10,6 +11,7 @@ dbClient = pymongo.MongoClient(host='localhost', port=27017)
 watchlist_db = dbClient["watchlist"]
 itemCollection = watchlist_db["items"]
 paraCollection = watchlist_db["parameters"]
+# getItemDetail = GetItemDetail()
 
 # Parameters
 def getItemNames(user_id):
@@ -93,6 +95,10 @@ def insertItem():
 # TODO: request items info using item ID
 @watchlist.route('/watchlist/<user_id>', methods=['GET'])
 def getItems(user_id):
+    # itemIDs = ",".join(getItemIDs(user_id))
+    # items = getItemDetail.call(itemIDs)
+    # print(items)
+    # return items
     itemIDs = getItemIDs(user_id)
     return jsonify({'items': itemIDs})
 
