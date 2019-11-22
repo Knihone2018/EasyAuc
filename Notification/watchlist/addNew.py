@@ -23,13 +23,17 @@ def compare(item_name, min_price, max_price, item):
 def addNew(ch, method, properties, body):
     item = json.loads(body)
     results = paraCollection.find({'category': item['category']})
+    users = []
     for result in results:
         add = compare(result['item_name'], result['min_price'], result['max_price'], item)
         if add != "-1":
             new = {'user_id': result['user_id'], 'item_id': add}
             itemCollection.insert_one(new)
             print("add to " + result['user_id'])
-            sendEmail(result['user_id'], item['url'])
+            users.append(result['user_id'])
+    
+    user_ids = ",".join(users)
+    sendEmail(user_ids, item['url'])
 
 # Send email to notify
 def sendEmail(id, item_url):

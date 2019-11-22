@@ -8,6 +8,7 @@ import traceback
 import pika
 import email_content
 import json
+from get_email import GetEmail
 
 def sendEmail(reciverAddress, contentType, auctionURL):
 
@@ -33,24 +34,26 @@ def sendEmail(reciverAddress, contentType, auctionURL):
         print("Sending email failed!")
         return False
 
-def getUserEmail(user_id):
-    return "angbian16@gmail.com,angbian@uchicago.edu,ang.bian96@gmail.com"
-
 def callback(ch, method, properties, body):
     emailInfo = json.loads(body)
-    print(emailInfo)
-    user_email = getUserEmail(emailInfo["user_id"])
+    print("Send email to user: {}".format(emailInfo["user_id"]))
+    user_emaillist = []
+    for id in emailInfo["user_id"].split(","):
+        print(id)
+        user_emaillist.append(getEmail.call(id))
+    spliter = ","
+    user_email = spliter.join(user_emaillist)
+    print("send email to:" + user_email)
     sendEmail(user_email, emailInfo["type"], emailInfo['url'])
 
 
 connection = pika.BlockingConnection(
     pika.ConnectionParameters(host='172.17.0.2'))
 channel = connection.channel()
+getEmail = GetEmail()
 
 channel.queue_declare(queue='email')
 channel.basic_consume(
     queue='email', on_message_callback=callback, auto_ack=True)
 print("Service starts!")
 channel.start_consuming()
-
-# sendEmial("angbian16@gmail.com,angbian@uchicago.edu,ang.bian96@gmail.com", "toSeller", "www.google.com")
