@@ -1,6 +1,5 @@
 from flask import Flask, request, Response, jsonify
 from flasgger import Swagger
-from nameko.standalone.rpc import ClusterRpcProxy
 from user import *
 
 

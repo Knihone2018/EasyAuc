@@ -19,7 +19,7 @@ class DatabaseControl:
         mydb = mysql.connector.connect(
           host="localhost",
           user="root",
-          passwd="",
+          passwd="a1s2d3f4",
           database="USER"
         )
         self.db = mydb
@@ -30,7 +30,7 @@ class DatabaseControl:
         mydb = mysql.connector.connect(
           host="localhost",
           user="root",
-          passwd=""
+          passwd="a1s2d3f4"
         )
         mycursor = mydb.cursor()
         mycursor.execute("CREATE DATABASE IF NOT EXISTS USER")

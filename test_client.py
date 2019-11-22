@@ -7,7 +7,7 @@ def test1():
 	print(p.content)
 
 def test2():
-	p1 = requests.get(url="http://127.0.0.1:{}/getallitemincart".format(port), json = {"userId":"123"})
+	p1 = requests.get(url="http://127.0.0.1:{}/getallitemincart".format(port), json = {"userId":"2"})
 	print(p1.content)
 
 
@@ -17,7 +17,7 @@ def test3():
 	print(p2.content)
 
 def test4():
-	e = {"email":"susan@qq.com"}
+	e = {"email":"susanxu@126.com"}
 	p3 = requests.post(url="http://127.0.0.1:{}/addaccount".format(port), json = e)
 	print(p3.content)
 
@@ -53,7 +53,7 @@ def test9():
 	print(p7.content)
 
 
-test9()
+test2()
 
 
     

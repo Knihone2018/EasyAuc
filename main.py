@@ -1,3 +1,3 @@
 import os
 
-os.system("python rpc_server.py & python api.py &")
+os.system("python api.py & python rpc_server.py &")
