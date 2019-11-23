@@ -142,7 +142,7 @@
 	            dataType: "json",
 	            url: url,
 	            success: function (response) {
-	                if(response.data["isAdded"]){
+	                if(response.data.success){
 	                	var temp = current+1;
 	                	t.parentNode.previousSibling.innerHTML = temp;
 	                }
@@ -162,7 +162,7 @@
 	            dataType: "json",
 	            url: url,
 	            success: function (response) {
-	                if(response.data["isDeleted"]){
+	                if(response.data.success){
 	                	var temp = current-1;
 	                	if(temp==0){
 	                		t.parentNode.parentNode.innerHTML = "";

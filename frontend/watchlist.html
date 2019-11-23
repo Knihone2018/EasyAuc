@@ -270,8 +270,8 @@
 		    for (var i = 0; i < len; i++) {
 		        tableStr = tableStr + "<tr class='row mx-0'><td class='col-3'>" + data.paras[i].item_name
 		                + "</td>" + "<td class='col-3'>" + data.paras[i].category + "</td>"
-		                + "<td class='col-2'>" + min_price+ "</td>"
-		                + "<td class='col-2'>" + max_price+"</td>"
+		                + "<td class='col-2'>" + data.paras[i].min_price+ "</td>"
+		                + "<td class='col-2'>" + data.paras[i].max_price+"</td>"
 		                + "<td class='col-2'>" + createDelButton2()
 		                + "<span style='display:none'>"+data.items[i].item_name+"</span></td>"
 		                + "</tr>";
@@ -333,7 +333,7 @@
 	            }
 	        });
 		}
-		
+
 		function deleteParam(){
 			var url="";
 			var user_id = $("#myaccount span").text();

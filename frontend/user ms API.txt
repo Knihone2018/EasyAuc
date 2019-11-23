@@ -22,7 +22,7 @@ url: myaccount.html?id=xxx
 		}
 	response
 		{
-			"isSuccessful":true/false
+			"success":true/false
 		}
 
 3. 改change pwd
@@ -34,14 +34,14 @@ url: myaccount.html?id=xxx
 		}
 	response
 		{
-			"isSuccessful":true/false
+			"success":true/false
 		}
 
 
 cart 界面 把 user的id加在后面 像下面这样
 url: cart.html?id=xxx
 4. 获得cart list
-修改line 81的url
+修改line 82的url
 	request格式
 		get方法
 	response格式
@@ -53,7 +53,7 @@ url: cart.html?id=xxx
 		get方法
 	response格式
 		{
-			"isAdded":true/false
+			"success":true/false
 		}
 
 6. 减item （如果quantity到0会删除整行）
@@ -61,7 +61,7 @@ url: cart.html?id=xxx
 		get方法
 	response格式
 	{
-		"isDeleted":true/false
+		"success":true/false
 	}
 
 
@@ -74,5 +74,5 @@ url: history.html?id=xxx
 		get方法
 	response格式
 	{
-		"isDeleted":true/false
+		"success":true/false
 	}

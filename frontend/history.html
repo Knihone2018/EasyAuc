@@ -137,7 +137,7 @@
 	            dataType: "json",
 	            url: url,
 	            success: function (response) {
-	                if(response.data["isDeleted"]){
+	                if(response.data.success){
 	                	t.parentNode.parentNode.innerHTML = "";
 	                }
 	            },
