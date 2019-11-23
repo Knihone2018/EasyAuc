@@ -230,14 +230,37 @@ class RabitMQ_PUB:
 		print(" Start an auction: %r" % message)
 		connection.close()
 
-class RabitMQ_RPC:
-	# RPC client
-	def checkuser(self,message):
-		pass
+class RabitMQ_RPC():
+    def __init__(self):
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+        self.channel = self.connection.channel()
+        result = self.channel.queue_declare(queue='', exclusive=True)
+        self.callback_queue = result.method.queue
 
-	# rpc server
-	def getItemInfo(self,message):
-		pass
+        self.channel.basic_consume(
+            queue = self.callback_queue,
+            on_message_callback = self.on_response,
+            auto_ack = True
+        )
+
+    def on_response(self, ch, method, props, body):
+        if self.corr_id == props.correlation_id:
+            self.response = body
+    
+    def checkuser(self, user_id):
+        self.response = None
+        self.corr_id = str(uuid.uuid4())
+        self.channel.basic_publish(
+            exchange='',
+            routing_key='checkuser',
+            properties=pika.BasicProperties(
+                reply_to=self.callback_queue,
+                correlation_id=self.corr_id,
+            ),
+            body='{"userId":{}}'.format(user_id))
+        while self.response is None:
+            self.connection.process_data_events()
+        return self.response
 
 #Check Auction Start in DB
 def CheckAuctionStart():
@@ -277,7 +300,7 @@ def additem():
 
 	#check if user valid first
 	RPC = RabitMQ_RPC()
-	if not RPC.checkuser(req['sellerID']):
+	if RPC.checkuser(req['sellerID']) == 'True':
 		return Response(json.dumps("sellerID is invalid"), status=400)
 
 	# check category
