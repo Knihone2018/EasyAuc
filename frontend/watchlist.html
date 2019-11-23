@@ -40,13 +40,16 @@
 				<table class="table row mx-0">
 					<thead class="w-100">
 						<tr class="row mx-0">
-							<th class="col-md-4">
+							<th class="col-md-3">
 							</th>
 							<th class="col-md-3">
 								Name
 							</th>
-							<th class="col-md-3">
+							<th class="col-md-2">
 								Category
+							</th>
+							<th class="col-md-2">
+								Price
 							</th>
 							<th class="col-md-2">
 							</th>
@@ -60,9 +63,36 @@
 			<br>
 			<br>
 			<br>
+			<p class="text-center font-weight-bold text-secondary">My Parameters</p>
+			<div style="text-align:center">
+				<table class="table row mx-0">
+					<thead class="w-100">
+						<tr class="row mx-0">
+							<th class="col-md-3">
+								Name
+							</th>
+							<th class="col-md-3">
+								Category
+							</th>
+							<th class="col-md-2">
+								Min Price
+							</th>
+							<th class="col-md-2">
+								Max Price
+							</th>
+							<th class="col-md-2">
+							</th>
+						</tr>
+					</thead>
+					<tbody id="dataTable2" class="w-100">
+					</tbody>
+				</table>
+			</div>
 			<br>
 			<br>
-			<p class="text-center font-weight-bold text-secondary">Add a new watchitem</p>
+			<br>
+			<br>
+			<p class="text-center font-weight-bold text-secondary">Add a new parameter</p>
 			<form role="form" id="add_form">
 				<div class="form-group">
 					 <label>Item Name</label><input class="form-control" id="add_itemname" />
@@ -85,7 +115,7 @@
 				</div>
 				<br>
 				<div class="text-center">
-					<button type="button" class="btn btn-primary" onclick="addItem()">Submit</button>
+					<button type="button" class="btn btn-primary" onclick="addParam()">Submit</button>
 				</div>
 			</form>
 			<br>
@@ -108,12 +138,13 @@
 				$("#categoryId").html(id);
 			});
 
-			getWatchlist("[Your url]?id="+id);
-			getCategories("[Your url]]");
+			getWatchlist();
+			getParameter();
+			getCategories();
 		});
 
-		function addItem() {
-			var userId = $("#myaccount span").text();
+		function addParam() {
+			var user_id = $("#myaccount span").text();
 			var name = $("#add_itemname").val();
 			var categoryId = $("#categoryId").text();
 			var category = $("#add_category").text();
@@ -139,7 +170,7 @@
 				alert("min price should be smaller than max price.");
 				return;
 			}
-			var data = {"userId":userId, "itemName": name, "categoryId":categoryId,"category": category, "minprice": minprice, "maxprice": maxprice};
+			var data = {"user_id":user_id, "item_name": name, "category": category, "min_price": minprice, "max_price": maxprice};
             $.ajax({
                 type: "POST",
                 dataType: "json",
@@ -147,26 +178,36 @@
                 data: data,
                 contentType: "application/json",
                 success: function (response) {
-                    if (response.data.isAdded){
-                    	alert("Added a new item!");
-						createWatchList(response.data);
+                    if (response.data.success){
+                    	alert("Added a new parameter!");
+                    	var temp = $("#dataTable2").html();
+						var newparam = temp + "<tr class='row mx-0'><td class='col-3'>" + data.paras[i].item_name
+					                + "</td>" + "<td class='col-3'>" + data.paras[i].category + "</td>"
+					                + "<td class='col-2'>" + min_price+ "</td>"
+					                + "<td class='col-2'>" + max_price+"</td>"
+					                + "<td class='col-2'>" + createDelButton2()
+					                + "<span style='display:none'>"+data.items[i].item_name+"</span></td>"
+					                + "</tr>";
+		                $("#dataTable2").html(newparam);
                     }else{
-                    	 alert("Failed to add a new item.");
+                    	 alert("Failed to add a new parameter.");
                     }
                 },
                 error : function() {
-                    alert("Failed to add a new item.");
+                    alert("Failed to add a new parameter.");
                 }
             });
         }
 
-		function getWatchlist(url){
+		function getWatchlist(){
+			var id = $("#myaccount span").text();
+			var url = "[Your url]/"+id;
 			$.ajax({
 	            type: "GET",
 	            dataType: "json",
 	            url: url,
 	            success: function (response) {
-	                createWatchList(response.data);
+	                createWatchlist(response.data);
 	            },
 	            error: function () {
 	                //alert("Sorry, we have some problem.");
@@ -174,7 +215,25 @@
 	        });
 		}
 
-		function getCategories(url){
+		function getParameter(){
+			var id = $("#myaccount span").text();
+			var url = "[Your url]/"+id;
+			$.ajax({
+	            type: "GET",
+	            dataType: "json",
+	            url: url,
+	            success: function (response) {
+	                createParam(response.data);
+	            },
+	            error: function () {
+	                //alert("Sorry, we have some problem.");
+	            }
+	        });
+		}
+
+		function getCategories(){
+			var id = $("#myaccount span").text();
+			var url = "[Your url]/"+id;
 			$.ajax({
 	            type: "GET",
 	            dataType: "json",
@@ -188,19 +247,36 @@
 	        });
 		}
 
-        function createWatchList(data){
+        function createWatchlist(data){
         	// var data={"items":[{"name":"A","image":"http://seopic.699pic.com/photo/50057/5368.jpg_wh1200.jpg","id":"1","category":"book","quantity":1}]};
         	var tableStr = "";
 		    var len = data.items.length;
 		    for (var i = 0; i < len; i++) {
-		        tableStr = tableStr + "<tr class='row mx-0'><td class='col-4'>" + createImage(data.items[i].image)
-		                + "</td>" + "<td class='col-3'>" + createName(data.items[i].name, data.items[i]["id"]) + "</td>"
-		                + "<td class='col-3'>" + data.items[i].category+ "</td>"
-		                + "<td class='col-2'>" + createDelButton()
-		                + "<span style='display:none'>"+data.items[i].id+"</span></td>"
+		        tableStr = tableStr + "<tr class='row mx-0'><td class='col-3'>" + createImage(data.items[i].image)
+		                + "</td>" + "<td class='col-3'>" + createName(data.items[i].item_name, data.items[i].auctionUrl) + "</td>"
+		                + "<td class='col-2'>" + data.items[i].category+ "</td>"
+		                + "<td class='col-2'>" + data.items[i].price+ "</td>"
+		                + "<td class='col-2'>" + createDelButton1()
+		                + "<span style='display:none'>"+data.items[i].item_id+"</span></td>"
 		                + "</tr>";
 		    }
 		    $("#dataTable").html(tableStr);
+		}
+
+		function createParam(data){
+        	// var data={"items":[{"name":"A","image":"http://seopic.699pic.com/photo/50057/5368.jpg_wh1200.jpg","id":"1","category":"book","quantity":1}]};
+        	var tableStr = "";
+		    var len = data.paras.length;
+		    for (var i = 0; i < len; i++) {
+		        tableStr = tableStr + "<tr class='row mx-0'><td class='col-3'>" + data.paras[i].item_name
+		                + "</td>" + "<td class='col-3'>" + data.paras[i].category + "</td>"
+		                + "<td class='col-2'>" + min_price+ "</td>"
+		                + "<td class='col-2'>" + max_price+"</td>"
+		                + "<td class='col-2'>" + createDelButton2()
+		                + "<span style='display:none'>"+data.items[i].item_name+"</span></td>"
+		                + "</tr>";
+		    }
+		    $("#dataTable2").html(tableStr);
 		}
 
 		function createCategories(data){
@@ -214,14 +290,18 @@
 		    $("#category").html(str);
 		}
 
-		function createName(name, id){
-			url = "item.html?id="+id;
+		function createName(name, url){
 			var link = "<a href='"+url+"'>"+name+"</a>";
 			return link;
 		}
 
-		function createDelButton(){
-			var button = "<button type='button' class='btn btn-danger' onclick=deleteWatchedItem()>Delete</button>";
+		function createDelButton1(){
+			var button = "<button type='button' class='btn btn-danger' onclick=deleteWatchedItem(this)>Delete</button>";
+			return button;
+		}
+
+		function createDelButton2(){
+			var button = "<button type='button' class='btn btn-danger' onclick=deleteParam(this)>Delete</button>";
 			return button;
 		}
 
@@ -230,15 +310,46 @@
 			return image;
 		}
 
-		function deleteWatchedItem(){
-			var id = t.nextSibling.textContent;
-			var url = "[Your url]?id="+id;
+		function deleteWatchedItem(t){
+			var item_id = t.nextSibling.textContent;
+			var user_id = $("#myaccount span").text();
+			var url = "[Your url]";
+			var data = {
+				"user_id": user_id,
+				"item_id": item_id
+			};
 			$.ajax({
-	            type: "GET",
+	            type: "DELETE",
 	            dataType: "json",
 	            url: url,
+	            contentType: "application/json",
 	            success: function (response) {
-	                if(response.data["isDeleted"]){
+	                if(response.data.success){
+	                	t.parentNode.parentNode.innerHTML = "";
+	                }
+	            },
+	            error: function () {
+	                //alert("Sorry, we have some problem.");
+	            }
+	        });
+		}
+		
+		function deleteParam(){
+			var url="";
+			var user_id = $("#myaccount span").text();
+			var item_name = t.nextSibling.textContent;
+			var data={
+				"user_id": user_id,
+				"item_name": item_name
+			};
+			$.ajax({
+	            type: "DELETE",
+	            dataType: "json",
+	            url: url,
+	            contentType: "application/json",
+	            data: data,
+	            success: function (response) {
+	                if(response.data.success){
 	                	t.parentNode.parentNode.innerHTML = "";
 	                }
 	            },
