@@ -1,0 +1,17 @@
+Send email: (implemented in send_email.py)
+
+Use RabbitMQ point-to-point
+
+Queue name is "email"
+
+Message format:
+{"user_id": "999,123,567", "type": "toSeller", "url": "www.google.com"} (Send email to three users: 999, 123, 567. Email type is toSeller, url of the auction is "www.google.com")
+
+Available type:
+	"toSeller": Send email to seller when someone bids on the selling item.
+	"toBider": Send email to bider when there is a higher bid.
+	"oneDayCountDown": Send email to seller and bider when one day left.
+	"oneHourCountDown": Send email to seller and bider when one hour left.
+	"watchlist": Send email to user when a new item added into watchlist.
+
+email_test.py is an example to send a message to send_email.
