@@ -1,31 +1,32 @@
 import mysql.connector
-import itertools
-import string
-import hashlib
 from flask import Flask, request, jsonify, Response
-import json
 from datetime import datetime
+import threading
+import json
+import os,base64
+import pika
+import uuid
 
-class Item:
-	def __init__(self):
-		self.ID = None
-		self.name = None
-		self.category = None
-		self.flag = None
-		self.quantity = None
-		self.price = None
-		self.start_time = None
-		self.end_time = None
-		self.rating = None
-		self.status = None
-		self.buy_now = None
-		self.shipping_cost = None
-		self.tag = None
+# Item:
+# ID
+# sellerID
+# name
+# category
+# quantity
+# cur_price
+# price_step
+# start_time
+# end_time
+# flag
+# buy_now
+# buy_now_price
+# shipping_cost
+# sold
+# description
 
-class Category:
-	def __init__(self):
-		self.ID = None
-		self.name = None
+#Category:
+# ID
+# name
 
 class DatabaseControl:
 	def CreateTable(self):
@@ -66,18 +67,19 @@ class DatabaseControl:
 		 								name varchar(255) unique,\
 		 								category int,\
 		 								quantity int default 1,\
-										cur_price int not null,\
+										cur_price float not null,\
+										price_step float not null,\
 										start_time datetime,\
 										end_time datetime,\
-										total_rating int,\
-										rating_count int,\
 						 				flag int default 0,\
 										buy_now boolean default False,\
 										buy_now_price int default 0,\
+										sent_to_auc boolean default False,\
 										shipping_cost int,\
-										status boolean default True,\
+										sold boolean default False,\
 										description varchar(1000),\
 										index(name),index(category),\
+										index(start_time,buy_now,sent_to_auc),\
 										foreign key(category) references Category(ID))")
 
 class ItemControl(DatabaseControl):
@@ -88,13 +90,20 @@ class ItemControl(DatabaseControl):
 		stored = self.SearchByName(item['name'])
 		if stored:
 			return "Name Already Exists"
+        
 		#insert
 		sql = "insert into Item (sellerID, name, category, quantity, cur_price, start_time, end_time, buy_now, buy_now_price, shipping_cost, description)\
 			 	values (%(sellerID)s, %(name)s, %(category)s,%(quantity)s,%(cur_price)s,%(start_time)s,%(end_time)s,%(buy_now)s,%(buy_now_price)s,%(shipping_cost)s,%(description)s)"
 		cursor.execute(sql,item)
 		db.commit()
+		
 		#get itemID
 		res = self.SearchByName(item['name'])
+
+		# add photo
+		png = "%d.png"%res
+		with open(png,'wb') as f:
+			f.write(base64.b64decode(item["photo"]))	
 		return res
 	
 	def UpdatePrice(self, info):
@@ -105,10 +114,18 @@ class ItemControl(DatabaseControl):
 		db.commit()
 		return True		
 
-	def UpdateStatus(self, info):
+	def UpdateSold(self, info):
+		db = self.Getdb()
+		#update sold
+		sql = "UPDATE Item SET sold = %(sold)s WHERE ID = %(ID)s"
+		db.cursor().execute(sql,info)
+		db.commit()
+		return True	
+
+	def UpdateQuantity(self, info):
 		db = self.Getdb()
 		#update status
-		sql = "UPDATE Item SET cur_price = %(status)s WHERE ID = %(ID)s"
+		sql = "UPDATE Item SET quantity = %(quantity)s WHERE ID = %(ID)s"
 		db.cursor().execute(sql,info)
 		db.commit()
 		return True	
@@ -124,13 +141,44 @@ class ItemControl(DatabaseControl):
 		else:
 			return None
 
-	def SearchByCategory(self, name):
+	def SearchByID(self, ID):
 		db = self.Getdb()
+		cursor = db.cursor(buffered=True)
 		#get item
-		db.cursor().execute("SELECT Item.ID, Item.sellerID, Item.name, Category.name, Item.quantity, Item.cur_price,\
-			 				Item.start_time, Item.end_time, Item.buy_now, Item.buy_now_price, Item.shipping_cost, Item.description\
-							from Item left join Category on Item.category = Category.ID where Category.name = %s"%name)
-		res = db.cursor().fetchall()
+		sql = "select * from Item where ID = %d" %ID
+		cursor.execute(sql)
+		res = cursor.fetchone()
+		Item = {
+			"ID":res[0],
+			"sellerID":res[1],
+			"name":res[2],
+			"category":res[3],
+			"quantity":res[4],
+			"cur_price":res[5],
+			"price_step":res[6],
+			"start_time":res[7],
+			"end_time":res[8],
+			"flag":res[9],
+			"buy_now":res[10],
+			"buy_now_price":res[11],
+			"sent_to_auc":res[12],
+			"shipping_cost":res[13],
+			"sold":res[14],
+			"description":res[15]
+			}
+		png = "%d.png"%res
+		with open(png,'rb') as image:
+			p = base64.b64encode(image.read())
+			Item["photo"] = p
+		return Item
+
+	def SearchByCategory(self,category):
+		db = self.Getdb()
+		cursor = db.cursor(buffered=True)		
+		#get item
+		sql = "select * from Item where category = {}".format(category)
+		cursor.execute(sql)
+		res = cursor.fetchall() # a tuple of tuples
 		return res
 
 class CategoryControl(DatabaseControl):
@@ -164,6 +212,47 @@ class CategoryControl(DatabaseControl):
 		else:
 			return None
 
+	def GetCategory(self):
+		db = self.Getdb()
+		mycursor = db.cursor()
+		mycursor.execute("select * from Category")
+		res = mycursor.fetchall() # a tuple of tuples
+		return res
+
+#RabitMQ connection
+class RabitMQ_PUB:
+	# point to point
+	def start_auction(self,message):
+		connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+		channel = connection.channel()
+		channel.exchange_declare(exchange='AuctionStart', exchange_type='fanout')
+		channel.basic_publish(exchange='AuctionStart', routing_key='', body=message)
+		print(" Start an auction: %r" % message)
+		connection.close()
+
+class RabitMQ_RPC:
+	# RPC client
+	def user(self,message):
+		pass
+
+	# rpc server
+	def getItemInfo(self,message):
+		pass
+
+#Check Auction Start in DB
+def CheckAuctionStart():
+	db = DatabaseControl().Getdb()
+	mycursor = db.cursor()
+	mycursor.execute("select ID from Item where buy_now = false and start_time <= \'%s\' and sent_to_auc = false"%datetime.datetime.now())
+	res = mycursor.fetchall()
+
+	for id in res:
+		mycursor.execute("update table set sent_to_auc=true where ID = {}".format(id[0]))
+		db.commit()
+		#publish
+		message = {"ID":id[0],"buy_now":False}
+		RabitMQ_PUB().start_auction(json.dumps(message))
+
 #run Flask
 app = Flask(__name__)
 
@@ -175,7 +264,8 @@ app = Flask(__name__)
 # name:string
 # category:string
 # quantity:int
-# cur_price:int
+# cur_price:float
+# price_step:float
 # start_time:datetime
 # end_time:datetime
 # buy_now:bool
@@ -184,19 +274,31 @@ app = Flask(__name__)
 # description:string
 def additem():
 	req = request.json
-	#get category
+
+	#check if user valid first
+	RPC = RabitMQ_RPC()
+	if not RPC.user(req['sellerID']):
+		return Response(json.dumps("sellerID is invalid"), status=400)
+
+	# check category
 	category = req['category']
 	cat_id = CategoryControl().getid(category)
 	if not cat_id:
-		res = "Category Not Exists"
-	else:
-		#update dictionary
-		req['category'] = cat_id
-		req["start_time"] = datetime.fromtimestamp(req["start_time"])
-		req["end_time"] = datetime.fromtimestamp(req["end_time"])
-		#item control
-		ctl = ItemControl()
-		res = ctl.AddItem(req)
+		return Response(json.dumps("Category Not Exists"), status=400)
+
+	#update dictionary
+	req['category'] = cat_id
+	req["start_time"] = datetime.fromtimestamp(req["start_time"])
+	req["end_time"] = datetime.fromtimestamp(req["end_time"])
+	#item control
+	ctl = ItemControl()
+	res = ctl.AddItem(req)
+
+	Publish = RabitMQ_PUB()		
+	#send to auction immediately if buy now item
+	if req["buy_now"]:
+		message = {'itemID':res,"buy_now":req["buy_now"]}
+		Publish.start_auction(json.dumps(message))
 	return Response(json.dumps(res), status=200)
 
 #update current price
@@ -218,18 +320,21 @@ def updatestatus():
 	req = request.json
 	#item control
 	ctl = ItemControl()
-	res = ctl.UpdateStatus(req)
+	res = ctl.UpdateSold(req)
 	return Response(json.dumps(res), status=200)
 
 #get items by category
 @app.route("/searchbycategory", methods=["GET"])
-# name : string
+# categoryID : int
 def searchbycategory():
 	req = request.json
 	#item control
 	ctl = ItemControl()
-	res = ctl.SearchByCategory(req['name'])
-	return Response(json.dumps(res), status=200)	
+	res = ctl.SearchByCategory(req['categoryID'])
+	dic = {}
+	for item in res:
+		dic[item[0]] = item[1:]
+	return Response(json.dumps(dic), status=200)    # ID:(,,,) tuple of info
 
 #add category
 @app.route("/addcategory", methods=["POST"])
@@ -241,6 +346,19 @@ def addcategory():
 	res = catectl.AddCategory(req)
 	return Response(json.dumps(res), status=200)
 
+#get all categories
+@app.route("/allcategory", methods=["GET"])
+# input:None
+# output: json
+def getcategory():
+	#category control
+	catectl = CategoryControl()
+	res = catectl.GetCategory()
+	dic = {}
+	for category in res:
+		dic[category[0]] = category[1]
+	return Response(json.dumps(dic), status=200) # ID:Name
+
 #delete category
 @app.route("/deletecategory", methods=["DELETE"])
 # ID: int
@@ -251,10 +369,11 @@ def deletecategory():
 	res = catectl.DeleteCategory(req)
 	return Response(json.dumps(res), status=200)
 
-
 # Run the Flask application as a server.
 if __name__ == "__main__":
-	p = 9000
 	DBctl = DatabaseControl()
 	DBctl.CreateTable()
+	t = threading.Timer(60, CheckAuctionStart)
+	t.start()
+	p = 9000
 	app.run(port=p)
