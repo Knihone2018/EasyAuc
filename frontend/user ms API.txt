@@ -1,0 +1,78 @@
+
+account界面
+url: myaccount.html?id=xxx
+1.
+每次进入此界面，会请求user ms，得到用户email等数据
+测试时请修改myaccount line 119 的url
+	request:
+		{
+			"id":xxx
+		}
+	response
+		{
+			"email":xxx
+		}
+
+2. 改email
+测试时请修改myaccount line 152 的url
+	request:
+		{
+			"id":xxx,
+			"email":xxx
+		}
+	response
+		{
+			"isSuccessful":true/false
+		}
+
+3. 改change pwd
+测试时请修改myaccount line 188 的url
+	request:
+		{
+			"id":xxx,
+			"password":xxx
+		}
+	response
+		{
+			"isSuccessful":true/false
+		}
+
+
+cart 界面 把 user的id加在后面 像下面这样
+url: cart.html?id=xxx
+4. 获得cart list
+修改line 81的url
+	request格式
+		get方法
+	response格式
+		{"items":[{"name":"A","image":"http://seopic.699pic.com/photo/50057/5368.jpg_wh1200.jpg","id":"1dsgsdg","category":"book","quantity":1}]};
+
+5. 加item
+修改line 137 157的url
+	request格式
+		get方法
+	response格式
+		{
+			"isAdded":true/false
+		}
+
+6. 减item （如果quantity到0会删除整行）
+	request格式
+		get方法
+	response格式
+	{
+		"isDeleted":true/false
+	}
+
+
+
+history 界面 把 user的id加在后面 像下面这样
+url: history.html?id=xxx
+7. 删除历史
+修改line 134的url
+	request格式
+		get方法
+	response格式
+	{
+		"isDeleted":true/false
+	}

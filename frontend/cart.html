@@ -28,6 +28,7 @@
 						</div>
 						<div class="col-md-2 column">
 							<br>
+							<button id="home" type="button" class="btn btn-warning btn-sm">Home<span style="display: none"></span></button>
 							<button id="myaccount" type="button" class="btn btn-primary btn-sm">My Account<span style="display: none"></span></button>
 						</div>
 					</div>
@@ -71,14 +72,14 @@
 		</div>
 	</body>
 	<script type="text/javascript">
-
 		$(function(){
+			var id = getQueryVariable("id");
 		    $("#myaccount span").html(getQueryVariable("id"));
 		    $("#myaccount").click(function(){
-				window.location.href="myaccount.html?id="+$(this).find("span").text();
+				window.location.href="myaccount.html?id="+id;
 			});
 	
-			getCart("http://www.baidu.com");
+			getCart("[your url]?id="+id);
 		});
 
 		function getCart(url){
@@ -91,13 +92,12 @@
 	            },
 	            error: function () {
 	                //alert("Sorry, we have some problem.");
-	                createCartList("response.data");
 	            }
 	        });
 		}
 
         function createCartList(data){
-        	var data={"items":[{"name":"A","image":"http://seopic.699pic.com/photo/50057/5368.jpg_wh1200.jpg","id":"1dsgsdg","category":"book","quantity":1}]};
+        	// var data={"items":[{"name":"A","image":"http://seopic.699pic.com/photo/50057/5368.jpg_wh1200.jpg","id":"1dsgsdg","category":"book","quantity":1}]};
         	var tableStr = "";
 		    var len = data.items.length;
 		    for (var i = 0; i < len; i++) {

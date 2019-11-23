@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>EasyAunc</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<script src="js/jquery-3.4.1.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<!-- <link href="css/easyaunc.css" rel="stylesheet" media="screen"> -->
+		<script src="js/easyaunc.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row clearfix">
+				<div class="col-md-12 column">
+					<h2>
+						EasyAunc
+					</h2>
+					<div class="row clearfix">
+						<div class="col-md-4 column">
+						</div>
+						<div class="col-md-2 column">
+						</div>
+						<div class="col-md-3 column">
+						</div>
+						<div class="col-md-3 column">
+							<br>
+							<button id="home" type="button" class="btn btn-warning btn-sm">Home<span style="display: none"></span></button>
+							<button id="mycart" type="button" class="btn btn-info btn-sm">My Cart<span style="display: none"></span></button>
+							<button id="mywatchlist" type="button" class="btn btn-success btn-sm">My Watchlist<span style="display: none"></span></button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<br/>
+			<div class="row clearfix">
+				<div class="col-md-12 column">
+					<div class="jumbotron">
+						<h1>
+							<span class="text-primary">H</span>
+							<span class="text-secondary">e</span>
+							<span class="text-success">l</span>
+							<span class="text-danger">l</span>
+							<span class="text-warning">o</span>
+							<span class="text-info">!</span>
+						</h1>
+						<p>
+							This is your profile page. You can manage your personal information here. Please don't tell anyone about your password.
+						</p>
+						<p>
+							EasyAunc will help you find everything you like!
+						</p>
+					</div>
+				</div>
+			</div>
+            <div class="mb-3">
+				<label for="email">My Email</label>
+				<input type="email" class="form-control" id="email" disabled="true">
+            </div>
+            <br>
+			<br>
+			<br>
+			<p class="text-center font-weight-bold text-secondary">Change Email</p>
+			<div class="mb-3">
+				<label for="email">New Email</label>
+				<input type="email" class="form-control" id="new_email">
+            </div>
+            <div class="mb-3">
+				<label for="email">Confrim New Email</label>
+				<input type="email" class="form-control" id="con_email">
+            </div>
+			<div class="mb-3">
+				<button id="changeemail" type="button" class="btn btn-danger btn-sm">Change Email<span style="display: none"></span></button>
+            </div>
+            <br>
+            <br>
+            <br>
+            <p class="text-center font-weight-bold text-secondary">Change Password</p>
+			<div class="mb-3">
+				<label for="password">New Password</label>
+				<input type="password" class="form-control" id="new_pwd">
+            </div>
+            <div class="mb-3">
+				<label for="password">Confrim New Password</label>
+				<input type="password" class="form-control" id="con_pwd">
+            </div>
+            <div class="mb-3">
+				<button id="changepwd" type="button" class="btn btn-danger btn-sm">Change Password<span style="display: none"></span></button>
+            </div>
+			<br>
+			<br>
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(function(){
+			var id = getQueryVariable("id");
+		    $("#home span").html(id);
+		    $("#home").click(function(){
+				window.location.href="home.html?id="+id;
+			});
+			$("#mycart span").html(id);
+		    $("#mycart").click(function(){
+				window.location.href="cart.html?id="+id;
+			});
+			$("#mywatchlist span").html(id);
+		    $("#mywatchlist").click(function(){
+				window.location.href="watchlist.html?id="+id;
+			});
+			$("#changeemail span").html(id);
+		    $("#changeemail").click(function(){
+				changeEmail();
+			});
+			$("#changepwd span").html(id);
+		    $("#changepwd").click(function(){
+				changePwd();
+			});
+
+		    var url = "[your url]?id="+id;
+			$.ajax({
+				type: "GET",
+	            dataType: "json",
+	            url: url,
+	            success: function (response) {
+	                if(response.data.isSuccessful){
+	                	$("email").html(response.data.email);
+	                }
+	            },
+	            error: function () {
+	                //alert("Sorry, we have some problem.");
+	            }
+			});
+		});
+
+		function changeEmail(){
+			var id = $(this).find("span").text();
+			var temp1 = $("#new_email").val();
+			var temp2 = $("#con_email").val();
+			if(temp1==undefined ||temp1==null||temp1==""){
+				alert("New email is empty.");
+				return;
+			}
+			if(temp2==undefined ||temp2==null||temp2==""){
+				alert("Confirm email is empty.");
+				return;
+			}
+			if(temp1!=temp2){
+				alert("Two emails are different.");
+				return;
+			}
+			var data = {"email": temp1, "id":id};
+			var url = "[your url]?id="+id;
+			$.ajax({
+	            type: "POST",
+	            dataType: "json",
+	            url: url,
+	            async: false,
+	            data: data,
+	            contentType: "application/json",
+	            success: function (response) {
+	                if(response.data.isSuccessful){
+	                	alert("You've already changed your email");
+	                }
+	            },
+	            error: function () {
+	                //alert("Sorry, we have some problem.");
+	            }
+	        });
+	        window.location.href="myaccount.html?id="+id;
+		}
+
+		function changePwd(){
+			var id = $(this).find("span").text();
+			var temp1 = $("#new_pwd").val();
+			var temp2 = $("#con_pwd").val();
+			if(temp1==undefined ||temp1==null||temp1==""){
+				alert("New password is empty.");
+				return;
+			}
+			if(temp2==undefined ||temp2==null||temp2==""){
+				alert("Confirm password is empty.");
+				return;
+			}
+			if(temp1!=temp2){
+				alert("Two passwords are different.");
+				return;
+			}
+			var url = "[your url]?id="+id;
+			var data = {"password": temp1,"id":id};
+			$.ajax({
+	            type: "POST",
+	            dataType: "json",
+	            url: url,
+	            async: false,
+	            data: data,
+	            contentType: 'application/json',
+	            success: function (response) {
+	                if(response.data.isSuccessful){
+	                	alert("You've already changed your password");
+	                }
+	            },
+	            error: function () {
+	                //alert("Sorry, we have some problem.");
+	            }
+	        });
+	        window.location.href="myaccount.html?id="+id;
+		}
+	</script>
+
+	<footer class="footer navbar-fixed-bottom ">
+		<div class="footer-copyright text-center py-3">Copyright © 2019 EasyAunc. All rights reserved.</div>
+	</footer>
+</html>

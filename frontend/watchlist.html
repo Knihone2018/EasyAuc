@@ -28,6 +28,7 @@
 						</div>
 						<div class="col-md-2 column">
 							<br>
+							<button id="home" type="button" class="btn btn-warning btn-sm">Home<span style="display: none"></span></button>
 							<button id="myaccount" type="button" class="btn btn-primary btn-sm">My Account<span style="display: none"></span></button>
 						</div>
 					</div>
@@ -94,11 +95,11 @@
 		</div>
 	</body>
 	<script type="text/javascript">
-
 		$(function(){
-		    $("#myaccount span").html(getQueryVariable("id"));
+			var id = getQueryVariable("id");
+		    $("#myaccount span").html(id);
 		    $("#myaccount").click(function(){
-				window.location.href="myaccount.html?id="+$(this).find("span").text();
+				window.location.href="myaccount.html?id="+id;
 			});
 			$("#category div").click(function(){
 				var selText = $(this).find("div").text();
@@ -107,12 +108,14 @@
 				$("#categoryId").html(id);
 			});
 
-			getWatchlist("http://www.baidu.com");
-			getCategories("http://www.baidu.com");
+			getWatchlist("[Your url]?id="+id);
+			getCategories("[Your url]]");
 		});
 
 		function addItem() {
+			var userId = $("#myaccount span").text();
 			var name = $("#add_itemname").val();
+			var categoryId = $("#categoryId").text();
 			var category = $("#add_category").text();
 			var minprice = $("#add_minprice").val();
 			var maxprice = $("#add_maxprice").val();
@@ -136,15 +139,20 @@
 				alert("min price should be smaller than max price.");
 				return;
 			}
-			var data = {"name": name, "category": category, "minprice": minprice, "maxprice": maxprice};
+			var data = {"userId":userId, "itemName": name, "categoryId":categoryId,"category": category, "minprice": minprice, "maxprice": maxprice};
             $.ajax({
                 type: "POST",
                 dataType: "json",
                 url: "",
                 data: data,
+                contentType: "application/json",
                 success: function (response) {
-                    alert("Added a new item!");
-					createWatchList(response.data);
+                    if (response.data.isAdded){
+                    	alert("Added a new item!");
+						createWatchList(response.data);
+                    }else{
+                    	 alert("Failed to add a new item.");
+                    }
                 },
                 error : function() {
                     alert("Failed to add a new item.");
@@ -162,7 +170,6 @@
 	            },
 	            error: function () {
 	                //alert("Sorry, we have some problem.");
-	                createWatchList("");
 	            }
 	        });
 		}
@@ -182,7 +189,7 @@
 		}
 
         function createWatchList(data){
-        	var data={"items":[{"name":"A","image":"http://seopic.699pic.com/photo/50057/5368.jpg_wh1200.jpg","id":"1","category":"book","quantity":1}]};
+        	// var data={"items":[{"name":"A","image":"http://seopic.699pic.com/photo/50057/5368.jpg_wh1200.jpg","id":"1","category":"book","quantity":1}]};
         	var tableStr = "";
 		    var len = data.items.length;
 		    for (var i = 0; i < len; i++) {
@@ -225,7 +232,7 @@
 
 		function deleteWatchedItem(){
 			var id = t.nextSibling.textContent;
-			var url = ""+id;
+			var url = "[Your url]?id="+id;
 			$.ajax({
 	            type: "GET",
 	            dataType: "json",

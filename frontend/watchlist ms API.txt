@@ -1,0 +1,37 @@
+watchlist界面 请把id加在url后面测试 像下面这样
+url: watchlist.html?id=xxx
+
+1. 获得watch list
+修改line 111的url
+	request格式
+		get方法
+	response格式
+		{"items":[{"name":"A","image":"http://seopic.699pic.com/photo/50057/5368.jpg_wh1200.jpg","id":"1dsgsdg","category":"book","quantity":1}]};
+
+
+2. 获得categories
+修改line 112的url
+	request格式
+		get方法
+	response格式
+		{"categories":[{"name":xxx,"id":xxx},{"name":xxx,"id":xxx}]}
+
+3. 删除一个watch item
+修改line 230的url
+	request格式
+		get方法
+	response格式
+		{
+			"isDeleted":true/false
+		}
+
+3. 提交一个watch item
+修改line 144的url
+	request格式
+	post请求 提交一个json
+		{"userId":userId, "itemName": name, "categoryId":categoryId,"category": category, "minprice": minprice, "maxprice": maxprice}
+	
+	response格式
+		{	"items":[{"name":"A","image":"http://seopic.699pic.com/photo/50057/5368.jpg_wh1200.jpg","id":"1dsgsdg","category":"book","quantity":1}],
+			"isAdded":true/false
+		}
