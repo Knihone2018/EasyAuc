@@ -232,7 +232,7 @@ class RabitMQ_PUB:
 
 class RabitMQ_RPC:
 	# RPC client
-	def user(self,message):
+	def checkuser(self,message):
 		pass
 
 	# rpc server
@@ -277,7 +277,7 @@ def additem():
 
 	#check if user valid first
 	RPC = RabitMQ_RPC()
-	if not RPC.user(req['sellerID']):
+	if not RPC.checkuser(req['sellerID']):
 		return Response(json.dumps("sellerID is invalid"), status=400)
 
 	# check category
@@ -299,6 +299,16 @@ def additem():
 	if req["buy_now"]:
 		message = {'itemID':res,"buy_now":req["buy_now"]}
 		Publish.start_auction(json.dumps(message))
+	return Response(json.dumps(res), status=200)
+
+#get Item by ID
+@app.route("/getitembyid", methods=["GET"])
+# ID: int
+def getitembyid():
+	req = request.json
+	#item control
+	ctl = ItemControl()
+	res = ctl.SearchByID(req["ID"])
 	return Response(json.dumps(res), status=200)
 
 #update current price
