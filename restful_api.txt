@@ -77,7 +77,20 @@ Remove parameters:
         return:
           {
             "items": [
-              "1234"
+              {	"item_id": "1", 
+		"item_name": "macBook", 
+		"category": "computer", 
+		"image": "imageString",
+		"price": "1200", 
+		"auctionUrl": "www.apple.com"
+	      },
+	      {	"item_id": "2", 
+		"item_name": "macBookPro", 
+		"category": "computer", 
+		"image": "imageString",
+		"price": "1200", 
+		"auctionUrl": "www.apple.com"
+	      }
             ]
           }
     Remove item from watchlist:
