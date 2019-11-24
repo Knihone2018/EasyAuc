@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>EasyAunc</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<script src="js/jquery-3.4.1.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<!-- <link href="css/easyaunc.css" rel="stylesheet" media="screen"> -->
+		<script src="js/easyaunc.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row clearfix">
+				<div class="col-md-12 column">
+					<h2>
+						EasyAuc
+					</h2>
+					<div class="row clearfix">
+						<div class="col-md-4 column">
+						</div>
+						<div class="col-md-2 column">
+						</div>
+						<div class="col-md-2 column">
+						</div>
+						<div class="col-md-2 column">
+						</div>
+						<div class="col-md-2 column">
+							<br>
+							<button id="home" type="button" class="btn btn-warning btn-sm">Home<span style="display: none"></span></button>
+							<button id="myaccount" type="button" class="btn btn-primary btn-sm">My Account<span style="display: none"></span></button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<br/>
+			<p class="text-center font-weight-bold text-secondary">My Watchlist</p>
+			<div style="text-align:center">
+				<table class="table row mx-0">
+					<thead class="w-100">
+						<tr class="row mx-0">
+							<th class="col-md-3">
+							</th>
+							<th class="col-md-3">
+								Name
+							</th>
+							<th class="col-md-2">
+								Category
+							</th>
+							<th class="col-md-2">
+								Price
+							</th>
+							<th class="col-md-2">
+							</th>
+						</tr>
+					</thead>
+					<tbody id="dataTable" class="w-100">
+					</tbody>
+				</table>
+			</div>
+			<br>
+			<br>
+			<br>
+			<br>
+			<p class="text-center font-weight-bold text-secondary">My Parameters</p>
+			<div style="text-align:center">
+				<table class="table row mx-0">
+					<thead class="w-100">
+						<tr class="row mx-0">
+							<th class="col-md-3">
+								Name
+							</th>
+							<th class="col-md-3">
+								Category
+							</th>
+							<th class="col-md-2">
+								Min Price
+							</th>
+							<th class="col-md-2">
+								Max Price
+							</th>
+							<th class="col-md-2">
+							</th>
+						</tr>
+					</thead>
+					<tbody id="dataTable2" class="w-100">
+					</tbody>
+				</table>
+			</div>
+			<br>
+			<br>
+			<br>
+			<br>
+			<p class="text-center font-weight-bold text-secondary">Add a new parameter</p>
+			<form role="form" id="add_form">
+				<div class="form-group">
+					 <label>Item Name</label><input class="form-control" id="add_itemname" />
+				</div>
+				<div class="form-group">
+					<span id="categoryId" style='display:none'></span>
+					<div class="btn-group">
+						<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="add_category">
+						Category
+						</button>
+						<div class="dropdown-menu" id="category">
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					 <label>Min Price</label><input type="number" min="1" class="form-control" id="add_minprice" />
+				</div>
+				<div class="form-group">
+					 <label>Max Price</label><input type="number" min="1" class="form-control" id="add_maxprice" />
+				</div>
+				<br>
+				<div class="text-center">
+					<button type="button" class="btn btn-primary" onclick="addParam()">Submit</button>
+				</div>
+			</form>
+			<br>
+			<br>
+			<br>
+			<br>
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(function(){
+			var id = getQueryVariable("id");
+		    $("#myaccount span").html(id);
+		    $("#myaccount").click(function(){
+				window.location.href="myaccount.html?id="+id;
+			});
+			$("#category div").click(function(){
+				var selText = $(this).find("div").text();
+				var id = $(this).find("span").text();
+				$(this).parents(".btn-group").find(".dropdown-toggle").html(selText);
+				$("#categoryId").html(id);
+			});
+			getWatchlist();
+			getParameter();
+			// getCategories();
+		});
+
+		function addParam() {
+			var user_id = $("#myaccount span").text();
+			var name = $("#add_itemname").val();
+			var categoryId = $("#categoryId").text();
+			var category = $("#add_category").text();
+			var minprice = $("#add_minprice").val();
+			var maxprice = $("#add_maxprice").val();
+			if(name==undefined || name ==null){
+				alert("name is required.");
+				return;
+			}
+			if(category==undefined || category==null){
+				alert("category is required.");
+				return;
+			}
+			if(minprice==undefined || minprice==null){
+				alert("minprice is required.");
+				return;
+			}
+			if(maxprice==undefined || maxprice==null){
+				alert("maxprice is required.");
+				return;
+			}
+			if(minprice>maxprice){
+				alert("min price should be smaller than max price.");
+				return;
+			}
+			var data = {"user_id":user_id, "item_name": name, "category": category, "min_price": minprice, "max_price": maxprice};
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "http://0.0.0.0:5000/parameters",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.success){
+                    	alert("Added a new parameter!");
+                    	var temp = $("#dataTable2").html();
+						var newparam = temp + "<tr class='row mx-0'><td class='col-3'>" + name
+					                + "</td>" + "<td class='col-3'>" + category + "</td>"
+					                + "<td class='col-2'>" + minprice+ "</td>"
+					                + "<td class='col-2'>" + maxprice+"</td>"
+					                + "<td class='col-2'>" + createDelButton2()
+					                + "<span style='display:none'>"+name+"</span></td>"
+					                + "</tr>";
+		                $("#dataTable2").html(newparam);
+                    }else{
+                    	 alert("Failed to add a new parameter.");
+                    }
+                },
+                error : function() {
+                    alert("Failed to add a new parameter.");
+                }
+            });
+        }
+
+		function getWatchlist(){
+			var id = $("#myaccount span").text();
+			var url = "http://0.0.0.0:5000/watchlist/" + id;
+			$.ajax({
+	            type: "GET",
+	            dataType: "json",
+	            url: url,
+	            success: function (response) {
+	                createWatchlist(response);
+	            },
+	            error: function () {
+	                //alert("Sorry, we have some problem.");
+	            }
+	        });
+		}
+
+		function getParameter(){
+			var id = $("#myaccount span").text();
+			var url = "http://0.0.0.0:5000/parameters/"+id;
+			$.ajax({
+	            type: "GET",
+	            dataType: "json",
+	            url: url,
+	            success: function (response) {
+	                createParam(response);
+	            },
+	            error: function () {
+	                //alert("Sorry, we have some problem.");
+	            }
+	        });
+		}
+
+		function getCategories(){
+			var id = $("#myaccount span").text();
+			var url = "[Your url]/"+id;
+			$.ajax({
+	            type: "GET",
+	            dataType: "json",
+	            url: url,
+	            success: function (response) {
+	                createCategories(response);
+	            },
+	            error: function () {
+	            	//alert("Sorry, we have some problem.");
+	            }
+	        });
+		}
+
+        function createWatchlist(data){
+        	// var data={"items":[{"name":"A","image":"http://seopic.699pic.com/photo/50057/5368.jpg_wh1200.jpg","id":"1","category":"book","quantity":1}]};
+        	var tableStr = "";
+		    var len = data.items.length;
+		    for (var i = 0; i < len; i++) {
+		        tableStr = tableStr + "<tr class='row mx-0'><td class='col-3'>" + createImage(data.items[i].image)
+		                + "</td>" + "<td class='col-3'>" + createName(data.items[i].item_name, data.items[i].auctionUrl) + "</td>"
+		                + "<td class='col-2'>" + data.items[i].category+ "</td>"
+		                + "<td class='col-2'>" + data.items[i].price+ "</td>"
+		                + "<td class='col-2'>" + createDelButton1()
+		                + "<span style='display:none'>"+data.items[i].item_id+"</span></td>"
+		                + "</tr>";
+		    }
+		    $("#dataTable").html(tableStr);
+		}
+
+		function createParam(data){
+        	// var data={"items":[{"name":"A","image":"http://seopic.699pic.com/photo/50057/5368.jpg_wh1200.jpg","id":"1","category":"book","quantity":1}]};
+        	var tableStr = "";
+		    var len = data.paras.length;
+		    for (var i = 0; i < len; i++) {
+		        tableStr = tableStr + "<tr class='row mx-0'><td class='col-3'>" + data.paras[i].item_name
+		                + "</td>" + "<td class='col-3'>" + data.paras[i].category + "</td>"
+		                + "<td class='col-2'>" + data.paras[i].min_price+ "</td>"
+		                + "<td class='col-2'>" + data.paras[i].max_price+"</td>"
+		                + "<td class='col-2'>" + createDelButton2()
+		                + "<span style='display:none'>"+data.paras[i].item_name+"</span></td>"
+		                + "</tr>";
+		    }
+		    $("#dataTable2").html(tableStr);
+		}
+
+		function createCategories(data){
+        	var str = "";
+		    var len = data.categories.length;
+		    for (var i = 0; i < len; i++) {
+		        str = str + "<div class='dropdown-item'><div>"+data.categories[i].name
+		        	+"</div><span style='display:none'>"+data.categories[i].id+"</span>"
+		        	+"</div>";
+		    }
+		    $("#category").html(str);
+		}
+
+		function createName(name, url){
+			var link = "<a href='"+url+"'>"+name+"</a>";
+			return link;
+		}
+
+		function createDelButton1(){
+			var button = "<button type='button' class='btn btn-danger' onclick=deleteWatchedItem(this)>Delete</button>";
+			return button;
+		}
+
+		function createDelButton2(){
+			var button = "<button type='button' class='btn btn-danger' onclick=deleteParam(this)>Delete</button>";
+			return button;
+		}
+
+		function createImage(url){
+			var image = "<img src='+" + url + "' class='img-rounded' width='150' height='150'>";
+			return image;
+		}
+
+		function deleteWatchedItem(t){
+			var item_id = t.nextSibling.textContent;
+			var user_id = $("#myaccount span").text();
+			var url = "http://0.0.0.0:5000/watchlist";
+			var data = {
+				"user_id": user_id,
+				"item_id": item_id
+			};
+			console.log(data);
+			$.ajax({
+	            type: "DELETE",
+	            dataType: "json",
+	            url: url,
+	            contentType: "application/json",
+	            data: JSON.stringify(data),
+	            success: function (response) {
+	                if(response.deleted){
+	                	t.parentNode.parentNode.innerHTML = "";
+	                }
+	            },
+	            error: function () {
+	                //alert("Sorry, we have some problem.");
+	            }
+	        });
+		}
+
+		function deleteParam(t){
+			var url="http://0.0.0.0:5000/parameters";
+			var user_id = $("#myaccount span").text();
+			var item_name = t.nextSibling.textContent;
+			var data={
+				"user_id": user_id,
+				"item_name": item_name
+			};
+			$.ajax({
+	            type: "DELETE",
+	            url: url,
+	            contentType: "application/json",
+	            data: JSON.stringify(data),
+	            success: function (response) {
+	                if(response.success){
+	                	t.parentNode.parentNode.innerHTML = "";
+	                }
+	            },
+	            error: function () {
+	                //alert("Sorry, we have some problem.");
+	            }
+	        });
+		}
+	</script>
+
+	<footer class="footer navbar-fixed-bottom ">
+		<div class="footer-copyright text-center py-3">Copyright © 2019 EasyAunc. All rights reserved.</div>
+	</footer>
+</html>
