@@ -49,7 +49,7 @@ incoming request format: json
 {"categoryID":int}
 
 return request format: json
-{"success":True,"message":{ID1:(name,price,category,photo)},ID2:(name,price,category,photo),...}}
+{"success":True,"message":{ID1:(name,price,url,photo)},ID2:(name,price,url,photo),...}}
 ID:int
 item_info:(,,,) tuple of info
 
@@ -80,7 +80,7 @@ incoming request format: json
 
 return request format: json
 {"success":False} //duplicate
-{"success":True,"message":id}
+{"success":True}
 id:int
 
 
@@ -106,7 +106,8 @@ incoming request format: json
 {"name":string}
 
 return request format: json
-{"success":False} //not exist
+{"success":False,"message":"Not Exist"}
+{"success":False,"message":"Existing Item Related"}
 {"success":True}
 
 
@@ -118,7 +119,7 @@ incoming request format: None
 None
 
 return request format: json
-{"success":True,"message":{ID:(name,category),...}}
+{"success":True,"message":{ID:(name,category,url),...}}
 
 
 
