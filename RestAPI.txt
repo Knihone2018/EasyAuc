@@ -1,0 +1,157 @@
+
+
+加item界面
+
+localhost:9000/additem
+methods=["POST"]
+
+incoming request format: Json
+sellerID:int
+name:string
+category:string
+quantity:int
+cur_price:float
+price_step:float
+start_time:datetime
+end_time:datetime
+buy_now:bool
+buy_now_price:int
+shipping_cost:int
+description:string
+photo:string (base64)
+
+return request format: Json
+{"success":False,"message":"sellerID is invalid"} //blocked user
+{"success":False,"message":"Category Not Exists"} 
+{"success":True,"message":1} //itemid
+
+-------------
+主页Home
+
+获得全部category
+localhost:9000/allcategory
+methods=["GET"]
+
+incoming request format: None
+None
+
+return request format: json
+{"success":True,"message":{ID1:Name1,ID2:Name2,ID3:Name3,...}}
+ID:int
+Name:string
+
+
+通过category获取对应商品
+localhost:9000/searchbycategory
+methods=["GET"]
+
+incoming request format: json
+{"categoryID":int}
+
+return request format: json
+{"success":True,"message":{ID1:(name,price,category,photo)},ID2:(name,price,category,photo),...}}
+ID:int
+item_info:(,,,) tuple of info
+
+
+通过名字搜索商品
+localhost:9000/searchbyname
+ methods=["GET"]
+
+incoming request format: json
+{"name":string}
+
+return request format: json
+{"success":False} //not found name
+{"success":True,"message":url}
+url:string
+
+
+
+-------------
+admin界面
+
+加category
+localhost:9000/searchbycategory
+methods=["POST"]
+
+incoming request format: json
+{"name":string}
+
+return request format: json
+{"success":False} //duplicate
+{"success":True,"message":id}
+id:int
+
+
+修改category
+localhost:9000/modifycategory
+methods=["PUT"]
+
+incoming request format: json
+{"old_name":string,"new_name":string}
+
+return request format: json
+{"success":False,"message":"Old Name Not Exist"}
+{"success":False,"message":"New Name Duplicate"}
+{"success":True}
+
+
+
+删除category
+localhost:9000/deletecategory
+methods=["DELETE"]
+
+incoming request format: json
+{"name":string}
+
+return request format: json
+{"success":False} //not exist
+{"success":True}
+
+
+看flag item
+localhost:9000/searchbyflag
+methods=["GET"]
+
+incoming request format: None
+None
+
+return request format: json
+{"success":True,"message":{ID:(name,category),...}}
+
+
+
+-------------
+通过itemid找item全部信息
+
+localhost:9000/getitembyid
+methods=["GET"]
+
+incoming request format: json
+ID:int
+
+return request format: json
+ID:int
+sellerID:int
+name:string
+category:string
+quantity:int
+cur_price:float
+price_step:float
+start_time:datetime
+end_time:datetime
+flag:int
+buy_now:bool
+buy_now_price:int
+sent_to_auc:bool
+shipping_cost:int
+sold:bool
+description:string
+photo:string (base64)
+
+
+
+
+
+
