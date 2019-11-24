@@ -8,6 +8,8 @@ from flask_cors import CORS #pip install -U flask-cors
 # import pika
 # import uuid
 
+
+
 # Item:
 # ID
 # sellerID
@@ -21,9 +23,12 @@ from flask_cors import CORS #pip install -U flask-cors
 # flag
 # buy_now
 # buy_now_price
+# sent_to_auc
 # shipping_cost
-# sold
 # description
+# url
+# status
+# photo
 
 #Category:
 # ID
