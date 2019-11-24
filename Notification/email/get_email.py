@@ -7,7 +7,7 @@ class GetEmail():
     def __init__(self):
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='172.17.0.2'))
         self.channel = self.connection.channel()
-        result = self.channel.queue_declare(queue='emailaddress')
+        result = self.channel.queue_declare(queue='',exclusive=True)
         self.callback_queue = result.method.queue
 
         self.channel.basic_consume(

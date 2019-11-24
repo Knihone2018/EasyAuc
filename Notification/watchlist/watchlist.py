@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 import pymongo
 import uuid
+from flask_cors import CORS
 # from getItemDetail import GetItemDetail
 
 watchlist = Flask(__name__)
+CORS(watchlist)
 
 dbClient = pymongo.MongoClient(host='localhost', port=27017)
 watchlist_db = dbClient["watchlist"]
@@ -77,6 +79,10 @@ def getItemIDs(user_id):
         itemIDs.append(result['item_id'])
     return itemIDs
 
+@watchlist.route('/watchlist')
+def home():
+    return render_template('watchlist.html')
+
 @watchlist.route('/watchlist', methods=['POST'])
 def insertItem():
     if not request.json:
@@ -109,7 +115,7 @@ def deleteItems():
     else:
         input = request.json
         itemCollection.remove({'user_id': input['user_id'], 'item_id': input['item_id']})
-        return jsonify({'success': True})
+        return jsonify({'deleted': True})
 
 if __name__=='__main__':
     watchlist.run(debug=True, host='0.0.0.0')

@@ -41,6 +41,7 @@ def callback(ch, method, properties, body):
     for id in emailInfo["user_id"].split(","):
         print(id)
         user_emaillist.append(getEmail.call(id))
+    print(user_emaillist)
     spliter = ","
     user_email = spliter.join(user_emaillist)
     print("send email to:" + user_email)
