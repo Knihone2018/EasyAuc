@@ -343,6 +343,18 @@ def CheckAuctionStart():
 
 
 
+############################################# with auction
+#change to point to point
+#get url
+
+#update current price
+
+#update status
+#############################################
+
+# Update an item properties, including quantity, description, shipping costs, buy now feature
+
+#############################################
 
 
 
@@ -352,36 +364,7 @@ def CheckAuctionStart():
 app = Flask(__name__)
 CORS(app)
 
-############################################# with auction
-#get url
 
-#update current price
-@app.route("/updateprice", methods=["PUT"])
-# ID: int
-# cur_price : int
-def updateprice():
-	req = request.json
-	#item control
-	ctl = ItemControl()
-	res = ctl.UpdatePrice(req)
-	message = {"success":res}
-	return jsonify(message)
-
-#update status
-@app.route("/updatestatus", methods=["PUT"])
-# ID: int
-# status : bool
-def updatestatus():
-	req = request.json
-	#item control
-	ctl = ItemControl()
-	res = ctl.UpdateStatus(req)
-	return Response(json.dumps(res), status=200)
-#############################################
-
-# update quantity with user
-
-#############################################
 
 #add item POST
 @app.route("/additem", methods=["POST"])
