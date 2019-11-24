@@ -1,13 +1,19 @@
 import requests
 
 port = 5672
+
+def test0():
+	p0 = requests.post(url="http://127.0.0.1:{}/droptable/boughtitems".format(port))
+	print(p0.content)
+
+
 def test1():
 	d = {"userId":"123","itemId":"456","addQuantity":1,"isBid":False}
 	p = requests.post(url="http://127.0.0.1:{}/additemtocartfrombuynow".format(port), json = d)
 	print(p.content)
 
 def test2():
-	p1 = requests.get(url="http://127.0.0.1:{}/getallitemincart".format(port), json = {"userId":"2"})
+	p1 = requests.get(url="http://127.0.0.1:{}/cart.html?id=2".format(port))
 	print(p1.content)
 
 
@@ -44,7 +50,7 @@ def test8():
 	p5 = requests.post(url="http://127.0.0.1:{}/additemstoboughtlist".format(port), json={"userId":1, "value":[(12, 1), (14, 2)]})
 	print(p5.content)
 
-	p6 = requests.get(url="http://127.0.0.1:{}/getallboughtitems".format(port), json={"userId":1})
+	p6 = requests.get(url="http://127.0.0.1:{}//history.html?id=1".format(port))
 	print(p6.content)
 
 
@@ -52,8 +58,8 @@ def test9():
 	p7 = requests.get(url="http://127.0.0.1:{}/getitemisbid".format(port), json={"userId":"123","itemId":"456"})
 	print(p7.content)
 
-
-test2()
+#test0()
+test8()
 
 
     

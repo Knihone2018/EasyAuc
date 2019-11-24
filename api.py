@@ -14,11 +14,53 @@ Port = 5672
 # restful apis
 ####################################################
 
+@app.route("/checkoutcart", methods=["GET"])
+def checkoutCart():
+    userId = request.json.get('userId')
+    cart = CartControl()
+    history = BoughtItemsControl()
+    items = cart.getAllItemInfoInCart(userId)
+    for row in items:
+        try:
+            history.addItemToBoughtList(userId, row[0], row[1])
+        except:
+            return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+    emptyRes = cart.emptyCart(userId)
+    if emptyRes:
+        return Response(json.dumps({'success': True}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 ######################
 # Getters for Account Database
 ######################
+
+
+
+@app.route("/myaccount.html?id=<userId>", methods=["GET"])
+def getAllUserInfo(userId):
+    try:
+        ctl = AccountControl()
+        email = ctl.getUserEmailbyUserId(userId)
+        firstname = ctl.getUserFirstname(userId)
+        lastname = ctl.getUserLastname(userId)
+        pwd = ctl.getUserPassword(userId)
+        address = ctl.getUserAddress(userId)
+        zipcode = ctl.getUserZipcode(userId)
+        city = ctl.getUserCity(userId)
+        state = ctl.getUserState(userId)
+        bankAcc = ctl.getUserBankAccNum(userId)
+        rating = ctl.getRating(userId)
+        isBlocked = ctl.checkBlockByUserId(userId)
+        isDeleted = ctl.checkDeleteByUserId(userId)
+        isAdmin = ctl.checkIsAdminByUserId(userId)
+        return Response(json.dumps({'success': True, 'email':email, 'firstname':firstname, 'lastname':lastname, 'password':pwd, 
+            'address':address, 'zipcode':zipcode, 'city':city, 'state':state, 'bankAccount':bankAcc, 'rating':rating,
+            'isBlocked':isBlocked, 'isDeleted':isDeleted, 'isAdmin':isAdmin}), status = 200, mimetype='application/json')
+    except:
+        return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+
+
 
 """
 Incoming json requirement:
@@ -33,8 +75,8 @@ def checkDeleteAccount():
     ctl = AccountControl()
     res = ctl.checkDeleteByUserId(userId)
     if res != -1:
-        return Response(json.dumps({'value': res}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 """
@@ -51,8 +93,8 @@ def checkBlockAccount():
     ctl = AccountControl()
     res = ctl.checkBlockByUserId(userId)
     if res != -1:
-        return Response(json.dumps({'value': res}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 """
@@ -69,8 +111,8 @@ def getUserEmail():
     res = ctl.getUserEmailbyUserId(userId)
     print(res)
     if res:
-        return Response(json.dumps({'value': res}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 """
@@ -86,8 +128,8 @@ def getUserFirstname():
     ctl = AccountControl()
     res = ctl.getUserFirstname(userId)
     if res:
-        return Response(json.dumps({'value': res}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 """
@@ -103,8 +145,8 @@ def getUserLastname():
     ctl = AccountControl()
     res = ctl.getUserLastname(userId)
     if res:
-        return Response(json.dumps({'value': res}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 """
@@ -120,8 +162,8 @@ def getUserPassword():
     ctl = AccountControl()
     res = ctl.getUserPassword(userId)
     if res:
-        return Response(json.dumps({'value': res}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'password': res}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 """
@@ -137,8 +179,8 @@ def getUserAddress():
     ctl = AccountControl()
     res = ctl.getUserAddress(userId)
     if res:
-        return Response(json.dumps({'value': res}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 
@@ -155,8 +197,8 @@ def getUserZipcode():
     ctl = AccountControl()
     res = ctl.getUserZipcode(userId)
     if res:
-        return Response(json.dumps({'value': res}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 """
@@ -172,8 +214,8 @@ def getUserCity():
     ctl = AccountControl()
     res = ctl.getUserCity(userId)
     if res:
-        return Response(json.dumps({'value': res}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 
@@ -190,8 +232,8 @@ def getUserState():
     ctl = AccountControl()
     res = ctl.getUserState(userId)
     if res:
-        return Response(json.dumps({'value': res}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 """
@@ -207,8 +249,8 @@ def getUserBankAccNum():
     ctl = AccountControl()
     res = ctl.getUserBankAccNum(userId)
     if res:
-        return Response(json.dumps({'value': res}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 ######################
@@ -253,8 +295,8 @@ def addAccount():
     ctl = AccountControl()
     res = ctl.addAccount(email, firstname, lastname, password, address, zipcode, city, state, bankAccountNumber, isBlocked, isDeleted, isAdmin, 0, 0)
     if res:
-        return Response(json.dumps({'userId': res}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'userId': res}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 """
@@ -270,8 +312,8 @@ def deleteAccount():
     ctl = AccountControl()
     res = ctl.deleteAccount(userId)
     if res:
-        return Response(json.dumps({'userId': res}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'userId': res}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 
@@ -288,14 +330,14 @@ def blockAccount():
     ctl = AccountControl()
     res = ctl.blockAccount(userId)
     if res:
-        return Response(json.dumps({'userId': res}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'userId': res}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 
 """
 Incoming json requirement:
-    userId: int
+    sellerId: int
     rate: int
 Response:
     a response class of Flask
@@ -303,13 +345,13 @@ Response:
 """
 @app.route("/addsellerrate", methods=["POST"])
 def addOneSellerRating():
-    userId = request.json.get('userId')
+    userId = request.json.get('sellerId')
     newNum = request.json.get('rate')
     ctl = AccountControl()
     res = ctl.addRating(userId, newNum)
     if res:
-        return Response(json.dumps({'userId': userId}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'sellerId': userId}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 
@@ -328,8 +370,8 @@ def setEmail():
     ctl = AccountControl()
     res = ctl.setEmail(userId, newemail)
     if res:
-        return Response(json.dumps({'userId': userId, 'newemail': newemail}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 
@@ -348,8 +390,8 @@ def setFirstname():
     ctl = AccountControl()
     res = ctl.setFirstname(userId, newStr)
     if res:
-        return Response(json.dumps({'userId': userId}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 
@@ -368,8 +410,8 @@ def setLastname():
     ctl = AccountControl()
     res = ctl.setLastname(userId, newStr)
     if res:
-        return Response(json.dumps({'userId': userId}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 """
@@ -380,15 +422,15 @@ Response:
     a response class of Flask
         userId: int
 """
-@app.route("/setlastname", methods=["POST"])
+@app.route("/setpassword", methods=["POST"])
 def setPassword():
     userId = request.json.get('userId')
     newStr = request.json.get('password')
     ctl = AccountControl()
     res = ctl.setPassword(userId, newStr)
     if res:
-        return Response(json.dumps({'userId': userId}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 """
@@ -406,8 +448,8 @@ def setAddress():
     ctl = AccountControl()
     res = ctl.setAddress(userId, newStr)
     if res:
-        return Response(json.dumps({'userId': userId}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 """
@@ -425,8 +467,8 @@ def setZipcode():
     ctl = AccountControl()
     res = ctl.setZipcode(userId, newNum)
     if res:
-        return Response(json.dumps({'userId': userId}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 """
@@ -444,8 +486,8 @@ def setCity():
     ctl = AccountControl()
     res = ctl.setCity(userId, newStr)
     if res:
-        return Response(json.dumps({'userId': userId}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 
@@ -464,8 +506,8 @@ def setState():
     ctl = AccountControl()
     res = ctl.setState(userId, newStr)
     if res:
-        return Response(json.dumps({'userId': userId}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 
@@ -484,8 +526,8 @@ def setBankAccNum():
     ctl = AccountControl()
     res = ctl.setBankAccNum(userId, newNum)
     if res:
-        return Response(json.dumps({'userId': userId}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 
@@ -512,8 +554,8 @@ def addItemToCartFromBuynow():
     ctl = CartControl()
     res = ctl.addToCart(userId, itemId, addQuantity, 0)
     if res:
-        return Response(json.dumps({'userId': userId}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 
@@ -521,8 +563,7 @@ def addItemToCartFromBuynow():
 Incoming json requirement:
     userId: int
     itemId: int
-    addQuantity: int
-    isBid: boolean
+    deleteQuantity: int
 Response:
     a response class of Flask
         userId: int
@@ -531,15 +572,14 @@ Response:
 def deleteItemFromCart():
     userId = request.json.get('userId')
     itemId = request.json.get('itemId')
-    addQuantity = request.json.get('addQuantity')
-    isBid = request.json.get('isBid')
+    deleteQuantity = request.json.get('deleteQuantity')
     ctl = CartControl()
-    if ctl.checkItemIsBid(userId, itemId):
+    if ctl.checkItemIsBid(userId, itemId) == 1:
         return "Cannot delete an item won from a bid"
-    res = ctl.deleteFromCart(userId, itemId, addQuantity, isBid)
+    res = ctl.deleteFromCart(userId, itemId, deleteQuantity)
     if res:
-        return Response(json.dumps({'userId': userId}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 
@@ -558,8 +598,8 @@ def emptyShoppingCart():
     res = ctl.emptyCart(userId)
     if res:
         ## need to call restful api in Item to update quantity!
-        return Response(json.dumps({'userId': userId}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 
@@ -584,8 +624,8 @@ def getItemIsBid():
     ctl = CartControl()
     res = ctl.checkItemIsBid(userId, itemId)
     if res != -1:
-        return Response(json.dumps({'value': res}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 
@@ -604,26 +644,45 @@ def getOneItemInfoInCart():
     ctl = CartControl()
     res = ctl.getOneItemInfoInCart(userId, itemId)
     if res:
-        return Response(json.dumps({'value': res}), status = 200)
-    return "There has been an error"
+        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 
-"""
-Incoming json requirement:
-    userId: int
-Response:
-    a response class of Flask
-        value: a list of tuple
-"""
-@app.route("/getallitemincart", methods=["GET"])
-def getAllItemInfoInCart():
-    userId = request.json.get('userId')
+
+@app.route("/cart.html?id=<userId>", methods=["GET"])
+def getAllItemInfoInCart(userId):
     ctl = CartControl()
     res = ctl.getAllItemInfoInCart(userId)
+    result = []
     if res:
-        return Response(json.dumps({'value': res}), status = 200)
-    return "There has been an error"
+        for i in xrange(len(res)):
+            # itemId, quantity, isBid
+            try:
+                itemInfo = requests.get(url="http://localhost:9000/getitembyid", json = {"ID": res[i][0]})
+                sellerID = itemInfo['sellerID']
+                name = itemInfo['name']
+                category = itemInfo['category']
+                cur_price = itemInfo['cur_price']
+                price_step = itemInfo['price_step']
+                start_time = itemInfo['start_time']
+                end_time = itemInfo['end_time']
+                flag = itemInfo['flag']
+                buy_now = itemInfo['buy_now']
+                buy_now_price = itemInfo['buy_now_price']
+                shipping_cost = itemInfo['shipping_cost']
+                description = itemInfo['description']
+                url = itemInfo['url']
+                status = itemInfo['status']
+                photo = itemInfo['photo']
+                result.append({'itemId':res[i][0], 'quantity':res[i][1], 'isBid': res[i][2], 'sellerID':sellerID, 
+                    'name':name, 'category':category, 'cur_price':cur_price, 'price_step':price_step,
+                    'start_time':start_time, 'end_time':end_time, 'flag':flag, 'buy_now':buy_now, 'buy_now_price':buy_now_price,
+                    'shipping_cost':shipping_cost, 'description':description, 'url':url, 'status':status, 'photo':photo, 'success': True})
+            except:
+                result.append({'itemId': res[i][0], 'quantity':res[i][1], 'isBid': res[i][2], 'success': False})
+        return Response(json.dumps({'success': True, 'items': result}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 
@@ -632,21 +691,39 @@ def getAllItemInfoInCart():
 ######################
 
 
-"""
-Incoming json requirement:
-    userId: int
-Response:
-    a response class of Flask
-        value: a list of tuple
-"""
-@app.route("/getallboughtitems", methods=["GET"])
-def getAllBoughtItems():
-    userId = request.json.get('userId')
+@app.route("/history.html?id=<userId>", methods=["GET"])
+def getAllBoughtItems(userId):
     ctl = BoughtItemsControl()
     res = ctl.getAllBoughtItems(userId)
+    result = []
     if res:
-        return Response(json.dumps({'userId': userId, 'value': res}), status = 200)
-    return "There has been an error"
+        for i in xrange(len(res)):
+            # itemId, quantity, checkOutTime
+            try:
+                itemInfo = requests.get(url="http://localhost:9000/getitembyid", json = {"ID": res[i][0]})
+                sellerID = itemInfo['sellerID']
+                name = itemInfo['name']
+                category = itemInfo['category']
+                cur_price = itemInfo['cur_price']
+                price_step = itemInfo['price_step']
+                start_time = itemInfo['start_time']
+                end_time = itemInfo['end_time']
+                flag = itemInfo['flag']
+                buy_now = itemInfo['buy_now']
+                buy_now_price = itemInfo['buy_now_price']
+                shipping_cost = itemInfo['shipping_cost']
+                description = itemInfo['description']
+                url = itemInfo['url']
+                status = itemInfo['status']
+                photo = itemInfo['photo']
+                result.append({'itemId':res[i][0], 'quantity':res[i][1], 'checkOutTime': res[i][2].strftime("%m/%d/%Y, %H:%M:%S")
+                    , 'sellerID':sellerID, 'name':name, 'category':category, 'cur_price':cur_price, 'price_step':price_step,
+                    'start_time':start_time, 'end_time':end_time, 'flag':flag, 'buy_now':buy_now, 'buy_now_price':buy_now_price,
+                    'shipping_cost':shipping_cost, 'description':description, 'url':url, 'status':status, 'photo':photo, 'success': True})
+            except:
+                result.append({'success': False, 'itemId':res[i][0], 'quantity':res[i][1], 'checkOutTime': res[i][2].strftime("%m/%d/%Y, %H:%M:%S")})
+        return Response(json.dumps({'success': True, 'items': result}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 
@@ -671,9 +748,22 @@ def addItemToBoughtList():
     for pair in val:
         res = ctl.addItemToBoughtList(userId, pair[0], pair[1])
         if not res:
-            return "There has been an error"
-    return Response(json.dumps({'userId': userId, "value": val}), status = 200)
+            return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+    return Response(json.dumps({'success': True, 'userId': userId, "value": val}), status = 200, mimetype='application/json')
 
+
+@app.route("/droptable/<tableName>", methods=["POST"])
+def dropTable(tableName):
+    if (tableName.strip()).lower() == "cart":
+        ctl = CartControl()
+    elif (tableName.strip()).lower() == "boughtitems":
+        ctl = BoughtItemsControl()
+    elif (tableName.strip()).lower() == "account":
+        ctl = AccountControl()
+    res = ctl.dropTable()
+    if res:
+        return Response(json.dumps({'success': True, 'success': res}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
 

@@ -1,8 +1,7 @@
 import mysql.connector
-#from nameko.rpc import rpc, RpcProxy
-#from nameko.standalone.rpc import ClusterRpcProxy
 from flask import Flask, request, jsonify, Response
 import json
+from datetime import datetime
 
 
 class DatabaseControl:
@@ -62,7 +61,8 @@ class DatabaseControl:
 
 
     def CreateBoughtItemsTable(self):
-        self.db.cursor().execute("create table if not exists BoughtItems (userId int, itemId int, quantity int);")
+        self.db.cursor().execute("create table if not exists BoughtItems (userId int, itemId int, quantity int, checkOutTime datetime);")
+        self.db.commit()
 
 
 class AccountControl(DatabaseControl):
@@ -104,9 +104,19 @@ class AccountControl(DatabaseControl):
         db = self.Getdb()
         cursor = db.cursor()
         cursor.execute("update Account set numOfRates = numOfRates + 1, ratingSum = ratingSum + %s where userId = %s;", (int(rate), int(userId)))
-        cursor.commit()
+        cursor.fetchone()
         return userId
 
+    def getRating(self, userId):
+        db = self.Getdb()
+        cursor = db.cursor()
+        cursor.execute("select ratingSum from Account where userId = %s;", (int(userId),))
+        res0 = cursor.fetchone()
+        cursor.execute("select numOfRates from Account where userId = %s;", (int(userId),))
+        res1 = cursor.fetchone()
+        if res0 and res1:
+            return res0[0] * 1.0 / res1[0]
+        return -1
 
 
     def getUserIdByEmail(self, email):
@@ -161,6 +171,17 @@ class AccountControl(DatabaseControl):
             db = self.Getdb()
             cursor = db.cursor(buffered = True)
             cursor.execute("select isBlocked from Account where userId = %s;", (int(userId),))
+            res = cursor.fetchone()
+            return res[0]
+        except:
+            return -1
+
+
+    def checkIsAdminByUserId(self, userId):
+        try:
+            db = self.Getdb()
+            cursor = db.cursor(buffered = True)
+            cursor.execute("select isAdmin from Account where userId = %s;", (int(userId),))
             res = cursor.fetchone()
             return res[0]
         except:
@@ -356,6 +377,13 @@ class AccountControl(DatabaseControl):
         except:
             return False
 
+    def dropTable(self):
+        db = self.Getdb()
+        cursor = db.cursor(buffered = True)
+        cursor.execute("drop table if exists Account cascade;")
+        db.commit()
+        return True
+
 
 
 
@@ -449,13 +477,28 @@ class CartControl(DatabaseControl):
         except:
             return False
 
+    def dropTable(self):
+        db = self.Getdb()
+        cursor = db.cursor(buffered = True)
+        cursor.execute("drop table if exists Cart cascade;")
+        db.commit()
+        return True
+
 
 class BoughtItemsControl(DatabaseControl):
+
+    def dropTable(self):
+        db = self.Getdb()
+        cursor = db.cursor(buffered = True)
+        cursor.execute("drop table if exists BoughtItems cascade;")
+        db.commit()
+        return True
+
 
     def addItemToBoughtList(self, userId, itemId, quantity):
         db = self.Getdb()
         cursor = db.cursor(buffered = True)
-        cursor.execute("insert into BoughtItems (userId, itemId, quantity) values (%s, %s, %s);", (int(userId), int(itemId), int(quantity)))
+        cursor.execute("insert into BoughtItems (userId, itemId, quantity, checkOutTime) values (%s, %s, %s, %s);", (int(userId), int(itemId), int(quantity), datetime.now()))
         db.commit()
         return True
 
@@ -465,7 +508,7 @@ class BoughtItemsControl(DatabaseControl):
             db = self.Getdb()
             cursor = db.cursor(buffered = True)
 
-            cursor.execute("select itemId, quantity from BoughtItems where userId = %s;", (int(userId),))
+            cursor.execute("select itemId, quantity, checkOutTime from BoughtItems where userId = %s;", (int(userId),))
             res = cursor.fetchall()
             if res:
                 return res
