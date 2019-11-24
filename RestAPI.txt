@@ -51,6 +51,7 @@ incoming request format: json
 return request format: json
 {"success":True,"message":{ID1:(name,price,url,photo)},ID2:(name,price,url,photo),...}}
 ID:int
+photo:string(µÿ÷∑)
 item_info:(,,,) tuple of info
 
 
@@ -119,8 +120,8 @@ incoming request format: None
 None
 
 return request format: json
-{"success":True,"message":{ID:(name,category,url),...}}
-
+{"success":True,"message":{ID:(name,category,flag,url),...}}
+flag:int //number of flags
 
 
 -------------
@@ -147,9 +148,10 @@ buy_now:bool
 buy_now_price:int
 sent_to_auc:bool
 shipping_cost:int
-sold:bool
 description:string
-photo:string (base64)
+url:string
+status:bool
+photo:string
 
 
 
