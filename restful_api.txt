@@ -187,16 +187,17 @@ Sign up 页面:
 
 Sign in 页面：
     
-    1. 获得数据库里user存的密码:
+    1. 对比email+密码是否正确:
         发送: 
-            function: get
-            url: /getuserpassword
+            function: post
+            url: /checkpassword
             Content-Type: application/json
             value: {
-                      "userId": int
+                      "email": string
+                      "password": string
                     }
         返回:
-            {'success': True, 'password': String}   -- password in the database
+            {'success': boolean, 'userId': int}
 
 
 

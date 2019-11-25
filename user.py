@@ -251,6 +251,21 @@ class AccountControl(DatabaseControl):
         except:
             return False
 
+    def checkSignin(self, email, pwd):
+        db = self.Getdb()
+        mycursor = db.cursor()
+        cursor.execute("select password from Account where email = %s;", (email,))
+        password = cursor.fetchone()
+        cursor.execute("select userId from Account where email = %s;", (email,))
+        userId = cursor.fetchone()
+        if password and userId:
+            if password == pwd:
+                return {'success': True, 'userId': userId}
+            else:
+                return {'success': False, 'userId': userId}
+        return False
+
+
     def getUserPassword(self, userId):
         db = self.Getdb()
         cursor = db.cursor(buffered = True)

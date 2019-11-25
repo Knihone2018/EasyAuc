@@ -31,6 +31,17 @@ def checkoutCart():
     return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
 
 
+@app.route("/checkpassword", methods=["POST"])
+def checkoutCart():
+    email = request.json.get('email')
+    password = request.json.get('password')
+    ctl = AccountControl()
+    res = ctl.checkSignin(email, password)
+    if res:
+        return Response(json.dumps({'success':res['success'], 'userId':res['userId']}), status = 200, mimetype='application/json')
+    return Response(json.dumps({'success':False}), status = 500, mimetype='application/json')
+
+
 ######################
 # Getters for Account Database
 ######################
