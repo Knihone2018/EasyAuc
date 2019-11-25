@@ -104,8 +104,8 @@ class AccountControl(DatabaseControl):
         db = self.Getdb()
         cursor = db.cursor()
         cursor.execute("update Account set numOfRates = numOfRates + 1, ratingSum = ratingSum + %s where userId = %s;", (int(rate), int(userId)))
-        cursor.fetchone()
-        return userId
+        cursor.commit()
+        return True
 
     def getRating(self, userId):
         db = self.Getdb()

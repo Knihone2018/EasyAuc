@@ -659,7 +659,8 @@ def getAllItemInfoInCart(userId):
         for i in xrange(len(res)):
             # itemId, quantity, isBid
             try:
-                itemInfo = requests.get(url="http://localhost:9000/getitembyid", json = {"ID": res[i][0]})
+                resItem = requests.get(url="http://localhost:9000/getitembyid", json = {"ID": res[i][0]})
+                itemInfo = resItem.json()
                 sellerID = itemInfo['sellerID']
                 name = itemInfo['name']
                 category = itemInfo['category']
@@ -700,7 +701,8 @@ def getAllBoughtItems(userId):
         for i in xrange(len(res)):
             # itemId, quantity, checkOutTime
             try:
-                itemInfo = requests.get(url="http://localhost:9000/getitembyid", json = {"ID": res[i][0]})
+                resItem = requests.get(url="http://localhost:9000/getitembyid", json = {"ID": res[i][0]})
+                itemInfo = resItem.json()
                 sellerID = itemInfo['sellerID']
                 name = itemInfo['name']
                 category = itemInfo['category']

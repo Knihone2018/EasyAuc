@@ -1,20 +1,18 @@
-Account Part:
-
 Profile页面:
-	1. Get user's all info:
-		发送: 
-			function: get
-			url: /myaccount.html?id=<userId>
-			Content-Type: application/json
-			value: {
-					 	无
-			        }
-		返回:
-			{'success': True,
-			'email': string,
-			'firstname': string,
-			'lastname': string,
-			'password': string, 
+    1. Get user's all info:
+        发送: 
+            function: get
+            url: /myaccount.html?id=<userId>
+            Content-Type: application/json
+            value: {
+                        无
+                    }
+        返回:
+            {'success': True,
+            'email': string,
+            'firstname': string,
+            'lastname': string,
+            'password': string, 
             'address': string, 
             'zipcode': int, 
             'city': string, 
@@ -24,310 +22,208 @@ Profile页面:
             'isBlocked': int,  // mySQL里没有boolean, 0 - False, 1 - True 
             'isDeleted': int,  // mySQL里没有boolean, 0 - False, 1 - True 
             'isAdmin': int     // mySQL里没有boolean, 0 - False, 1 - True 
-			}
+            }
 
 
-	2. Delete account:
-		发送: 
-			function: post
-			url: /deleteaccount
-			Content-Type: application/json
-			value: {
-					 	'userId': int
-			        }
-		返回:
-			{'success': True, 'userId': int}
-
-
-
-	3. 设置 各种各种profile信息(如email，password等）:
-
-		a. 设置email
-			发送: 
-				function: post
-				url: /setemail
-				Content-Type: application/json
-				value: {
-						 	'userId': int
-						 	'email': string     //new email
-				        }
-			返回:
-				{'success': True, 'userId': int}
-
-
-		b. 设置firstname
-			发送: 
-				function: post
-				url: /setfirstname
-				Content-Type: application/json
-				value: {
-						 	'userId': int
-						 	'firstName': string     //new firstName
-				        }
-			返回:
-				{'success': True, 'userId': int}
-
-
-		c. 设置lastname
-			发送: 
-				function: post
-				url: /setlastname
-				Content-Type: application/json
-				value: {
-						 	'userId': int
-						 	'lastName': string     //new lastName
-				        }
-			返回:
-				{'success': True, 'userId': int}
-
-
-		d. 设置firstname
-			发送: 
-				function: post
-				url: /setpassword
-				Content-Type: application/json
-				value: {
-						 	'userId': int
-						 	'password': string     //new password
-				        }
-			返回:
-				{'success': True, 'userId': int}
+    2. Delete account:
+        发送: 
+            function: post
+            url: /deleteaccount
+            Content-Type: application/json
+            value: {
+                        'userId': int
+                    }
+        返回:
+            {'success': True, 'userId': int}
 
 
 
-		e. 设置address
-			发送: 
-				function: post
-				url: /setaddress
-				Content-Type: application/json
-				value: {
-						 	'userId': int
-						 	'address': string     //new address
-				        }
-			返回:
-				{'success': True, 'userId': int}
+    3. 设置 各种各种profile信息(如email，password等）:
+
+        a. 设置email
+            发送: 
+                function: post
+                url: /setemail
+                Content-Type: application/json
+                value: {
+                            'userId': int
+                            'email': string     //new email
+                        }
+            返回:
+                {'success': True, 'userId': int}
+
+
+        b. 设置firstname
+            发送: 
+                function: post
+                url: /setfirstname
+                Content-Type: application/json
+                value: {
+                            'userId': int
+                            'firstName': string     //new firstName
+                        }
+            返回:
+                {'success': True, 'userId': int}
+
+
+        c. 设置lastname
+            发送: 
+                function: post
+                url: /setlastname
+                Content-Type: application/json
+                value: {
+                            'userId': int
+                            'lastName': string     //new lastName
+                        }
+            返回:
+                {'success': True, 'userId': int}
+
+
+        d. 设置firstname
+            发送: 
+                function: post
+                url: /setpassword
+                Content-Type: application/json
+                value: {
+                            'userId': int
+                            'password': string     //new password
+                        }
+            返回:
+                {'success': True, 'userId': int}
 
 
 
-		f. 设置zipcode
-			发送: 
-				function: post
-				url: /setzipcode
-				Content-Type: application/json
-				value: {
-						 	'userId': int
-						 	'zipcode': string     //new zipcode
-				        }
-			返回:
-				{'success': True, 'userId': int}
+        e. 设置address
+            发送: 
+                function: post
+                url: /setaddress
+                Content-Type: application/json
+                value: {
+                            'userId': int
+                            'address': string     //new address
+                        }
+            返回:
+                {'success': True, 'userId': int}
 
 
-		g. 设置city
-			发送: 
-				function: post
-				url: /setCity
-				Content-Type: application/json
-				value: {
-						 	'userId': int
-						 	'city': string     //new city
-				        }
-			返回:
-				{'success': True, 'userId': int}
+
+        f. 设置zipcode
+            发送: 
+                function: post
+                url: /setzipcode
+                Content-Type: application/json
+                value: {
+                            'userId': int
+                            'zipcode': string     //new zipcode
+                        }
+            返回:
+                {'success': True, 'userId': int}
 
 
-		h. 设置state
-			发送: 
-				function: post
-				url: /setstate
-				Content-Type: application/json
-				value: {
-						 	'userId': int
-						 	'state': string     //new state
-				        }
-			返回:
-				{'success': True, 'userId': int}
+        g. 设置city
+            发送: 
+                function: post
+                url: /setCity
+                Content-Type: application/json
+                value: {
+                            'userId': int
+                            'city': string     //new city
+                        }
+            返回:
+                {'success': True, 'userId': int}
 
 
-		i. 设置BankAccNum
-			发送: 
-				function: post
-				url: /setbankaccountnum
-				Content-Type: application/json
-				value: {
-						 	'userId': int
-						 	'BankAccNum': string     //new BankAccNum
-				        }
-			返回:
-				{'success': True, 'userId': int}
+        h. 设置state
+            发送: 
+                function: post
+                url: /setstate
+                Content-Type: application/json
+                value: {
+                            'userId': int
+                            'state': string     //new state
+                        }
+            返回:
+                {'success': True, 'userId': int}
+
+
+        i. 设置BankAccNum
+            发送: 
+                function: post
+                url: /setbankaccountnum
+                Content-Type: application/json
+                value: {
+                            'userId': int
+                            'BankAccNum': string     //new BankAccNum
+                        }
+            返回:
+                {'success': True, 'userId': int}
 
 
 Sign up 页面:
 
-	1. Add account:
-		发送: 
-			function: post
-			url: /addaccount
-			Content-Type: application/json
-			value: {
-			          "email": string,    
-			          "firstname": string,
-			          "lastname": string,
-			          "password": string,
-			          "address": string,
-			          "zipcode": int,
-			          "city": string,
-			          "state": string,
-			          "bankAccountNumber": string,
-			          "isBlocked": int,  -- 0 or 1
-			          "isDeleted": int,  -- 0 or 1
-			          "isAdmin": int, -- 0 or 1
-			        }
-		返回:
-			{'success': True, 'userId': int}
+    1. Add account:
+        发送: 
+            function: post
+            url: /addaccount
+            Content-Type: application/json
+            value: {
+                      "email": string,    
+                      "firstname": string,
+                      "lastname": string,
+                      "password": string,
+                      "address": string,
+                      "zipcode": int,
+                      "city": string,
+                      "state": string,
+                      "bankAccountNumber": string,
+                      "isBlocked": int,  -- 0 or 1
+                      "isDeleted": int,  -- 0 or 1
+                      "isAdmin": int, -- 0 or 1
+                    }
+        返回:
+            {'success': True, 'userId': int}
 
 
 
 Sign in 页面：
-	
-	1. 获得数据库里user存的密码:
-		发送: 
-			function: get
-			url: /getuserpassword
-			Content-Type: application/json
-			value: {
-			          "userId": int
-			        }
-		返回:
-			{'success': True, 'password': String}   -- password in the database
+    
+    1. 获得数据库里user存的密码:
+        发送: 
+            function: get
+            url: /getuserpassword
+            Content-Type: application/json
+            value: {
+                      "userId": int
+                    }
+        返回:
+            {'success': True, 'password': String}   -- password in the database
 
 
 
 购物车页面：
-	
-	1. 获得购物车内所有item的信息：
-		发送: 
-			function: get
-			url: /cart.html?id=<userId>
-			Content-Type: application/json
-			value: {
-					 	无
-			        }
-		返回:
-			'success': True
-			'items' : 
-				[
-					{
-					 'success': True,
-					 'itemId':int, 
-					 'quantity':int, 
-					 'isBid': int,        -- 0 or 1
-					 'sellerID':sellerID, 
-	                 'name':name, 
-	                 'category':category, 
-	                 'cur_price':cur_price, 
-	                 'price_step':price_step,
-	                 'start_time':start_time, 
-	                 'end_time':end_time, 
-	                 'flag':flag, 
-	                 'buy_now':buy_now, 
-	                 'buy_now_price':buy_now_price,
-	                 'shipping_cost':shipping_cost, 
-	                 'description':description, 
-	                 'url':url, 
-	                 'status':status, 
-	                 'photo':photo
-	                 },
-					{
-
-					}, ...
-				]
-
-
-	2. 添加item -- from buy now：  //auction microservice处理add to cart from auction
-		发送: 
-			function: post
-			url: /additemtocartfrombuynow
-			Content-Type: application/json
-			value: {
-			          "userId": int,
-			          "itemId": int,
-			          "addQuantity": int
-
-			        }
-		返回:
-			{'success': True, 'userId': int} 
-
-
-	3. 减少item：(如果isBid = 0 才可以)
-
-		发送: 
-			function: post
-			url: /deleteitemfromcart
-			Content-Type: application/json
-			value: {
-			          "userId": int,
-			          "itemId": int,
-			          "deleteQuantity": int
-			        }
-		返回:
-			{'success': True, 'userId': int} 
-
-
-	4. 点击购买按钮（即买完了购物车内的东西）
-
-		发送: 
-			function: post
-			url: /checkoutcart
-			Content-Type: application/json
-			value: {
-			          "userId": int
-			        }
-		返回:
-			{'success': True} 
-
-
-
-购买完后rating页面：
-
-	1. 给卖家打分 (sellerId即为userId)
-
-		发送: 
-			function: post
-			url: /addsellerrate
-			Content-Type: application/json
-			value: {
-			          "sellerId": int,
-			          "rate": int
-			        }
-		返回:
-			{'success': True, 'sellerId': int} 
-
-
-购买历史页面：
-
-	1. 获得所有已购买item的信息：
-
-		发送: 
-			function: get
-			url: /history.html?id=<userId>
-			Content-Type: application/json
-			value: {
-					 	无
-			        }
-		返回:
-			'success': True
-			'items' : 
-				[
-					{
-					 'success': True,
-					 'itemId': int
-					 'quantity': int
-					 'checkOutTime': "07/27/2019, 12:12:12", // string
-					 'sellerID': int, 
-					 'name': string, 
-					 'category':category, 
-					 'cur_price':cur_price, 
-					 'price_step':price_step,
+    
+    1. 获得购物车内所有item的信息：
+        发送: 
+            function: get
+            url: /cart.html?id=<userId>
+            Content-Type: application/json
+            value: {
+                        无
+                    }
+        返回:
+            'success': True
+            'items' : 
+                [
+                    {
+                     'success': True,
+                     'itemId':int, 
+                     'quantity':int, 
+                     'isBid': int,        -- 0 or 1
+                     'sellerID':sellerID, 
+                     'name':name, 
+                     'category':category, 
+                     'cur_price':cur_price, 
+                     'price_step':price_step,
                      'start_time':start_time, 
                      'end_time':end_time, 
                      'flag':flag, 
@@ -338,61 +234,163 @@ Sign in 页面：
                      'url':url, 
                      'status':status, 
                      'photo':photo
-	                 },
-					{
+                     },
+                    {
 
-					}, ...
-				]
+                    }, ...
+                ]
+
+
+    2. 添加item -- from buy now：  //auction microservice处理add to cart from auction
+        发送: 
+            function: post
+            url: /additemtocartfrombuynow
+            Content-Type: application/json
+            value: {
+                      "userId": int,
+                      "itemId": int,
+                      "addQuantity": int
+
+                    }
+        返回:
+            {'success': True, 'userId': int} 
+
+
+    3. 减少item：(如果isBid = 0 才可以)
+
+        发送: 
+            function: post
+            url: /deleteitemfromcart
+            Content-Type: application/json
+            value: {
+                      "userId": int,
+                      "itemId": int,
+                      "deleteQuantity": int
+                    }
+        返回:
+            {'success': True, 'userId': int} 
+
+
+    4. 点击购买按钮（即买完了购物车内的东西）
+
+        发送: 
+            function: post
+            url: /checkoutcart
+            Content-Type: application/json
+            value: {
+                      "userId": int
+                    }
+        返回:
+            {'success': True} 
+
+
+
+购买完后rating页面：
+
+    1. 给卖家打分 (sellerId即为userId)
+
+        发送: 
+            function: post
+            url: /addsellerrate
+            Content-Type: application/json
+            value: {
+                      "sellerId": int,
+                      "rate": int
+                    }
+        返回:
+            {'success': True, 'sellerId': int} 
+
+
+购买历史页面：
+
+    1. 获得所有已购买item的信息：
+
+        发送: 
+            function: get
+            url: /history.html?id=<userId>
+            Content-Type: application/json
+            value: {
+                        无
+                    }
+        返回:
+            'success': True
+            'items' : 
+                [
+                    {
+                     'success': True,
+                     'itemId': int
+                     'quantity': int
+                     'checkOutTime': "07/27/2019, 12:12:12", // string
+                     'sellerID': int, 
+                     'name': string, 
+                     'category':category, 
+                     'cur_price':cur_price, 
+                     'price_step':price_step,
+                     'start_time':start_time, 
+                     'end_time':end_time, 
+                     'flag':flag, 
+                     'buy_now':buy_now, 
+                     'buy_now_price':buy_now_price,
+                     'shipping_cost':shipping_cost, 
+                     'description':description, 
+                     'url':url, 
+                     'status':status, 
+                     'photo':photo
+                     },
+                    {
+
+                    }, ...
+                ]
 
 
 Admin页面：
 
-	1. Delete account:
-		发送: 
-			function: post
-			url: /deleteaccount
-			Content-Type: application/json
-			value: {
-					 	'userId': int
-			        }
-		返回:
-			{'success': True, 'userId': int}
+    1. Delete account:
+        发送: 
+            function: post
+            url: /deleteaccount
+            Content-Type: application/json
+            value: {
+                        'userId': int
+                    }
+        返回:
+            {'success': True, 'userId': int}
 
 
-	2. Block account:
-		发送: 
-			function: post
-			url: /blockaccount
-			Content-Type: application/json
-			value: {
-					 	'userId': int
-			        }
-		返回:
-			{'success': True, 'userId': int}
+    2. Block account:
+        发送: 
+            function: post
+            url: /blockaccount
+            Content-Type: application/json
+            value: {
+                        'userId': int
+                    }
+        返回:
+            {'success': True, 'userId': int}
 
 
-	3. check user is deleted
-		发送: 
-			function: get
-			url: /checkdeleteaccount
-			Content-Type: application/json
-			value: {
-					 	'userId': int
-			        }
-		返回:
-			{'success': True, 'value': int}		 -- value == 0: not deleted, value == 1: is deleted
+    3. check user is deleted
+        发送: 
+            function: get
+            url: /checkdeleteaccount
+            Content-Type: application/json
+            value: {
+                        'userId': int
+                    }
+        返回:
+            {'success': True, 'value': int}      -- value == 0: not deleted, value == 1: is deleted
 
 
-	4. check user is blocked
-		发送: 
-			function: get
-			url: /checkblockaccount
-			Content-Type: application/json
-			value: {
-					 	'userId': int
-			        }
-		返回:
-			{'success': True, 'value': int}		 -- value == 0: not blocked, value == 1: is blocked
+    4. check user is blocked
+        发送: 
+            function: get
+            url: /checkblockaccount
+            Content-Type: application/json
+            value: {
+                        'userId': int
+                    }
+        返回:
+            {'success': True, 'value': int}      -- value == 0: not blocked, value == 1: is blocked
 
 
 
