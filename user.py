@@ -1,5 +1,6 @@
 import mysql.connector
 from flask import Flask, request, jsonify, Response
+from flask_cors import CORS
 import json
 from datetime import datetime
 
@@ -258,11 +259,13 @@ class AccountControl(DatabaseControl):
         password = cursor.fetchone()
         cursor.execute("select userId from Account where email = %s;", (email,))
         userId = cursor.fetchone()
+        cursor.execute("select isAdmin from Account where email = %s;", (email,))
+        isAdmin = cursor.fetchone()
         if password and userId:
             if password == pwd:
-                return {'success': True, 'userId': userId}
+                return {'success': True, 'userId': userId, 'isAdmin': isAdmin}
             else:
-                return {'success': False, 'userId': userId}
+                return {'success': False, 'userId': userId, 'isAdmin': isAdmin}
         return False
 
 

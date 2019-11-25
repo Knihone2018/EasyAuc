@@ -1,11 +1,13 @@
 from flask import Flask, request, Response, jsonify
-from flasgger import Swagger
+from flask_cors import CORS
+#from flasgger import Swagger
 from user import *
 
 
 
 app = Flask(__name__)
-Swagger(app)
+CORS(app)
+#Swagger(app)
 Port = 5672
 
 
@@ -38,7 +40,7 @@ def checkoutCart():
     ctl = AccountControl()
     res = ctl.checkSignin(email, password)
     if res:
-        return Response(json.dumps({'success':res['success'], 'userId':res['userId']}), status = 200, mimetype='application/json')
+        return Response(json.dumps({'success':res['success'], 'userId':res['userId'], 'isAdmin':res['isAdmin']}), status = 200, mimetype='application/json')
     return Response(json.dumps({'success':False}), status = 500, mimetype='application/json')
 
 

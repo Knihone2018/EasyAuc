@@ -197,7 +197,7 @@ Sign in 页面：
                       "password": string
                     }
         返回:
-            {'success': boolean, 'userId': int}
+            {'success': boolean, 'userId': int, 'isAdmin': int}    -- isAdmin == 1: is admin; isAdmin == 0: not admin;
 
 
 
