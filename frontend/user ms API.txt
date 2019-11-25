@@ -1,78 +1,72 @@
-
-account界面
-url: myaccount.html?id=xxx
-1.
-每次进入此界面，会请求user ms，得到用户email等数据
-测试时请修改myaccount line 119 的url
-	request:
-		{
-			"id":xxx
-		}
-	response
-		{
-			"email":xxx
-		}
-
-2. 改email
-测试时请修改myaccount line 152 的url
-	request:
-		{
-			"id":xxx,
-			"email":xxx
-		}
-	response
-		{
-			"success":true/false
-		}
-
-3. 改change pwd
-测试时请修改myaccount line 188 的url
-	request:
-		{
-			"id":xxx,
-			"password":xxx
-		}
-	response
-		{
-			"success":true/false
-		}
+Profile页面:
+    1. Get user's all info:
+        309
 
 
-cart 界面 把 user的id加在后面 像下面这样
-url: cart.html?id=xxx
-4. 获得cart list
-修改line 82的url
-	request格式
-		get方法
-	response格式
-		{"items":[{"name":"A","image":"http://seopic.699pic.com/photo/50057/5368.jpg_wh1200.jpg","id":"1dsgsdg","category":"book","quantity":1}]};
+    2. Delete account:
+        255
 
-5. 加item
-修改line 137 157的url
-	request格式
-		get方法
-	response格式
-		{
-			"success":true/false
-		}
 
-6. 减item （如果quantity到0会删除整行）
-	request格式
-		get方法
-	response格式
-	{
-		"success":true/false
-	}
+    3. 设置 各种各种profile信息(如email，password等）:
+
+        a. 设置email
+            
+        b. 设置firstname
+            
+        c. 设置lastname
+
+        d. 设置firstname
+      
+        e. 设置address
+          
+        f. 设置zipcode
+           
+        g. 设置city
+            
+        h. 设置state
+            
+        i. 设置BankAccNum
+
+        351
+            
+
+
+Sign up 页面:
+
+    1. Add account:
+        132
+
+Sign in 页面：
+    
+    1. 对比email+密码是否正确:
+        53
 
 
 
-history 界面 把 user的id加在后面 像下面这样
-url: history.html?id=xxx
-7. 删除历史
-修改line 134的url
-	request格式
-		get方法
-	response格式
-	{
-		"success":true/false
-	}
+购物车页面：
+    
+    1. 获得购物车内所有item的信息：
+        117
+
+
+    2. 添加item -- from buy now：  //auction microservice处理add to cart from auction
+        177
+
+
+    3. 减少item：(如果isBid = 0 才可以)
+      204
+
+    4. 点击购买按钮（即买完了购物车内的东西）
+        92
+
+
+
+购买完后rating页面：
+
+    1. 给卖家打分 (sellerId即为userId)
+      180
+
+购买历史页面：
+
+    1. 获得所有已购买item的信息：
+      115
