@@ -262,10 +262,10 @@ class AccountControl(DatabaseControl):
         cursor.execute("select isAdmin from Account where email = %s;", (email,))
         isAdmin = cursor.fetchone()
         if password and userId:
-            if password == pwd:
-                return {'success': True, 'userId': userId, 'isAdmin': isAdmin}
+            if password[0] == pwd:
+                return {'success': True, 'userId': userId[0], 'isAdmin': isAdmin[0]}
             else:
-                return {'success': False, 'userId': userId, 'isAdmin': isAdmin}
+                return {'success': False, 'userId': userId[0], 'isAdmin': isAdmin[0]}
         return False
 
 
