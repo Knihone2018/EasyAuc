@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>EasyAunc</title>
+		<title>EasyAuc</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 		<script src="js/jquery-3.4.1.min.js"></script>
@@ -15,7 +15,7 @@
 			<div class="row clearfix">
 				<div class="col-md-12 column">
 					<h2>
-						EasyAunc
+						EasyAuc
 					</h2>
 					<div class="row clearfix">
 						<div class="col-md-4 column">
@@ -137,10 +137,9 @@
 				$(this).parents(".btn-group").find(".dropdown-toggle").html(selText);
 				$("#categoryId").html(id);
 			});
-
 			getWatchlist();
 			getParameter();
-			getCategories();
+			// getCategories();
 		});
 
 		function addParam() {
@@ -174,19 +173,19 @@
             $.ajax({
                 type: "POST",
                 dataType: "json",
-                url: "",
-                data: data,
+                url: "http://0.0.0.0:5000/parameters",
+                data: JSON.stringify(data),
                 contentType: "application/json",
                 success: function (response) {
-                    if (response.data.success){
+                    if (response.success){
                     	alert("Added a new parameter!");
                     	var temp = $("#dataTable2").html();
-						var newparam = temp + "<tr class='row mx-0'><td class='col-3'>" + data.paras[i].item_name
-					                + "</td>" + "<td class='col-3'>" + data.paras[i].category + "</td>"
-					                + "<td class='col-2'>" + min_price+ "</td>"
-					                + "<td class='col-2'>" + max_price+"</td>"
+						var newparam = temp + "<tr class='row mx-0'><td class='col-3'>" + name
+					                + "</td>" + "<td class='col-3'>" + category + "</td>"
+					                + "<td class='col-2'>" + minprice+ "</td>"
+					                + "<td class='col-2'>" + maxprice+"</td>"
 					                + "<td class='col-2'>" + createDelButton2()
-					                + "<span style='display:none'>"+data.items[i].item_name+"</span></td>"
+					                + "<span style='display:none'>"+name+"</span></td>"
 					                + "</tr>";
 		                $("#dataTable2").html(newparam);
                     }else{
@@ -201,13 +200,13 @@
 
 		function getWatchlist(){
 			var id = $("#myaccount span").text();
-			var url = "[Your url]/"+id;
+			var url = "http://0.0.0.0:5000/watchlist/" + id;
 			$.ajax({
 	            type: "GET",
 	            dataType: "json",
 	            url: url,
 	            success: function (response) {
-	                createWatchlist(response.data);
+	                createWatchlist(response);
 	            },
 	            error: function () {
 	                //alert("Sorry, we have some problem.");
@@ -217,13 +216,13 @@
 
 		function getParameter(){
 			var id = $("#myaccount span").text();
-			var url = "[Your url]/"+id;
+			var url = "http://0.0.0.0:5000/parameters/"+id;
 			$.ajax({
 	            type: "GET",
 	            dataType: "json",
 	            url: url,
 	            success: function (response) {
-	                createParam(response.data);
+	                createParam(response);
 	            },
 	            error: function () {
 	                //alert("Sorry, we have some problem.");
@@ -239,7 +238,7 @@
 	            dataType: "json",
 	            url: url,
 	            success: function (response) {
-	                createCategories(response.data);
+	                createCategories(response);
 	            },
 	            error: function () {
 	            	//alert("Sorry, we have some problem.");
@@ -273,7 +272,7 @@
 		                + "<td class='col-2'>" + data.paras[i].min_price+ "</td>"
 		                + "<td class='col-2'>" + data.paras[i].max_price+"</td>"
 		                + "<td class='col-2'>" + createDelButton2()
-		                + "<span style='display:none'>"+data.items[i].item_name+"</span></td>"
+		                + "<span style='display:none'>"+data.paras[i].item_name+"</span></td>"
 		                + "</tr>";
 		    }
 		    $("#dataTable2").html(tableStr);
@@ -313,18 +312,20 @@
 		function deleteWatchedItem(t){
 			var item_id = t.nextSibling.textContent;
 			var user_id = $("#myaccount span").text();
-			var url = "[Your url]";
+			var url = "http://0.0.0.0:5000/watchlist";
 			var data = {
 				"user_id": user_id,
 				"item_id": item_id
 			};
+			console.log(data);
 			$.ajax({
 	            type: "DELETE",
 	            dataType: "json",
 	            url: url,
 	            contentType: "application/json",
+	            data: JSON.stringify(data),
 	            success: function (response) {
-	                if(response.data.success){
+	                if(response.deleted){
 	                	t.parentNode.parentNode.innerHTML = "";
 	                }
 	            },
@@ -334,8 +335,8 @@
 	        });
 		}
 
-		function deleteParam(){
-			var url="";
+		function deleteParam(t){
+			var url="http://0.0.0.0:5000/parameters";
 			var user_id = $("#myaccount span").text();
 			var item_name = t.nextSibling.textContent;
 			var data={
@@ -344,12 +345,11 @@
 			};
 			$.ajax({
 	            type: "DELETE",
-	            dataType: "json",
 	            url: url,
 	            contentType: "application/json",
-	            data: data,
+	            data: JSON.stringify(data),
 	            success: function (response) {
-	                if(response.data.success){
+	                if(response.success){
 	                	t.parentNode.parentNode.innerHTML = "";
 	                }
 	            },
