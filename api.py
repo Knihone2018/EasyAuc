@@ -34,7 +34,7 @@ def checkoutCart():
 
 
 @app.route("/checkpassword", methods=["POST"])
-def checkoutCart():
+def checkPassword():
     email = request.json.get('email')
     password = request.json.get('password')
     ctl = AccountControl()

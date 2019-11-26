@@ -77,14 +77,14 @@ class AccountControl(DatabaseControl):
         if userId:
             # if the account is deleted
             isDeleted = self.checkDeleteByUserId(userId)
-            if isDeleted:
+            if isDeleted == 1:
                 cursor.execute("update Account set isDeleted = 0 where userId = %s;", (int(userId),))
                 db.commit()
                 return userId
 
             # if the account is blocked
             isBlocked = self.checkBlockByUserId(userId)
-            if isBlocked:
+            if isBlocked == 1:
                 return False
 
             # else, user already exists
@@ -133,27 +133,23 @@ class AccountControl(DatabaseControl):
     def deleteAccount(self, userId):
         db = self.Getdb()
         cursor = db.cursor()
-        isDeleted = self.checkDeleteByUserId(userId)
-        if isDeleted:
-            return False
-        else:
+        try:
             cursor.execute("update Account set isDeleted = 1 where userId = %s;", (int(userId),))
             db.commit()
             return userId
-        return False
+        except:
+            return False
 
 
     def blockAccount(self, userId):
         db = self.Getdb()
         cursor = db.cursor()
-        isBlocked = self.checkBlockByUserId(userId)
-        if isBlocked:
-            return "User Already Deleted"
-        else:
+        try:
             cursor.execute("update Account set isBlocked = 1 where userId = %s;", (int(userId),))
             db.commit()
-            return True
-        return False
+            return userId
+        except:
+            return False
 
 
     def checkDeleteByUserId(self, userId):
@@ -427,14 +423,14 @@ class CartControl(DatabaseControl):
         try:
             db = self.Getdb()
             mycursor = db.cursor()
-            if self.checkItemIsBid(userId, itemId):
+            if self.checkItemIsBid(userId, itemId) == 1:
                 return "Cannot delete a bid item"
 
             res = self.getOneItemInfoInCart(userId, itemId)
             if res:
                 mycursor.execute("update Cart set quantity = quantity - %s where userId = %s and itemId = %s;", (int(deleteQuantity), int(userId), int(itemId)))
                 db.commit()
-                mycursor.execute("delete from Cart where quantity = 0;")
+                mycursor.execute("delete from Cart where quantity <= 0;")
                 db.commit()
                 return True
             else:
@@ -463,7 +459,7 @@ class CartControl(DatabaseControl):
 
             cursor.execute("select isBid from Cart where userId = %s and itemId = %s;", (int(userId), int(itemId)))
             res = cursor.fetchone()
-            return res
+            return res[0]
         except:
             return -1
 

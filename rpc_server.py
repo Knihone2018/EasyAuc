@@ -41,7 +41,6 @@ channel.basic_consume(queue='rpc_get_user_deleted_or_blocked_queue', on_message_
 """
 channel.queue_declare(queue='rpc_get_user_email_queue')
 def get_user_email(ch, method, props, body):
-    print(body)
     b = json.loads(body)
     userId = b['userId']
 
