@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>EasyAuc</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <script src="js/jquery-3.4.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <!-- <link href="css/easyaunc.css" rel="stylesheet" media="screen"> -->
+        <script src="js/easyaunc.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <h2>
+                        EasyAuc
+                    </h2>
+                    <div class="row clearfix">
+                        <div class="col-md-4 column">
+                        </div>
+                        <div class="col-md-2 column">
+                        </div>
+                        <div class="col-md-3 column">
+                        </div>
+                        <div class="col-md-3 column">
+                            <span id="id_span" style="display: none"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <div class="jumbotron">
+                        <h1>
+                            <span class="text-primary">H</span>
+                            <span class="text-secondary">e</span>
+                            <span class="text-success">l</span>
+                            <span class="text-danger">l</span>
+                            <span class="text-warning">o</span>
+                            <span class="text-info">!</span>
+                            <span class="text-secondary">&nbsp&nbspAdministrator.</span>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Remove User</label>
+                <input type="number" class="form-control" id="remove_user">
+            </div>
+            <button id="remove_user_btn" type="button" class="btn btn-danger btn-sm">Remove<span style="display: none"></span></button>
+            <br>
+            <br>
+            <div class="mb-3">
+                <label>Block User</label>
+                <input type="number" class="form-control" id="block_user">
+            </div>
+            <button id="block_user_btn" type="button" class="btn btn-danger btn-sm">Block<span style="display: none"></span></button>
+            <br>
+            <br>
+            <div class="mb-3">
+                <label>Add Category</label>
+                <input class="form-control" id="add_category">
+            </div>
+            <button id="add_category_btn" type="button" class="btn btn-danger btn-sm">Add<span style="display: none"></span></button>
+            <br>
+            <br>
+            <div class="mb-3">
+                <label>Modify Category</label>
+                <input class="form-control" id="modify_category_old" placeholder="old category">
+                <input class="form-control" id="modify_category_new" placeholder="new category">
+            </div>
+            <button id="modify_category_btn" type="button" class="btn btn-danger btn-sm">Modify<span style="display: none"></span></button>
+            <br>
+            <br>
+            <div class="mb-3">
+                <label>Remove Category</label>
+                <input class="form-control" id="remove_category">
+            </div>
+            <button id="remove_category_btn" type="button" class="btn btn-danger btn-sm">Remove<span style="display: none"></span></button>
+            <br>
+            <br>
+            <br>
+            <p class="text-center font-weight-bold text-secondary">Flagged Item</p>
+            <div style="text-align:center">
+                <table class="table row mx-0">
+                    <thead class="w-100">
+                        <tr class="row mx-0">
+                            <th class="col-md-3">
+                            </th>
+                            <th class="col-md-3">
+                                Name
+                            </th>
+                            <th class="col-md-3">
+                                Category
+                            </th>
+                            <th class="col-md-3">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTable" class="w-100">
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <br>
+            <br>
+        </div>
+    </body>
+    <footer class="footer navbar-fixed-bottom ">
+        <div class="footer-copyright text-center py-3">Copyright © 2019 EasyAuc. All rights reserved.</div>
+    </footer>
+    <script type="text/javascript">
+        $(function(){
+            var id = getQueryVariable("id");
+            $("#id_span").html(id);
+            $("#remove_user_btn").click(function(){
+                var id = parseInt($("remove_user").val());
+                var url = "[your url]"+"/deleteaccount";
+                var data = {
+                    "userId": id
+                };
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: url,
+                    contentType:"application/json",
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        if(response.success){
+                            
+                        }
+                    },
+                    error: function () {
+                        //alert("Sorry, we have some problem.");
+                    }
+                });
+            });
+            $("#block_user_btn").click(function(){
+                var id = parseInt($("block_user").val());
+                var url = "[your url]"+"/blockaccount";
+                var data = {
+                    "userId": id
+                };
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: url,
+                    contentType:"application/json",
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        if(response.success){
+                            
+                        }
+                    },
+                    error: function () {
+                        //alert("Sorry, we have some problem.");
+                    }
+                });
+            });
+            $("#add_category_btn").click(function(){
+                var name = $("add_category").val();
+                var url = "[your url]"+"/searchbycategory";
+                var data = {
+                    "name": name
+                };
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: url,
+                    contentType:"application/json",
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        if(response.success){
+                            alert("Added a category.");
+                        }else{
+                            alert("Failed to add a category.");
+                        }
+                    },
+                    error: function () {
+                        //alert("Sorry, we have some problem.");
+                    }
+                });
+            });
+            $("#modify_category_btn").click(function(){
+                var old_name = $("modify_category_old").val();
+                var new_name = $("modify_category_new").val();
+                var url = "[your url]"+"/modifycategory";
+                var data = {
+                    "old_name": old_name,
+                    "new_name": new_name
+                };
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: url,
+                    contentType:"application/json",
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        if(!response.success){
+                            alert(response.message);
+                        }
+                    },
+                    error: function () {
+                        //alert("Sorry, we have some problem.");
+                    }
+                });
+            });
+            $("#remove_category_btn").click(function(){
+                var name = $("remove_category").val();
+                var url = "[your url]"+"/deletecategory";
+                var data = {
+                    "name": name
+                };
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: url,
+                    contentType:"application/json",
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        if(!response.success){
+                            alert(response.message);
+                        }
+                    },
+                    error: function () {
+                        //alert("Sorry, we have some problem.");
+                    }
+                });
+            });
+            var url = "[your url]"+"/searchbyflag";
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: url,
+                contentType:"application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    if(response.success){
+                        createFlaggedItem(response);
+                    }
+                },
+                error: function () {
+                    //alert("Sorry, we have some problem.");
+                }
+            });
+        });
+
+        function createFlaggedItem(data){
+
+        }
+    </script>
+</html>
