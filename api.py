@@ -16,7 +16,7 @@ Port = 5672
 # restful apis
 ####################################################
 
-@app.route("/checkoutcart", methods=["GET"])
+@app.route("/checkoutcart", methods=["POST"])
 def checkoutCart():
     userId = request.json.get('userId')
     cart = CartControl()
@@ -50,8 +50,9 @@ def checkPassword():
 
 
 
-@app.route("/myaccount.html?id=<userId>", methods=["GET"])
-def getAllUserInfo(userId):
+@app.route("/myaccount", methods=["GET"])
+def getAllUserInfo():
+    userId = request.json.get('userId')
     try:
         ctl = AccountControl()
         email = ctl.getUserEmailbyUserId(userId)
@@ -663,8 +664,9 @@ def getOneItemInfoInCart():
 
 
 
-@app.route("/cart.html?id=<userId>", methods=["GET"])
-def getAllItemInfoInCart(userId):
+@app.route("/cart", methods=["GET"])
+def getAllItemInfoInCart():
+    userId = request.json.get('userId')
     ctl = CartControl()
     res = ctl.getAllItemInfoInCart(userId)
     result = []
@@ -705,8 +707,9 @@ def getAllItemInfoInCart(userId):
 ######################
 
 
-@app.route("/history.html?id=<userId>", methods=["GET"])
-def getAllBoughtItems(userId):
+@app.route("/history", methods=["GET"])
+def getAllBoughtItems():
+    userId = request.json.get('userId')
     ctl = BoughtItemsControl()
     res = ctl.getAllBoughtItems(userId)
     result = []

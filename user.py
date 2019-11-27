@@ -105,7 +105,7 @@ class AccountControl(DatabaseControl):
         db = self.Getdb()
         cursor = db.cursor()
         cursor.execute("update Account set numOfRates = numOfRates + 1, ratingSum = ratingSum + %s where userId = %s;", (int(rate), int(userId)))
-        cursor.commit()
+        db.commit()
         return True
 
     def getRating(self, userId):
@@ -116,6 +116,8 @@ class AccountControl(DatabaseControl):
         cursor.execute("select numOfRates from Account where userId = %s;", (int(userId),))
         res1 = cursor.fetchone()
         if res0 and res1:
+            if res1[0] == 0:
+                return 0
             return res0[0] * 1.0 / res1[0]
         return -1
 
@@ -251,12 +253,12 @@ class AccountControl(DatabaseControl):
     def checkSignin(self, email, pwd):
         db = self.Getdb()
         mycursor = db.cursor()
-        cursor.execute("select password from Account where email = %s;", (email,))
-        password = cursor.fetchone()
-        cursor.execute("select userId from Account where email = %s;", (email,))
-        userId = cursor.fetchone()
-        cursor.execute("select isAdmin from Account where email = %s;", (email,))
-        isAdmin = cursor.fetchone()
+        mycursor.execute("select password from Account where email = %s;", (email,))
+        password = mycursor.fetchone()
+        mycursor.execute("select userId from Account where email = %s;", (email,))
+        userId = mycursor.fetchone()
+        mycursor.execute("select isAdmin from Account where email = %s;", (email,))
+        isAdmin = mycursor.fetchone()
         if password and userId:
             if password[0] == pwd:
                 return {'success': True, 'userId': userId[0], 'isAdmin': isAdmin[0]}

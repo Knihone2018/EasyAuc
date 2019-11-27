@@ -2,10 +2,10 @@ Profile页面:
     1. Get user's all info:
         发送: 
             function: get
-            url: /myaccount.html?id=<userId>
+            url: /myaccount
             Content-Type: application/json
             value: {
-                        无
+                        'userId': int
                     }
         返回:
             {'success': True,
@@ -206,10 +206,10 @@ Sign in 页面：
     1. 获得购物车内所有item的信息：
         发送: 
             function: get
-            url: /cart.html?id=<userId>
+            url: /cart
             Content-Type: application/json
             value: {
-                        无
+                        'userId': int
                     }
         返回:
             'success': True
@@ -308,10 +308,10 @@ Sign in 页面：
 
         发送: 
             function: get
-            url: /history.html?id=<userId>
+            url: /history
             Content-Type: application/json
             value: {
-                        无
+                        'userId': int
                     }
         返回:
             'success': True
