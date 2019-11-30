@@ -139,7 +139,7 @@
 			});
 			getWatchlist();
 			getParameter();
-			// getCategories();
+			getCategory();
 		});
 
 		function addParam() {
@@ -230,15 +230,16 @@
 	        });
 		}
 
-		function getCategories(){
+		function getCategory(){
 			var id = $("#myaccount span").text();
-			var url = "[Your url]/"+id;
+			var url = "[Your url]"+"/allcategory";
 			$.ajax({
 	            type: "GET",
 	            dataType: "json",
 	            url: url,
 	            success: function (response) {
-	                createCategories(response);
+	            	if (response.success)
+	                	createCategory(response);
 	            },
 	            error: function () {
 	            	//alert("Sorry, we have some problem.");
@@ -278,12 +279,12 @@
 		    $("#dataTable2").html(tableStr);
 		}
 
-		function createCategories(data){
+		function createCategory(data){
         	var str = "";
-		    var len = data.categories.length;
+		    var len = data.message.length;
 		    for (var i = 0; i < len; i++) {
-		        str = str + "<div class='dropdown-item'><div>"+data.categories[i].name
-		        	+"</div><span style='display:none'>"+data.categories[i].id+"</span>"
+		        str = str + "<div class='dropdown-item'><div>"+data.message[i].name
+		        	+"</div><span style='display:none'>"+data.message[i].ID+"</span>"
 		        	+"</div>";
 		    }
 		    $("#category").html(str);

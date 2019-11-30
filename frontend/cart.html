@@ -1,234 +1,234 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>EasyAuc</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-		<script src="js/jquery-3.4.1.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-		<script src="js/bootstrap.min.js"></script>
-		<!-- <link href="css/easyaunc.css" rel="stylesheet" media="screen"> -->
-		<script src="js/easyaunc.js"></script>
-	</head>
-	<body>
-		<div class="container">
-			<div class="row clearfix">
-				<div class="col-md-12 column">
-					<h2>
-						EasyAuc
-					</h2>
-					<div class="row clearfix">
-						<div class="col-md-4 column">
-						</div>
-						<div class="col-md-2 column">
-						</div>
-						<div class="col-md-2 column">
-						</div>
-						<div class="col-md-2 column">
-						</div>
-						<div class="col-md-2 column">
-							<br>
-							<button id="home" type="button" class="btn btn-warning btn-sm">Home<span style="display: none"></span></button>
-							<button id="myaccount" type="button" class="btn btn-primary btn-sm">My Account<span style="display: none"></span></button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<br/>
-			<p class="text-center font-weight-bold text-secondary">My Cart</p>
-			<div style="text-align:center">
-				<table class="table row mx-0">
-					<thead class="w-100">
-						<tr class="row mx-0">
-							<th class="col-md-3">
-							</th>
-							<th class="col-md-2">
-								Name
-							</th>
-							<th class="col-md-2">
-								Category
-							</th>
-							<th class="col-md-2">
-								Quantity
-							</th>
-							<th class="col-md-3">
-							</th>
-						</tr>
-					</thead>
-					<tbody id="dataTable" class="w-100">
-					</tbody>
-				</table>
-			</div>
-			<br>
-			<br>
-			<br>
-			<br>
-			<button id="checkout" type="button" class="btn btn-success">Check Out<span style="display: none"></span></button>
-			<br>
-			<br>
-			<br>
-			<br>
-			<br>
-			<br>
-			<br>
-			<br>
-			<br>
-			<br>
-		</div>
-	</body>
-	<footer class="footer navbar-fixed-bottom ">
-		<div class="footer-copyright text-center py-3">Copyright © 2019 EasyAunc. All rights reserved.</div>
-	</footer>
-	<script type="text/javascript">
-		$(function(){
-			var id = getQueryVariable("id");
-		    $("#myaccount span").html(getQueryVariable("id"));
-		    $("#myaccount").click(function(){
-				window.location.href="myaccount.html?id="+id;
-			});
-	
-			$("#checkout").click(function(){
-				var id = $("#myaccount span").text();
-				var url = "[your url]"+"/checkoutcart";
-				var data = {
-					"userId": id
-				};
-				$.ajax({
-		            type: "POST",
-		            dataType: "json",
-		            url: url,
-		            contentType: "application/json",
-		            data: JSON.stringify(data),
-		            success: function (response) {
-		                if(response.success){
-		                	$("#dataTable").html("");
-		                	window.location.href="rating.html?id="+id;
-		                }
-		            },
-		            error: function () {
-		                //alert("Sorry, we have some problem.");
-		            }
-		        });
-			});
-			getCart(id);
-		});
+    <head>
+        <title>EasyAuc</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <script src="js/jquery-3.4.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <!-- <link href="css/easyaunc.css" rel="stylesheet" media="screen"> -->
+        <script src="js/easyaunc.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <h2>
+                        EasyAuc
+                    </h2>
+                    <div class="row clearfix">
+                        <div class="col-md-4 column">
+                        </div>
+                        <div class="col-md-2 column">
+                        </div>
+                        <div class="col-md-2 column">
+                        </div>
+                        <div class="col-md-2 column">
+                        </div>
+                        <div class="col-md-2 column">
+                            <br>
+                            <button id="home" type="button" class="btn btn-warning btn-sm">Home<span style="display: none"></span></button>
+                            <button id="myaccount" type="button" class="btn btn-primary btn-sm">My Account<span style="display: none"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <p class="text-center font-weight-bold text-secondary">My Cart</p>
+            <div style="text-align:center">
+                <table class="table row mx-0">
+                    <thead class="w-100">
+                        <tr class="row mx-0">
+                            <th class="col-md-3">
+                            </th>
+                            <th class="col-md-2">
+                                Name
+                            </th>
+                            <th class="col-md-2">
+                                Category
+                            </th>
+                            <th class="col-md-2">
+                                Quantity
+                            </th>
+                            <th class="col-md-3">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTable" class="w-100">
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <button id="checkout" type="button" class="btn btn-success">Check Out<span style="display: none"></span></button>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+    </body>
+    <footer class="footer navbar-fixed-bottom ">
+        <div class="footer-copyright text-center py-3">Copyright © 2019 EasyAunc. All rights reserved.</div>
+    </footer>
+    <script type="text/javascript">
+        $(function(){
+            var id = getQueryVariable("id");
+            $("#myaccount span").html(getQueryVariable("id"));
+            $("#myaccount").click(function(){
+                window.location.href="myaccount.html?id="+id;
+            });
+    
+            $("#checkout").click(function(){
+                var id = $("#myaccount span").text();
+                var url = "[your url]"+"/checkoutcart";
+                var data = {
+                    "userId": id
+                };
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: url,
+                    contentType: "application/json",
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        if(response.success){
+                            $("#dataTable").html("");
+                            window.location.href="rating.html?id="+id;
+                        }
+                    },
+                    error: function () {
+                        //alert("Sorry, we have some problem.");
+                    }
+                });
+            });
+            getCart(id);
+        });
 
-		function getCart(id){
-			var url = "[your url]"+"/cart.html?id="+id;
-			$.ajax({
-	            type: "GET",
-	            dataType: "json",
-	            url: url,
-	            success: function (response) {
-	            	if (response.success)
-	                	createCartList(response);
-	            },
-	            error: function () {
-	                //alert("Sorry, we have some problem.");
-	            }
-	        });
-		}
+        function getCart(id){
+            var url = "[your url]"+"/cart.html?id="+id;
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: url,
+                success: function (response) {
+                    if (response.success)
+                        createCartList(response);
+                },
+                error: function () {
+                    //alert("Sorry, we have some problem.");
+                }
+            });
+        }
 
         function createCartList(data){
-        	// var data={"items":[{"name":"A","photo":"http://seopic.699pic.com/photo/50057/5368.jpg_wh1200.jpg","itemId":"1dsgsdg","category":"book","quantity":1, "isBid":0}]};
-        	var tableStr = "";
-		    var len = data.items.length;
-		    for (var i = 0; i < len; i++) {
-		        tableStr = tableStr + "<tr class='row mx-0'><td class='col-3'>" + createImage(data.items[i].photo)
-		                + "</td>" + "<td class='col-2'>" + createName(data.items[i].name, data.items[i].itemId) + "</td>"
-		                + "<td class='col-2'>" + data.items[i].category + "</td>"
-		                + "<td class='col-2 quantity'>" + data.items[i].quantity + "</td>";
-		        if (data.items[i].isBid==0){
-		        	tableStr=tableStr+"<td class='col-3'>" + createAddButton()+"&nbsp"+createDelButton()
-		                + "<span style='display:none'>"+data.items[i].itemId+"</span></td>"
-		                + "</tr>";
-		        }else{
-		        	tableStr= tableStr+ "</tr>";
-		        }
-		    }
-		    $("#dataTable").html(tableStr);
-		}
+            // var data={"items":[{"name":"A","photo":"http://seopic.699pic.com/photo/50057/5368.jpg_wh1200.jpg","itemId":"1dsgsdg","category":"book","quantity":1, "isBid":0}]};
+            var tableStr = "";
+            var len = data.items.length;
+            for (var i = 0; i < len; i++) {
+                tableStr = tableStr + "<tr class='row mx-0'><td class='col-3'>" + createImage(data.items[i].photo)
+                        + "</td>" + "<td class='col-2'>" + createName(data.items[i].name, data.items[i].itemId) + "</td>"
+                        + "<td class='col-2'>" + data.items[i].category + "</td>"
+                        + "<td class='col-2 quantity'>" + data.items[i].quantity + "</td>";
+                if (data.items[i].isBid==0){
+                    tableStr=tableStr+"<td class='col-3'>" + createAddButton()+"&nbsp"+createDelButton()
+                        + "<span style='display:none'>"+data.items[i].itemId+"</span></td>"
+                        + "</tr>";
+                }else{
+                    tableStr= tableStr+ "</tr>";
+                }
+            }
+            $("#dataTable").html(tableStr);
+        }
 
-		function createName(name, id){
-			var userId = $("#myaccount span").text();
-			var url = "item.html?itemId="+id+"&userId="+userId;
-			var link = "<a href='"+url+"'>"+name+"</a>";
-			return link;
-		}
+        function createName(name, id){
+            var userId = $("#myaccount span").text();
+            var url = "item.html?itemId="+id+"&userId="+userId;
+            var link = "<a href='"+url+"'>"+name+"</a>";
+            return link;
+        }
 
-		function createAddButton(){
-			var button = "<button type='button' class='btn btn-light' onclick=addCartItem(this)>+</button>";
-			return button;
-		}
+        function createAddButton(){
+            var button = "<button type='button' class='btn btn-light' onclick=addCartItem(this)>+</button>";
+            return button;
+        }
 
-		function createDelButton(){
-			var button = "<button type='button' class='btn btn-danger' onclick=deleteCartItem(this)>-</button>";
-			return button;
-		}
+        function createDelButton(){
+            var button = "<button type='button' class='btn btn-danger' onclick=deleteCartItem(this)>-</button>";
+            return button;
+        }
 
-		function createImage(url){
-			var image = "<img src='+" + url + "' class='img-rounded' width='150' height='150'>";
-			return image;
-		}
+        function createImage(url){
+            var image = "<img src='+" + url + "' class='img-rounded' width='150' height='150'>";
+            return image;
+        }
 
-		function addCartItem(t){
-			var id = $("#myaccount span").text();
-			var itemId = t.nextSibling.nextSibling.nextSibling.textContent;
-			var url = "[your url]"+"/additemtocartfrombuynow";
-			var current = parseInt(t.parentNode.previousSibling.textContent);
-			var data = {
-				"userId": id,
-				"itemId": itemId,
-				"addQuantity": 1
-			};
-			$.ajax({
-	            type: "POST",
-	            dataType: "json",
-	            url: url,
-	            data: JSON.stringify(data),
-	            success: function (response) {
-	                if(response.success){
-	                	var temp = current+1;
-	                	t.parentNode.previousSibling.innerHTML = temp;
-	                }
-	            },
-	            error: function () {
-	                //alert("Sorry, we have some problem.");
-	            }
-	        });
-		}
+        function addCartItem(t){
+            var id = $("#myaccount span").text();
+            var itemId = t.nextSibling.nextSibling.nextSibling.textContent;
+            var url = "[your url]"+"/additemtocartfrombuynow";
+            var current = parseInt(t.parentNode.previousSibling.textContent);
+            var data = {
+                "userId": id,
+                "itemId": itemId,
+                "addQuantity": 1
+            };
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: url,
+                data: JSON.stringify(data),
+                success: function (response) {
+                    if(response.success){
+                        var temp = current+1;
+                        t.parentNode.previousSibling.innerHTML = temp;
+                    }
+                },
+                error: function () {
+                    //alert("Sorry, we have some problem.");
+                }
+            });
+        }
 
-		function deleteCartItem(t){
-			var id = $("#myaccount span").text();
-			var itemId = t.nextSibling.nextSibling.textContent;
-			var url = "[your url]"+"/deleteitemfromcart";
-			var current = parseInt(t.parentNode.previousSibling.textContent);
-			var data = {
-				"userId": id,
-				"itemId": itemId,
-				"deleteQuantity": 1
-			};
-			$.ajax({
-	            type: "POST",
-	            dataType: "json",
-	            url: url,
-	            contentType: "application/json",
-	            data: JSON.stringify(data),
-	            success: function (response) {
-	                if(response.success){
-	                	var temp = current-1;
-	                	if(temp==0){
-	                		t.parentNode.parentNode.innerHTML = "";
-	                	}else{
-	                		t.parentNode.previousSibling.innerHTML = temp;
-	                	}
-	                }
-	            },
-	            error: function () {
-	                //alert("Sorry, we have some problem.");
-	            }
-	        });
-		}
+        function deleteCartItem(t){
+            var id = $("#myaccount span").text();
+            var itemId = t.nextSibling.nextSibling.textContent;
+            var url = "[your url]"+"/deleteitemfromcart";
+            var current = parseInt(t.parentNode.previousSibling.textContent);
+            var data = {
+                "userId": id,
+                "itemId": itemId,
+                "deleteQuantity": 1
+            };
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: url,
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    if(response.success){
+                        var temp = current-1;
+                        if(temp==0){
+                            t.parentNode.parentNode.innerHTML = "";
+                        }else{
+                            t.parentNode.previousSibling.innerHTML = temp;
+                        }
+                    }
+                },
+                error: function () {
+                    //alert("Sorry, we have some problem.");
+                }
+            });
+        }
 
-	</script>
+    </script>
 </html>

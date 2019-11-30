@@ -1,165 +1,165 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>EasyAuc</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-		<script src="js/jquery-3.4.1.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-		<script src="js/bootstrap.min.js"></script>
-		<!-- <link href="css/easyaunc.css" rel="stylesheet" media="screen"> -->
-		<script src="js/easyaunc.js"></script>
-	</head>
-	<body>
-		<div class="container">
-			<div class="row clearfix">
-				<div class="col-md-12 column">
-					<h2>
-						EasyAuc
-					</h2>
-					<div class="row clearfix">
-						<div class="col-md-4 column">
-						</div>
-						<div class="col-md-4 column">
-						</div>
-						<div class="col-md-3 column">
-						</div>
-						<div class="col-md-1 column">
-							<br>
-							<button id="home" type="button" class="btn btn-warning btn-sm">Home<span style="display: none"></span></button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<br/>
-			<div class="row clearfix">
-				<div class="col-md-12 column">
-					<div class="jumbotron">
-						<h1>
-							<span class="text-primary">H</span>
-							<span class="text-secondary">e</span>
-							<span class="text-success">l</span>
-							<span class="text-danger">l</span>
-							<span class="text-warning">o</span>
-							<span class="text-info">!</span>
-						</h1>
-						<p>
-							Please add a new item in this page.
-						</p>
-						<p>
-							EasyAunc will help you find everything you like!
-						</p>
-					</div>
-				</div>
-			</div>
-            <div class="mb-3">
-				<label>Name</label>
-				<input class="form-control" id="name">
+    <head>
+        <title>EasyAuc</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <script src="js/jquery-3.4.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <!-- <link href="css/easyaunc.css" rel="stylesheet" media="screen"> -->
+        <script src="js/easyaunc.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <h2>
+                        EasyAuc
+                    </h2>
+                    <div class="row clearfix">
+                        <div class="col-md-4 column">
+                        </div>
+                        <div class="col-md-4 column">
+                        </div>
+                        <div class="col-md-3 column">
+                        </div>
+                        <div class="col-md-1 column">
+                            <br>
+                            <button id="home" type="button" class="btn btn-warning btn-sm">Home<span style="display: none"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <div class="jumbotron">
+                        <h1>
+                            <span class="text-primary">H</span>
+                            <span class="text-secondary">e</span>
+                            <span class="text-success">l</span>
+                            <span class="text-danger">l</span>
+                            <span class="text-warning">o</span>
+                            <span class="text-info">!</span>
+                        </h1>
+                        <p>
+                            Please add a new item in this page.
+                        </p>
+                        <p>
+                            EasyAunc will help you find everything you like!
+                        </p>
+                    </div>
+                </div>
             </div>
             <div class="mb-3">
-				<label>Category</label>
-				<input class="form-control" id="category">
+                <label>Name</label>
+                <input class="form-control" id="name">
             </div>
             <div class="mb-3">
-				<label>Quantity</label>
-				<input type="number" class="form-control" id="quantity">
+                <label>Category</label>
+                <input class="form-control" id="category">
             </div>
             <div class="mb-3">
-				<label>Current Price</label>
-				<input class="form-control" id="cur_price">
+                <label>Quantity</label>
+                <input type="number" class="form-control" id="quantity">
             </div>
             <div class="mb-3">
-				<label>Price Step</label>
-				<input class="form-control" id="price_step">
+                <label>Current Price</label>
+                <input class="form-control" id="cur_price">
             </div>
             <div class="mb-3">
-				<label>Start Time</label>
-				<input class="form-control" id="start_time">
+                <label>Price Step</label>
+                <input class="form-control" id="price_step">
             </div>
             <div class="mb-3">
-				<label>End Time</label>
-				<input class="form-control" id="end_time">
+                <label>Start Time</label>
+                <input class="form-control" id="start_time">
+            </div>
+            <div class="mb-3">
+                <label>End Time</label>
+                <input class="form-control" id="end_time">
             </div>
             <div class="mb-3 form-check">
-				<input type="checkbox" class="form-check-input" id="buy_now">
-    			<label class="form-check-label">Buy Now</label>
+                <input type="checkbox" class="form-check-input" id="buy_now">
+                <label class="form-check-label">Buy Now</label>
             </div>
             <div id="buy_now_price_div" class="mb-3" style="display: none">
-				<label>Buy Now Price</label>
-				<input class="form-control" id="buy_now_price">
+                <label>Buy Now Price</label>
+                <input class="form-control" id="buy_now_price">
             </div>
             <div class="mb-3">
-				<label>Shipping Cost</label>
-				<input class="form-control" id="shipping_cost">
+                <label>Shipping Cost</label>
+                <input class="form-control" id="shipping_cost">
             </div>
             <div class="mb-3">
-				<label>Description</label>
-    			<textarea class="form-control" id="description" rows="3"></textarea>
+                <label>Description</label>
+                <textarea class="form-control" id="description" rows="3"></textarea>
             </div>
             <div class="mb-3">
-				<label>Upload Image</label>
-    			<input type="file" class="form-control-file" id="photo">
+                <label>Upload Image</label>
+                <input type="file" class="form-control-file" id="photo">
             </div>
             <button id="submit" type="button" class="btn btn-success btn-sm">Submit</button>
             <br>
             <br>
-			<br>
-			<br>
-		</div>
-	</body>
-	<footer class="footer navbar-fixed-bottom ">
-		<div class="footer-copyright text-center py-3">Copyright © 2019 EasyAuc. All rights reserved.</div>
-	</footer>
-	<script type="text/javascript">
-		$(function(){
-			var id = getQueryVariable("id");
-			$("#home span").html(id);
-		    $("#home").click(function(){
-				window.location.href="home.html?id="+id;
-			});
+            <br>
+            <br>
+        </div>
+    </body>
+    <footer class="footer navbar-fixed-bottom ">
+        <div class="footer-copyright text-center py-3">Copyright © 2019 EasyAuc. All rights reserved.</div>
+    </footer>
+    <script type="text/javascript">
+        $(function(){
+            var id = getQueryVariable("id");
+            $("#home span").html(id);
+            $("#home").click(function(){
+                window.location.href="home.html?id="+id;
+            });
 
-		    $("#buy_now").click(function(){
-		    	if($("#buy_now").is(":checked"))
-		    		$("#buy_now_price_div").removeAttr("style");
-		    	else
-		    		$("#buy_now_price_div").css("display","none");
-			});
-		});
-		$("#submit").click(function(){
-			var name = $("#name").val();
-			var sellerId = parseInt($("#home span").val());
-			var category = $("#category").val();
-			var quantity = parseInt($("#quantity").val());
-			var cur_price = parseFloat($("#cur_price").val());
-			var price_step = parseFloat($("#price_step").val());
-			var start_time = $("#start_time").val();
-			var end_time = $("#end_time").val();
-			var buy_now=false;
-			var buy_now_price=0;
-			if($("#buy_now").is(":checked")){
-				buy_now=true;
-				buy_now_price=parseInt($("#buy_now_price").val());
-			}
-			var shipping_cost=parseInt($("#shipping_cost").val());
-			var description=$("#description").val();
-			var photo=$("#photo").get(0).files[0];
-			var url = "[your url]"+"/additem";
-			var data={
-				"sellerId": id,
-				"name":name,
-				"category":category,
-				"quantity":quantity,
-				"cur_price":cur_price,
-				"price_step":price_step,
-				"start_time":start_time,
-				"end_time":end_time,
-				"buy_now": buy_now,
-				"buy_now_price": buy_now_price,
-				"shipping_cost": shipping_cost,
-				"description": description,
-				"photo": 
-			};
-			$.ajax({
+            $("#buy_now").click(function(){
+                if($("#buy_now").is(":checked"))
+                    $("#buy_now_price_div").removeAttr("style");
+                else
+                    $("#buy_now_price_div").css("display","none");
+            });
+        });
+        $("#submit").click(function(){
+            var name = $("#name").val();
+            var sellerId = parseInt($("#home span").val());
+            var category = $("#category").val();
+            var quantity = parseInt($("#quantity").val());
+            var cur_price = parseFloat($("#cur_price").val());
+            var price_step = parseFloat($("#price_step").val());
+            var start_time = $("#start_time").val();
+            var end_time = $("#end_time").val();
+            var buy_now=false;
+            var buy_now_price=0;
+            if($("#buy_now").is(":checked")){
+                buy_now=true;
+                buy_now_price=parseInt($("#buy_now_price").val());
+            }
+            var shipping_cost=parseInt($("#shipping_cost").val());
+            var description=$("#description").val();
+            var photo=$("#photo").get(0).files[0];
+            var url = "[your url]"+"/additem";
+            var data={
+                "sellerId": id,
+                "name":name,
+                "category":category,
+                "quantity":quantity,
+                "cur_price":cur_price,
+                "price_step":price_step,
+                "start_time":start_time,
+                "end_time":end_time,
+                "buy_now": buy_now,
+                "buy_now_price": buy_now_price,
+                "shipping_cost": shipping_cost,
+                "description": description,
+                "photo": 
+            };
+            $.ajax({
                 type: "POST",
                 dataType: "json",
                 url: url,
@@ -167,13 +167,13 @@
                 data: JSON.stringify(data),
                 success: function (response) {
                     if(!response.success){
-                    	alert(response.message);
+                        alert(response.message);
                     }
                 },
                 error: function () {
                     //alert("Sorry, we have some problem.");
                 }
             });
-		});
-	</script>
+        });
+    </script>
 </html>

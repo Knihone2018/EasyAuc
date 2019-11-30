@@ -1,197 +1,197 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>EasyAuc</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-		<script src="js/jquery-3.4.1.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-		<script src="js/bootstrap.min.js"></script>
-		<!-- <link href="css/easyaunc.css" rel="stylesheet" media="screen"> -->
-		<script src="js/easyaunc.js"></script>
-	</head>
-	<body>
-		<div class="container">
-			<div class="row clearfix">
-				<div class="col-md-12 column">
-					<h2>
-						EasyAuc
-					</h2>
-					<div class="row clearfix">
-						<div class="col-md-4 column">
-						</div>
-						<div class="col-md-2 column">
-						</div>
-						<div class="col-md-2 column">
-						</div>
-						<div class="col-md-2 column">
-						</div>
-						<div class="col-md-2 column">
-							<br>
-							<button id="home" type="button" class="btn btn-warning btn-sm">Home<span style="display: none"></span></button>
-							<button id="myaccount" type="button" class="btn btn-primary btn-sm">My Account<span style="display: none"></span></button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<br/>
-			<p class="text-center font-weight-bold text-secondary">My History</p>
-			<div style="text-align:center">
-				<table class="table row mx-0">
-					<thead class="w-100">
-						<tr class="row mx-0">
-							<th class="col-md-3">
-							</th>
-							<th class="col-md-2">
-								Name
-							</th>
-							<th class="col-md-2">
-								Category
-							</th>
-							<th class="col-md-2">
-								Quantity
-							</th>
-							<th class="col-md-2">
-								Check Out Time
-							</th>
-							<th class="col-md-1">
-							</th>
-						</tr>
-					</thead>
-					<tbody id="dataTable" class="w-100">
-					</tbody>
-				</table>
-			</div>
+    <head>
+        <title>EasyAuc</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <script src="js/jquery-3.4.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <!-- <link href="css/easyaunc.css" rel="stylesheet" media="screen"> -->
+        <script src="js/easyaunc.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <h2>
+                        EasyAuc
+                    </h2>
+                    <div class="row clearfix">
+                        <div class="col-md-4 column">
+                        </div>
+                        <div class="col-md-2 column">
+                        </div>
+                        <div class="col-md-2 column">
+                        </div>
+                        <div class="col-md-2 column">
+                        </div>
+                        <div class="col-md-2 column">
+                            <br>
+                            <button id="home" type="button" class="btn btn-warning btn-sm">Home<span style="display: none"></span></button>
+                            <button id="myaccount" type="button" class="btn btn-primary btn-sm">My Account<span style="display: none"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <p class="text-center font-weight-bold text-secondary">My History</p>
+            <div style="text-align:center">
+                <table class="table row mx-0">
+                    <thead class="w-100">
+                        <tr class="row mx-0">
+                            <th class="col-md-3">
+                            </th>
+                            <th class="col-md-2">
+                                Name
+                            </th>
+                            <th class="col-md-2">
+                                Category
+                            </th>
+                            <th class="col-md-2">
+                                Quantity
+                            </th>
+                            <th class="col-md-2">
+                                Check Out Time
+                            </th>
+                            <th class="col-md-1">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTable" class="w-100">
+                    </tbody>
+                </table>
+            </div>
 
-			<!-- Modal -->
-			<div class="modal fade" id="ratingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			  <div class="modal-dialog" role="document">
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <h5 class="modal-title" id="exampleModalLabel">Rating</h5>
-			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			          <span aria-hidden="true">&times;</span>
-			        </button>
-			      </div>
-			      <div class="modal-body">
-					<input type="number" class="form-control" id="ratingnumber" min="0" max="100">
-			      </div>
-			      <div class="modal-footer">
-			        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-			        <button type="button" class="btn btn-primary" onclick=ratingSeller()>Submit</button>
-			        <span id="sellerid_span" style="display: none"></span>
-			      </div>
-			    </div>
-			  </div>
-			</div>
-			<br>
-			<br>
-			<br>
-			<br>
-			<br>
-			<br>
-			<br>
-			<br>
-			<br>
-			<br>
-		</div>
-	</body>
-	<footer class="footer navbar-fixed-bottom ">
-		<div class="footer-copyright text-center py-3">Copyright © 2019 EasyAuc. All rights reserved.</div>
-	</footer>
-	<script type="text/javascript">
+            <!-- Modal -->
+            <div class="modal fade" id="ratingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Rating</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <input type="number" class="form-control" id="ratingnumber" min="0" max="100">
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick=ratingSeller()>Submit</button>
+                    <span id="sellerid_span" style="display: none"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+    </body>
+    <footer class="footer navbar-fixed-bottom ">
+        <div class="footer-copyright text-center py-3">Copyright © 2019 EasyAuc. All rights reserved.</div>
+    </footer>
+    <script type="text/javascript">
 
-		$(function(){
-			var id = getQueryVariable("id");
-		    $("#myaccount span").html(id);
-		    $("#myaccount").click(function(){
-				window.location.href="myaccount.html?id="+id;
-			});
+        $(function(){
+            var id = getQueryVariable("id");
+            $("#myaccount span").html(id);
+            $("#myaccount").click(function(){
+                window.location.href="myaccount.html?id="+id;
+            });
 
-			getHistoryList(id);
-		});
+            getHistoryList(id);
+        });
 
-		function getHistoryList(id){
-			var url = "[your url]"+"/history.html?id="+id;
-			$.ajax({
-	            type: "GET",
-	            dataType: "json",
-	            url: url,
-	            success: function (response) {
-	            	if(response.success)
-	                	createHistoryList(response);
-	            },
-	            error: function () {
-	                //alert("Sorry, we have some problem.");
-	                createHistoryList("");
-	            }
-	        });
-		}
+        function getHistoryList(id){
+            var url = "[your url]"+"/history.html?id="+id;
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: url,
+                success: function (response) {
+                    if(response.success)
+                        createHistoryList(response);
+                },
+                error: function () {
+                    //alert("Sorry, we have some problem.");
+                    createHistoryList("");
+                }
+            });
+        }
 
         function createHistoryList(data){
-        	var data={"items":[{"name":"A","photo":"http://seopic.699pic.com/photo/50057/5368.jpg_wh1200.jpg","itemId":"1","category":"book","quantity":1,"sellerId":1231}]};
-        	var tableStr = "";
-		    var len = data.items.length;
-		    for (var i = 0; i < len; i++) {
-		        tableStr = tableStr + "<tr class='row mx-0'><td class='col-3'>" + createImage(data.items[i].photo)
-		                + "</td>" + "<td class='col-2'>" + createName(data.items[i].name, data.items[i].itemId) + "</td>"
-		                + "<td class='col-2'>" + data.items[i].category + "</td>"
-		                + "<td class='col-2'>" + data.items[i].quantity + "</td>"
-		                + "<td class='col-2'>" + data.items[i].checkOutTime + "</td>"
-		                + "<td class='col-1'>" + createRatingButton()+"<span style='display:none'>"+data.items[i].sellerId+"</span></td>"
-		                + "</tr>";
-		    }
-		    $("#dataTable").html(tableStr);
-		}
+            // var data={"items":[{"name":"A","photo":"http://seopic.699pic.com/photo/50057/5368.jpg_wh1200.jpg","itemId":"1","category":"book","quantity":1,"sellerId":1231}]};
+            var tableStr = "";
+            var len = data.items.length;
+            for (var i = 0; i < len; i++) {
+                tableStr = tableStr + "<tr class='row mx-0'><td class='col-3'>" + createImage(data.items[i].photo)
+                        + "</td>" + "<td class='col-2'>" + createName(data.items[i].name, data.items[i].itemId) + "</td>"
+                        + "<td class='col-2'>" + data.items[i].category + "</td>"
+                        + "<td class='col-2'>" + data.items[i].quantity + "</td>"
+                        + "<td class='col-2'>" + data.items[i].checkOutTime + "</td>"
+                        + "<td class='col-1'>" + createRatingButton()+"<span style='display:none'>"+data.items[i].sellerId+"</span></td>"
+                        + "</tr>";
+            }
+            $("#dataTable").html(tableStr);
+        }
 
-		function createName(name, id){
-			url = "item.html?id="+id;
-			var link = "<a href='"+url+"'>"+name+"</a>";
-			return link;
-		}
+        function createName(name, id){
+            url = "item.html?id="+id;
+            var link = "<a href='"+url+"'>"+name+"</a>";
+            return link;
+        }
 
-		function createImage(url){
-			var image = "<img src='+" + url + "' class='img-rounded' width='150' height='150'>";
-			return image;
-		}
+        function createImage(url){
+            var image = "<img src='+" + url + "' class='img-rounded' width='150' height='150'>";
+            return image;
+        }
 
-		function createRatingButton(t){
-			var button = "<button type='button' class='btn btn-info btn-sm' data-toggle='modal' data-target='#ratingModal' onclick=setSellerId(this)>Rate</button>";
-			return button;
-		}
+        function createRatingButton(t){
+            var button = "<button type='button' class='btn btn-info btn-sm' data-toggle='modal' data-target='#ratingModal' onclick=setSellerId(this)>Rate</button>";
+            return button;
+        }
 
-		function setSellerId(t){
-			var sellerId = t.nextSibling.textContent;
-			$("#sellerid_span").html(sellerId);
-		}
+        function setSellerId(t){
+            var sellerId = t.nextSibling.textContent;
+            $("#sellerid_span").html(sellerId);
+        }
 
-		function ratingSeller(){
-			var id=$("#myaccount span").text();
-			var sellerId = $("#sellerid_span").text();
-			var rating=$("#ratingnumber").val();
-			if(rating==""){
-				alert("Rating can't be empty.");
-				return;
-			}
-			var data={
-				"sellerId": sellerId,
-				"rate": parseInt(rating)
-			};
-			var url = "[your url]"+"/addsellerrate";
-			$.ajax({
-	            type: "POST",
-	            dataType: "json",
-	            url: url,
-	            data: JSON.stringify(data),
-	            success: function (response) {
-	            	if(response.success)
-	            		window.location.href="history.html?id="+id;
-	            },
-	            error: function () {
-	                //alert("Sorry, we have some problem.");
-	                //window.location.href="history.html?id="+id;
-	            }
-	        });
-		}
-	</script>
+        function ratingSeller(){
+            var id=$("#myaccount span").text();
+            var sellerId = $("#sellerid_span").text();
+            var rating=$("#ratingnumber").val();
+            if(rating==""){
+                alert("Rating can't be empty.");
+                return;
+            }
+            var data={
+                "sellerId": sellerId,
+                "rate": parseInt(rating)
+            };
+            var url = "[your url]"+"/addsellerrate";
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: url,
+                data: JSON.stringify(data),
+                success: function (response) {
+                    if(response.success)
+                        window.location.href="history.html?id="+id;
+                },
+                error: function () {
+                    //alert("Sorry, we have some problem.");
+                    //window.location.href="history.html?id="+id;
+                }
+            });
+        }
+    </script>
 </html>
