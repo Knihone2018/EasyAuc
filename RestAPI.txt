@@ -124,6 +124,24 @@ return request format: json
 flag:int //number of flags
 
 
+
+
+-------------
+Item界面/Auction界面
+localhost:9000/setflag
+methods=["PUT"]
+
+incoming request format: json
+{“ID”:int}
+
+return request format: json
+{"success":True}
+
+
+
+
+
+
 -------------
 通过itemid找item全部信息
 
