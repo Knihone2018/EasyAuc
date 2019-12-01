@@ -8,7 +8,7 @@ from user import *
 app = Flask(__name__)
 CORS(app)
 #Swagger(app)
-Port = 5672
+Port = 8000
 
 
 
@@ -50,9 +50,9 @@ def checkPassword():
 
 
 
-@app.route("/myaccount", methods=["GET"])
-def getAllUserInfo():
-    userId = request.json.get('userId')
+@app.route("/myaccount/<userId>", methods=["GET"])
+def getAllUserInfo(userId):
+    #userId = request.json.get('userId')
     try:
         ctl = AccountControl()
         email = ctl.getUserEmailbyUserId(userId)
@@ -75,9 +75,8 @@ def getAllUserInfo():
         return jsonify({'success': False})
 
 
-@app.route("/getsellerrating", methods=["GET"])
-def getSellerRating():
-    userId = request.json.get('userId')
+@app.route("/getsellerrating/<userId>", methods=["GET"])
+def getSellerRating(userId):
     try:
         ctl = AccountControl()
         rating = ctl.getRating(userId)
@@ -673,9 +672,9 @@ def getOneItemInfoInCart():
 
 
 
-@app.route("/cart", methods=["GET"])
-def getAllItemInfoInCart():
-    userId = request.json.get('userId')
+@app.route("/cart/<userId>", methods=["GET"])
+def getAllItemInfoInCart(userId):
+    #userId = request.json.get('userId')
     ctl = CartControl()
     res = ctl.getAllItemInfoInCart(userId)
     result = []
@@ -716,9 +715,9 @@ def getAllItemInfoInCart():
 ######################
 
 
-@app.route("/history", methods=["GET"])
-def getAllBoughtItems():
-    userId = request.json.get('userId')
+@app.route("/history/<userId>", methods=["GET"])
+def getAllBoughtItems(userId):
+    #userId = request.json.get('userId')
     ctl = BoughtItemsControl()
     res = ctl.getAllBoughtItems(userId)
     result = []

@@ -1,6 +1,6 @@
 import requests
 
-port = 5672
+port = 8000
 
 def test0():
 	p0 = requests.post(url="http://127.0.0.1:{}/droptable/boughtitems".format(port))
@@ -8,7 +8,7 @@ def test0():
 
 
 def test1():
-	d = {"userId":"123","itemId":"456","addQuantity":1,"isBid":False}
+	d = {"userId":"123","itemId":"456","addQuantity":1}
 	p = requests.post(url="http://127.0.0.1:{}/additemtocartfrombuynow".format(port), json = d)
 	print(p.content)
 

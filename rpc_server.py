@@ -59,33 +59,31 @@ channel.basic_consume(queue='emailaddress', on_message_callback=get_user_email)
 
 
 
-# a function to add items to shopping cart from auction
+# a function to add items to shopping cart
+# use point to point
 """
     Incoming json requirement: 
         userId: int
         itemId: int
         quantity: int
+        buy_now: int
 """
-channel.queue_declare(queue='add_item_to_cart_from_bid_queue')
-def add_item_to_cart_from_bid(ch, method, props, body):
-    targetItem = json.loads(body)
-    userId = targetItem['userId']
-    itemId = targetItem['itemId']
-    addQuantity = targetItem['quantity']
+channel.queue_declare(queue='add_item_to_cart_queue')
 
-    print(" [.] addToCart(%s)" % userId)
+def add_item_to_cart(ch, method, properties, body):
+    info = json.loads(body)
+    userId = info['userId']
+    itemId = info['itemId']
+    addQuantity = info['quantity']
+    isBid = 1 - int(info['buy_now'])
+
+    print(" [x] addToCart(%s)" % userId)
     ctl = CartControl()
-    res = ctl.addToCart(userId, itemId, addQuantity, 1)
+    res = ctl.addToCart(userId, itemId, addQuantity, isBid)
 
-    ch.basic_publish(exchange='',
-                     routing_key=props.reply_to,
-                     properties=pika.BasicProperties(correlation_id = \
-                                                         props.correlation_id),
-                     body= 'userId: {}, itemId: {}, addQuantity: {}'.format(userId, itemId, addQuantity) if res else str(res))
-    ch.basic_ack(delivery_tag=method.delivery_tag)
-
-channel.basic_consume(queue='add_item_to_cart_from_bid_queue', on_message_callback=add_item_to_cart_from_bid)
+channel.basic_consume(queue='add_item_to_cart_queue', on_message_callback=add_item_to_cart, auto_ack=True)
 
 
-print(" [x] Awaiting RPC requests")
+
+print(" [x] Awaiting requests...")
 channel.start_consuming()
