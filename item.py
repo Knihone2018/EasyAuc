@@ -324,7 +324,6 @@ class CategoryControl(DatabaseControl):
 #RabitMQ connection
 '''
 point to point
-get url
 update current price
 json: {'head':'price','itemID':10,'new_price':15.5}
 
