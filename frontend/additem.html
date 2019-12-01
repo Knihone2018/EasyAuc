@@ -74,11 +74,11 @@
             </div>
             <div class="mb-3">
                 <label>Start Time</label>
-                <input class="form-control" id="start_time">
+                <input type="datetime-local" class="form-control" id="start_time" value="2019-01-01T00:00">
             </div>
             <div class="mb-3">
                 <label>End Time</label>
-                <input class="form-control" id="end_time">
+                <input type="datetime-local" class="form-control" id="end_time" value="2019-01-01T00:00">
             </div>
             <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="buy_now">
@@ -111,6 +111,16 @@
         <div class="footer-copyright text-center py-3">Copyright © 2019 EasyAuc. All rights reserved.</div>
     </footer>
     <script type="text/javascript">
+        function toTimeStr(str){
+            s=str.split("T");
+            date=s[0].split("-");
+            return date[1]+"/"+date[2]+"/"+date[0]+" "+s[1];
+        }
+
+        function toTimestamp(strDate){
+            var datum = Date.parse(toTimeStr(strDate));
+            return datum/1000;
+        }
         $(function(){
             var id = getQueryVariable("id");
             $("#home span").html(id);
@@ -152,8 +162,8 @@
                 "quantity":quantity,
                 "cur_price":cur_price,
                 "price_step":price_step,
-                "start_time":start_time,
-                "end_time":end_time,
+                "start_time":toTimestamp(start_time),
+                "end_time":toTimestamp(end_time),
                 "buy_now": buy_now,
                 "buy_now_price": buy_now_price,
                 "shipping_cost": shipping_cost,
