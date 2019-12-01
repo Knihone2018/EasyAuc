@@ -33,7 +33,7 @@ class Test(object):
         self.corr_id = str(uuid.uuid4())
         self.channel.basic_publish(
             exchange='',
-            routing_key='rpc_get_user_email_queue',
+            routing_key='emailaddress',
             properties=pika.BasicProperties(
                 reply_to=self.callback_queue,
                 correlation_id=self.corr_id,
@@ -47,6 +47,6 @@ class Test(object):
 test_rpc = Test()
 
 print(" [x] Requesting ...")
-response = test_rpc.call(1)
+response = test_rpc.call(2)
 print(" [.] Got %r" % response)
 

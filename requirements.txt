@@ -1,0 +1,5 @@
+flask
+mysql-connector
+flask_cors
+pika
+uuid

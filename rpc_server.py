@@ -12,7 +12,7 @@ channel = connection.channel()
     Incoming json requirement: 
         userId: int
 """
-channel.queue_declare(queue='rpc_get_user_deleted_or_blocked_queue')
+channel.queue_declare(queue='checkuser')
 def check_user_valid_request(ch, method, props, body):
     b = json.loads(body)
     userId = b['userId']
@@ -30,7 +30,7 @@ def check_user_valid_request(ch, method, props, body):
                      body=str(response))
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
-channel.basic_consume(queue='rpc_get_user_deleted_or_blocked_queue', on_message_callback=check_user_valid_request)
+channel.basic_consume(queue='checkuser', on_message_callback=check_user_valid_request)
 
 
 
@@ -39,7 +39,7 @@ channel.basic_consume(queue='rpc_get_user_deleted_or_blocked_queue', on_message_
     Incoming json requirement: 
         userId: int
 """
-channel.queue_declare(queue='rpc_get_user_email_queue')
+channel.queue_declare(queue='emailaddress')
 def get_user_email(ch, method, props, body):
     b = json.loads(body)
     userId = b['userId']
@@ -55,7 +55,7 @@ def get_user_email(ch, method, props, body):
                      body=str(response))
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
-channel.basic_consume(queue='rpc_get_user_email_queue', on_message_callback=get_user_email)
+channel.basic_consume(queue='emailaddress', on_message_callback=get_user_email)
 
 
 

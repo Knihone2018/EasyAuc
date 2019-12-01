@@ -26,11 +26,11 @@ def checkoutCart():
         try:
             history.addItemToBoughtList(userId, row[0], row[1])
         except:
-            return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+            return jsonify({'success': False})
     emptyRes = cart.emptyCart(userId)
     if emptyRes:
-        return Response(json.dumps({'success': True}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True})
+    return jsonify({'success': False})
 
 
 @app.route("/checkpassword", methods=["POST"])
@@ -40,8 +40,8 @@ def checkPassword():
     ctl = AccountControl()
     res = ctl.checkSignin(email, password)
     if res:
-        return Response(json.dumps({'success':res['success'], 'userId':res['userId'], 'isAdmin':res['isAdmin']}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success':False}), status = 500, mimetype='application/json')
+        return jsonify({'success':res['success'], 'userId':res['userId'], 'isAdmin':res['isAdmin']})
+    return jsonify({'success': False})
 
 
 ######################
@@ -68,13 +68,22 @@ def getAllUserInfo():
         isBlocked = ctl.checkBlockByUserId(userId)
         isDeleted = ctl.checkDeleteByUserId(userId)
         isAdmin = ctl.checkIsAdminByUserId(userId)
-        return Response(json.dumps({'success': True, 'email':email, 'firstname':firstname, 'lastname':lastname, 'password':pwd, 
+        return jsonify({'success': True, 'email':email, 'firstname':firstname, 'lastname':lastname, 'password':pwd, 
             'address':address, 'zipcode':zipcode, 'city':city, 'state':state, 'bankAccount':bankAcc, 'rating':rating,
-            'isBlocked':isBlocked, 'isDeleted':isDeleted, 'isAdmin':isAdmin}), status = 200, mimetype='application/json')
+            'isBlocked':isBlocked, 'isDeleted':isDeleted, 'isAdmin':isAdmin})
     except:
-        return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': False})
 
 
+@app.route("/getsellerrating", methods=["GET"])
+def getSellerRating():
+    userId = request.json.get('userId')
+    try:
+        ctl = AccountControl()
+        rating = ctl.getRating(userId)
+        return jsonify({'success': True, 'rating':rating})
+    except:
+        return jsonify({'success': False})
 
 """
 Incoming json requirement:
@@ -89,8 +98,8 @@ def checkDeleteAccount():
     ctl = AccountControl()
     res = ctl.checkDeleteByUserId(userId)
     if res != -1:
-        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'value': res})
+    return jsonify({'success': False})
 
 
 """
@@ -107,8 +116,8 @@ def checkBlockAccount():
     ctl = AccountControl()
     res = ctl.checkBlockByUserId(userId)
     if res != -1:
-        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'value': res})
+    return jsonify({'success': False})
 
 
 """
@@ -125,8 +134,8 @@ def getUserEmail():
     res = ctl.getUserEmailbyUserId(userId)
     print(res)
     if res:
-        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'value': res})
+    return jsonify({'success': False})
 
 
 """
@@ -142,8 +151,8 @@ def getUserFirstname():
     ctl = AccountControl()
     res = ctl.getUserFirstname(userId)
     if res:
-        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'value': res})
+    return jsonify({'success': False})
 
 
 """
@@ -159,8 +168,8 @@ def getUserLastname():
     ctl = AccountControl()
     res = ctl.getUserLastname(userId)
     if res:
-        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'value': res})
+    return jsonify({'success': False})
 
 
 """
@@ -176,8 +185,8 @@ def getUserPassword():
     ctl = AccountControl()
     res = ctl.getUserPassword(userId)
     if res:
-        return Response(json.dumps({'success': True, 'password': res}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'password': res})
+    return jsonify({'success': False})
 
 
 """
@@ -193,8 +202,8 @@ def getUserAddress():
     ctl = AccountControl()
     res = ctl.getUserAddress(userId)
     if res:
-        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'value': res})
+    return jsonify({'success': False})
 
 
 
@@ -211,8 +220,8 @@ def getUserZipcode():
     ctl = AccountControl()
     res = ctl.getUserZipcode(userId)
     if res:
-        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'value': res})
+    return jsonify({'success': False})
 
 
 """
@@ -228,8 +237,8 @@ def getUserCity():
     ctl = AccountControl()
     res = ctl.getUserCity(userId)
     if res:
-        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'value': res})
+    return jsonify({'success': False})
 
 
 
@@ -246,8 +255,8 @@ def getUserState():
     ctl = AccountControl()
     res = ctl.getUserState(userId)
     if res:
-        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'value': res})
+    return jsonify({'success': False})
 
 
 """
@@ -263,8 +272,8 @@ def getUserBankAccNum():
     ctl = AccountControl()
     res = ctl.getUserBankAccNum(userId)
     if res:
-        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'value': res})
+    return jsonify({'success': False})
 
 
 ######################
@@ -309,8 +318,8 @@ def addAccount():
     ctl = AccountControl()
     res = ctl.addAccount(email, firstname, lastname, password, address, zipcode, city, state, bankAccountNumber, isBlocked, isDeleted, isAdmin, 0, 0)
     if res:
-        return Response(json.dumps({'success': True, 'userId': res}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'userId': res})
+    return jsonify({'success': False})
 
 
 """
@@ -326,8 +335,8 @@ def deleteAccount():
     ctl = AccountControl()
     res = ctl.deleteAccount(userId)
     if res:
-        return Response(json.dumps({'success': True, 'userId': res}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'userId': res})
+    return jsonify({'success': False})
 
 
 
@@ -344,8 +353,8 @@ def blockAccount():
     ctl = AccountControl()
     res = ctl.blockAccount(userId)
     if res:
-        return Response(json.dumps({'success': True, 'userId': res}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'userId': res})
+    return jsonify({'success': False})
 
 
 
@@ -364,8 +373,8 @@ def addOneSellerRating():
     ctl = AccountControl()
     res = ctl.addRating(userId, newNum)
     if res:
-        return Response(json.dumps({'success': True, 'sellerId': userId}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'sellerId': userId})
+    return jsonify({'success': False})
 
 
 
@@ -384,8 +393,8 @@ def setEmail():
     ctl = AccountControl()
     res = ctl.setEmail(userId, newemail)
     if res:
-        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'userId': userId})
+    return jsonify({'success': False})
 
 
 
@@ -404,8 +413,8 @@ def setFirstname():
     ctl = AccountControl()
     res = ctl.setFirstname(userId, newStr)
     if res:
-        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'userId': userId})
+    return jsonify({'success': False})
 
 
 
@@ -424,8 +433,8 @@ def setLastname():
     ctl = AccountControl()
     res = ctl.setLastname(userId, newStr)
     if res:
-        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'userId': userId})
+    return jsonify({'success': False})
 
 
 """
@@ -443,8 +452,8 @@ def setPassword():
     ctl = AccountControl()
     res = ctl.setPassword(userId, newStr)
     if res:
-        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'userId': userId})
+    return jsonify({'success': False})
 
 
 """
@@ -462,8 +471,8 @@ def setAddress():
     ctl = AccountControl()
     res = ctl.setAddress(userId, newStr)
     if res:
-        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'userId': userId})
+    return jsonify({'success': False})
 
 
 """
@@ -481,8 +490,8 @@ def setZipcode():
     ctl = AccountControl()
     res = ctl.setZipcode(userId, newNum)
     if res:
-        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'userId': userId})
+    return jsonify({'success': False})
 
 
 """
@@ -500,8 +509,8 @@ def setCity():
     ctl = AccountControl()
     res = ctl.setCity(userId, newStr)
     if res:
-        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'userId': userId})
+    return jsonify({'success': False})
 
 
 
@@ -520,8 +529,8 @@ def setState():
     ctl = AccountControl()
     res = ctl.setState(userId, newStr)
     if res:
-        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'userId': userId})
+    return jsonify({'success': False})
 
 
 
@@ -540,8 +549,8 @@ def setBankAccNum():
     ctl = AccountControl()
     res = ctl.setBankAccNum(userId, newNum)
     if res:
-        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'userId': userId})
+    return jsonify({'success': False})
 
 
 
@@ -568,8 +577,8 @@ def addItemToCartFromBuynow():
     ctl = CartControl()
     res = ctl.addToCart(userId, itemId, addQuantity, 0)
     if res:
-        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'userId': userId})
+    return jsonify({'success': False})
 
 
 
@@ -592,8 +601,8 @@ def deleteItemFromCart():
         return "Cannot delete an item won from a bid"
     res = ctl.deleteFromCart(userId, itemId, deleteQuantity)
     if res:
-        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'userId': userId})
+    return jsonify({'success': False})
 
 
 
@@ -612,8 +621,8 @@ def emptyShoppingCart():
     res = ctl.emptyCart(userId)
     if res:
         ## need to call restful api in Item to update quantity!
-        return Response(json.dumps({'success': True, 'userId': userId}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'userId': userId})
+    return jsonify({'success': False})
 
 
 
@@ -638,8 +647,8 @@ def getItemIsBid():
     ctl = CartControl()
     res = ctl.checkItemIsBid(userId, itemId)
     if res != -1:
-        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'value': res})
+    return jsonify({'success': False})
 
 
 
@@ -658,8 +667,8 @@ def getOneItemInfoInCart():
     ctl = CartControl()
     res = ctl.getOneItemInfoInCart(userId, itemId)
     if res:
-        return Response(json.dumps({'success': True, 'value': res}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'value': res})
+    return jsonify({'success': False})
 
 
 
@@ -697,8 +706,8 @@ def getAllItemInfoInCart():
                     'shipping_cost':shipping_cost, 'description':description, 'url':url, 'status':status, 'photo':photo, 'success': True})
             except:
                 result.append({'itemId': res[i][0], 'quantity':res[i][1], 'isBid': res[i][2], 'success': False})
-        return Response(json.dumps({'success': True, 'items': result}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'items': result})
+    return jsonify({'success': False})
 
 
 
@@ -740,8 +749,8 @@ def getAllBoughtItems():
                     'shipping_cost':shipping_cost, 'description':description, 'url':url, 'status':status, 'photo':photo, 'success': True})
             except:
                 result.append({'success': False, 'itemId':res[i][0], 'quantity':res[i][1], 'checkOutTime': res[i][2].strftime("%m/%d/%Y, %H:%M:%S")})
-        return Response(json.dumps({'success': True, 'items': result}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'items': result})
+    return jsonify({'success': False})
 
 
 
@@ -766,8 +775,8 @@ def addItemToBoughtList():
     for pair in val:
         res = ctl.addItemToBoughtList(userId, pair[0], pair[1])
         if not res:
-            return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
-    return Response(json.dumps({'success': True, 'userId': userId, "value": val}), status = 200, mimetype='application/json')
+            return jsonify({'success': False})
+    return jsonify({'success': True, 'userId': userId, "value": val})
 
 
 @app.route("/droptable/<tableName>", methods=["POST"])
@@ -780,8 +789,8 @@ def dropTable(tableName):
         ctl = AccountControl()
     res = ctl.dropTable()
     if res:
-        return Response(json.dumps({'success': True, 'success': res}), status = 200, mimetype='application/json')
-    return Response(json.dumps({'success': False}), status = 500, mimetype='application/json')
+        return jsonify({'success': True, 'success': res})
+    return jsonify({'success': False})
 
 
 
