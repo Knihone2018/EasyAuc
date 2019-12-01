@@ -44,49 +44,14 @@
                             <span class="text-info">!</span>
                         </h1>
                         <p>
-                            Please add a new item in this page.
-                        </p>
-                        <p>
-                            EasyAunc will help you find everything you like!
+                            Update your selling item!
                         </p>
                     </div>
                 </div>
             </div>
             <div class="mb-3">
-                <label>Name</label>
-                <input class="form-control" id="name">
-            </div>
-            <div class="mb-3">
-                <label>Category</label>
-                <input class="form-control" id="category">
-            </div>
-            <div class="mb-3">
                 <label>Quantity</label>
                 <input type="number" class="form-control" id="quantity">
-            </div>
-            <div class="mb-3">
-                <label>Current Price</label>
-                <input class="form-control" id="cur_price">
-            </div>
-            <div class="mb-3">
-                <label>Price Step</label>
-                <input class="form-control" id="price_step">
-            </div>
-            <div class="mb-3">
-                <label>Start Time</label>
-                <input class="form-control" id="start_time">
-            </div>
-            <div class="mb-3">
-                <label>End Time</label>
-                <input class="form-control" id="end_time">
-            </div>
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="buy_now">
-                <label class="form-check-label">Buy Now</label>
-            </div>
-            <div id="buy_now_price_div" class="mb-3" style="display: none">
-                <label>Buy Now Price</label>
-                <input class="form-control" id="buy_now_price">
             </div>
             <div class="mb-3">
                 <label>Shipping Cost</label>
@@ -95,10 +60,6 @@
             <div class="mb-3">
                 <label>Description</label>
                 <textarea class="form-control" id="description" rows="3"></textarea>
-            </div>
-            <div class="mb-3">
-                <label>Upload Image</label>
-                <input type="file" class="form-control-file" id="photo">
             </div>
             <button id="submit" type="button" class="btn btn-success btn-sm">Submit</button>
             <br>
@@ -118,51 +79,20 @@
                 window.location.href="home.html?id="+id;
             });
 
-            $("#buy_now").click(function(){
-                if($("#buy_now").is(":checked"))
-                    $("#buy_now_price_div").removeAttr("style");
-                else
-                    $("#buy_now_price_div").css("display","none");
-            });
-        });
         $("#submit").click(function(){
-            var name = $("#name").val();
-            var sellerId = parseInt($("#home span").val());
-            var category = $("#category").val();
             var quantity = parseInt($("#quantity").val());
-            var cur_price = parseFloat($("#cur_price").val());
-            var price_step = parseFloat($("#price_step").val());
-            var start_time = $("#start_time").val();
-            var end_time = $("#end_time").val();
-            var buy_now=false;
-            var buy_now_price=0;
-            if($("#buy_now").is(":checked")){
-                buy_now=true;
-                buy_now_price=parseInt($("#buy_now_price").val());
-            }
             var shipping_cost=parseInt($("#shipping_cost").val());
             var description=$("#description").val();
-
-            var photo=$("#photo").get(0).files[0];
-            var url = "http://localhost:9000"+"/additem";
+            var url = "http://localhost:9000"+"/updateitem";
             var data={
-                "sellerId": sellerId,
-                "name":name,
-                "category":category,
+                "ID": id,
                 "quantity":quantity,
-                "cur_price":cur_price,
-                "price_step":price_step,
-                "start_time":start_time,
-                "end_time":end_time,
-                "buy_now": buy_now,
-                "buy_now_price": buy_now_price,
                 "shipping_cost": shipping_cost,
                 "description": description,
-                "photo": photo
             };
             $.ajax({
                 url: url,
-                type: "POST",
+                type: "PUT",
                 contentType:"application/json",
                 data: JSON.stringify(data),
                 success: function (response) {
@@ -175,5 +105,6 @@
                 }
             });
         });
+    });
     </script>
 </html>

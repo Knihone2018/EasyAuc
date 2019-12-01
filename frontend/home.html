@@ -8,6 +8,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="js/bootstrap.min.js"></script>
         <script src="js/easyauc.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
     <body>
         <div class="container">
@@ -47,10 +48,8 @@
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="add_category">
                     Category
                     </button>
-                    <ul class="dropdown-menu" id="category">
-                        <li>1</li>
-                            <li>2</li>
-                    </ul>
+                    <div class="dropdown-menu" id="category">
+                    </div>
                 </div>
                 <button id="searchbycategory" type="button" class="btn btn-info">Search</button>
             </div>
@@ -59,21 +58,13 @@
                 <table class="table row mx-0">
                     <thead class="w-100">
                         <tr class="row mx-0">
-                            <th class="col-md-3">
+                            <th class="col-md-4">
                             </th>
-                            <th class="col-md-2">
+                            <th class="col-md-4">
                                 Name
                             </th>
-                            <th class="col-md-2">
-                                Category
-                            </th>
-                            <th class="col-md-2">
-                                Quantity
-                            </th>
-                            <th class="col-md-2">
+                            <th class="col-md-4">
                                 Price
-                            </th>
-                            <th class="col-md-1">
                             </th>
                         </tr>
                     </thead>
@@ -102,15 +93,11 @@
             }
             $("#searchbyname").click(function(){
                 var name = $("#searchbar").val();
-                var data={
-                    "name":name
-                };
-                var url = "[your url]" + "/searchbyname";
+                var url = "http://localhost:9000" + "/searchbyname/";
                 $.ajax({
-                    type: "POST",
+                    url: url+name,
+                    type: "GET",
                     dataType: "json",
-                    url: url,
-                    data:JSON.stringify(data),
                     success: function (response) {
                         if (response.success)
                             createItem(response);
@@ -122,15 +109,11 @@
             });
             $("#searchbycategory").click(function(){
                 var categoryId = $("#categoryId").text();
-                var data={
-                    "categoryID":categoryId
-                };
-                var url = "[your url]" + "/searchbycategory";
+                var url = "http://localhost:9000" + "/searchbycategory/";
                 $.ajax({
-                    type: "POST",
+                    url: url+categoryId,
+                    type: "GET",
                     dataType: "json",
-                    url: url,
-                    data:JSON.stringify(data),
                     success: function (response) {
                         if (response.success)
                             createItem(response);
@@ -145,54 +128,54 @@
 
         function getCategory(){
             var id = $("#myaccount span").text();
-            var url = "[Your url]"+"/allcategory";
+            var url = "http://localhost:9000"+"/allcategory";
             $.ajax({
                 type: "GET",
                 dataType: "json",
                 url: url,
                 success: function (response) {
-                    if (response.success)
+                    if (response.success){
                         createCategory(response);
+                    }
                 },
                 error: function () {
                     //alert("Sorry, we have some problem.");
-                    createCategory("");
                 }
             });
         }
 
         function createCategory(data){
-            data={"123":"drink","1233":"food"};
             var str = "";
-            for (var i in data) {
-                str = str + "<li>"+data[i]
-                    +"<span style='display:none'>"+i+"</span>"
-                    +"</li>";
+            for (var i in data.message) {
+                str = str + "<div class='dropdown-item'><div>"+data.message[i]
+                    +"</div><span style='display:none'>"+i+"</span>"
+                    +"</div>";
             }
-            alert(str);
             $("#category").html(str);
-            $("#category li").click(function(){
-                alert(1);
-                var selText = $(this).find("div").text();
-                var id = $(this).find("span").text();
-                $(this).parents(".btn-group").find(".dropdown-toggle").html(selText);
-                $("#categoryId").html(id);
-            });
+            $("#category div").click(function(){
+				var selText = $(this).find("div").text();
+				var id = $(this).find("span").text();
+				$(this).parents(".btn-group").find(".dropdown-toggle").html(selText);
+				$("#categoryId").html(id);
+			});
         }
 
         function createItem(data){
             var tableStr = "";
-            var len = data.items.length;
-            for (var i = 0; i < len; i++) {
-                tableStr = tableStr + "<tr class='row mx-0'><td class='col-3'>" + createImage(data.items[i].photo)
-                        + "</td>" + "<td class='col-2'>" + createName(data.items[i].name, data.items[i].itemId) + "</td>"
-                        + "<td class='col-2'>" + data.items[i].category + "</td>"
-                        + "<td class='col-2'>" + data.items[i].quantity + "</td>"
-                        + "<td class='col-2'>" + data.items[i].checkOutTime + "</td>"
-                        + "<td class='col-1'>" + createRatingButton()+"<span style='display:none'>"+data.items[i].sellerId+"</span></td>"
+            for(var id in data.message){
+                tableStr = tableStr + "<tr class='row mx-0'><td class='col-4'>" + createImage(data.message[id][3])
+                        + "</td>" + "<td class='col-4'>" + createName(data.message[id][0],data.message[id][2]) + "</td>"
+                        + "<td class='col-4'>" + data.message[id][1] + "</td>"
                         + "</tr>";
             }
             $("#dataTable").html(tableStr);
+        }
+        function createImage(photo){
+            return;
+        }
+        function createName(name, url){
+            var str="<a href='"+url+"'>"+name+"</a>";
+            return str;
         }
     </script>
     <br>
