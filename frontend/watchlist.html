@@ -127,6 +127,10 @@
 	<script type="text/javascript">
 		$(function(){
 			var id = getQueryVariable("id");
+			$("#home span").html(id);
+		    $("#home").click(function(){
+				window.location.href="home.html?id="+id;
+			});
 		    $("#myaccount span").html(id);
 		    $("#myaccount").click(function(){
 				window.location.href="myaccount.html?id="+id;
@@ -253,7 +257,7 @@
 		    var len = data.items.length;
 		    for (var i = 0; i < len; i++) {
 		        tableStr = tableStr + "<tr class='row mx-0'><td class='col-3'>" + createImage(data.items[i].image)
-		                + "</td>" + "<td class='col-3'>" + createName(data.items[i].item_name, data.items[i].auctionUrl) + "</td>"
+		                + "</td>" + "<td class='col-3'>" + createName(data.items[i].item_name, data.items[i].item_id) + "</td>"
 		                + "<td class='col-2'>" + data.items[i].category+ "</td>"
 		                + "<td class='col-2'>" + data.items[i].price+ "</td>"
 		                + "<td class='col-2'>" + createDelButton1()
@@ -291,9 +295,10 @@
 		}
 
 		function createName(name, url){
-			var link = "<a href='"+url+"'>"+name+"</a>";
-			return link;
-		}
+            url +="&userId="+$("#home span").html();
+            var str="<a href='"+url+"'>"+name+"</a>";
+            return str;
+        }
 
 		function createDelButton1(){
 			var button = "<button type='button' class='btn btn-danger' onclick=deleteWatchedItem(this)>Delete</button>";
