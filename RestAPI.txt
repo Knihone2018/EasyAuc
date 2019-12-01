@@ -12,8 +12,8 @@ category:string
 quantity:int
 cur_price:float
 price_step:float
-start_time:datetime
-end_time:datetime
+start_time:timestamp 精确到分钟
+end_time:timestamp 精确到分钟
 buy_now:bool
 buy_now_price:int
 shipping_cost:int
