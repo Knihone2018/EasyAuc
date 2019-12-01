@@ -7,3 +7,9 @@ function getQueryVariable(variable){
        }
        return(false);
 }
+
+function getUrlRelativePath(){
+	var url = document.location.toString();
+	var i = url.lastIndexOf("/");
+	return url.substring(0,i);
+}
