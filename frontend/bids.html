@@ -1,7 +1,0 @@
-{% if bids %}
-<ul>
-    {% for bid in bids %}
-    <li>{{ bid.id }}, {{ bid.auction_id }}, {{ bid.bidder_id }}, {{ bid.bidder_name}}, {{ bid.bid_amount }}, {{ bid.time_stamp }}</li>
-    {% endfor %}
-</ul>
-{% endif %}

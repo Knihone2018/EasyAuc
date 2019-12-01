@@ -63,7 +63,7 @@
                 <div id="currentprice" class="text-warning">US $35.0</div>
             </div>
             <div class="mb-3">
-                <label>Bid (US $)</label>
+                <label>Bid (US $)</label>&nbsp<a class="text-info" data-toggle='modal' data-target='#bidInfoModal' id="bidinfo">bid info</a>
                 <input class="form-control" id="bid">
             </div>
             <div class="mb-3">
@@ -75,6 +75,42 @@
             <button id="addwatchlist" type="button" class="btn btn-primary btn-sm">Add to Watchlist</button>
             &nbsp
             <button id="flag" type="button" class="btn btn-danger btn-sm">Flag</button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="bidInfoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Bid Information</h5>
+                        </div>
+                        <div class="modal-body">
+                            <div style="text-align:center">
+                                <table class="table row mx-0">
+                                    <thead class="w-100">
+                                        <tr class="row mx-0">
+                                            <th class="col-md-4">
+                                                Bidder Id
+                                            </th>
+                                            <th class="col-md-4">
+                                                Bid Amount
+                                            </th>
+                                            <th class="col-md-4">
+                                                Bid Time
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bidtable" class="w-100">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <span id="sellerid_span" style="display: none"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <br>
             <br>
             <br>
@@ -114,6 +150,28 @@
             },
             error: function () {
                 //alert("Sorry, we have some problem.");
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "[your url]"+"/auction/"+itemId+"/bids",
+            success: function (response) {
+                if(response.success){
+                    var str="";
+                    for(var i=0;i<response.bids.length;i++)
+                        str+="<li>"+response.bids.bidder_id+" "+response.bids.bid_amount+" "+response.bids.time_stamp+"</li>"
+                    $("#bidinfo").html(str);
+                }
+            },
+            error: function () {
+                //alert("Sorry, we have some problem.");
+                response={"bids":[{"bidder_id":"123","bid_amount":"123","time_stamp":123213}]}
+                var str="";
+                for(var i=0;i<response.bids.length;i++)
+                    str+="<tr class='row mx-0'><th class='col-md-4'>"+response.bids[i].bidder_id+"</th><th class='col-md-4'>"+response.bids[i].bid_amount+"</th><th class='col-md-4'>"+response.bids[i].time_stamp+"</th></tr>"
+                $("#bidtable").html(str);
             }
         });
 

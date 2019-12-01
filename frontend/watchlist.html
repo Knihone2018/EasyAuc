@@ -173,7 +173,7 @@
             $.ajax({
                 type: "POST",
                 dataType: "json",
-                url: "http://0.0.0.0:5000/parameters",
+                url: "http://0.0.0.0:7000/parameters",
                 data: JSON.stringify(data),
                 contentType: "application/json",
                 success: function (response) {
@@ -200,7 +200,7 @@
 
 		function getWatchlist(){
 			var id = $("#myaccount span").text();
-			var url = "http://0.0.0.0:5000/watchlist/" + id;
+			var url = "http://0.0.0.0:7000/watchlist/" + id;
 			$.ajax({
 	            type: "GET",
 	            dataType: "json",
@@ -216,7 +216,7 @@
 
 		function getParameter(){
 			var id = $("#myaccount span").text();
-			var url = "http://0.0.0.0:5000/parameters/"+id;
+			var url = "http://0.0.0.0:7000/parameters/"+id;
 			$.ajax({
 	            type: "GET",
 	            dataType: "json",
@@ -313,7 +313,7 @@
 		function deleteWatchedItem(t){
 			var item_id = t.nextSibling.textContent;
 			var user_id = $("#myaccount span").text();
-			var url = "http://0.0.0.0:5000/watchlist";
+			var url = "http://0.0.0.0:7000/watchlist";
 			var data = {
 				"user_id": user_id,
 				"item_id": item_id
@@ -337,7 +337,7 @@
 		}
 
 		function deleteParam(t){
-			var url="http://0.0.0.0:5000/parameters";
+			var url="http://0.0.0.0:7000/parameters";
 			var user_id = $("#myaccount span").text();
 			var item_name = t.nextSibling.textContent;
 			var data={
