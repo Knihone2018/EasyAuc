@@ -8,7 +8,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="js/bootstrap.min.js"></script>
         <!-- <link href="css/easyaunc.css" rel="stylesheet" media="screen"> -->
-        <script src="js/easyaunc.js"></script>
+        <script src="js/easyauc.js"></script>
     </head>
     <body>
         <div class="container">
@@ -107,17 +107,17 @@
 
             $("#register").click(function(){
                 var email = $("#email").val();
-                var password = $("#password").val():
+                var password = $("#password").val();
                 var firstname = $("#firstname").val();
                 var lastname = $("#lastname").val();
-                var password = $("#address").val();
-                var zipcode = $("zipcode").val();
-                var city = $("city").val();
-                var state = $("state").val();
-                var bankAccount = $("#bankAccount").val();
+                var address= $("#address").val();
+                var zipcode = parseInt($("#zipcode").val());
+                var city = $("#city").val();
+                var state = $("#state").val();
+                var bankAccount = parseInt($("#bankAccount").val());
                 var data = {
                     "email": email,    
-                    "firstname": password,
+                    "firstname": firstname,
                     "lastname": lastname,
                     "password": password,
                     "address": address,
@@ -129,7 +129,8 @@
                     "isDeleted": 0,
                     "isAdmin": 0
                 };
-                var url = "[Your url]" +"/addaccount";
+                var url = "http://127.0.0.1:8000" +"/addaccount";
+                console.log(JSON.stringify(data));
                 $.ajax({
                     type: "POST",
                     dataType: "json",

@@ -8,7 +8,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="js/bootstrap.min.js"></script>
         <!-- <link href="css/easyaunc.css" rel="stylesheet" media="screen"> -->
-        <script src="js/easyaunc.js"></script>
+        <script src="js/easyauc.js"></script>
     </head>
     <body>
         <div class="container">
@@ -89,7 +89,7 @@
     
             $("#checkout").click(function(){
                 var id = $("#myaccount span").text();
-                var url = "[your url]"+"/checkoutcart";
+                var url = "http://127.0.0.1:8000"+"/checkoutcart";
                 var data = {
                     "userId": id
                 };
@@ -102,7 +102,6 @@
                     success: function (response) {
                         if(response.success){
                             $("#dataTable").html("");
-                            window.location.href="rating.html?id="+id;
                         }
                     },
                     error: function () {
@@ -114,11 +113,14 @@
         });
 
         function getCart(id){
-            var url = "[your url]"+"/cart.html?id="+id;
+            var url = "http://127.0.0.1:8000"+"/cart/";
+            var data={"userId":id}
+            console.log(JSON.stringify(data));
             $.ajax({
                 type: "GET",
                 dataType: "json",
-                url: url,
+                url: url+id,
+                data:JSON.stringify(data),
                 success: function (response) {
                     if (response.success)
                         createCartList(response);
@@ -174,17 +176,19 @@
         function addCartItem(t){
             var id = $("#myaccount span").text();
             var itemId = t.nextSibling.nextSibling.nextSibling.textContent;
-            var url = "[your url]"+"/additemtocartfrombuynow";
+            var url = "http://127.0.0.1:8000"+"/additemtocartfrombuynow";
             var current = parseInt(t.parentNode.previousSibling.textContent);
             var data = {
                 "userId": id,
                 "itemId": itemId,
                 "addQuantity": 1
             };
+            console.log(JSON.stringify(data));
             $.ajax({
                 type: "POST",
                 dataType: "json",
                 url: url,
+                contentType: "application/json",
                 data: JSON.stringify(data),
                 success: function (response) {
                     if(response.success){
@@ -200,8 +204,8 @@
 
         function deleteCartItem(t){
             var id = $("#myaccount span").text();
-            var itemId = t.nextSibling.nextSibling.textContent;
-            var url = "[your url]"+"/deleteitemfromcart";
+            var itemId = t.nextSibling.textContent;
+            var url = "http://127.0.0.1:8000"+"/deleteitemfromcart";
             var current = parseInt(t.parentNode.previousSibling.textContent);
             var data = {
                 "userId": id,

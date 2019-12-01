@@ -8,7 +8,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="js/bootstrap.min.js"></script>
         <!-- <link href="css/easyaunc.css" rel="stylesheet" media="screen"> -->
-        <script src="js/easyaunc.js"></script>
+        <script src="js/easyauc.js"></script>
     </head>
     <body>
         <div class="container">
@@ -55,8 +55,8 @@
                 </div>
             </div>
             <div class="mb-3">
-                <label for="email">My Email</label>
-                <input type="email" class="form-control" id="email" disabled="true">
+                <label >My Email</label>
+                <input class="form-control" id="email" disabled="true">
             </div>
             <div class="mb-3">
                 <label>First Name</label>
@@ -252,7 +252,7 @@
             });
             $("#deleteaccount span").html(id);
             $("#deleteaccount").click(function(){
-                var url = "[Your url]"+"/deleteaccount";
+                var url = "http://127.0.0.1:8000"+"/deleteaccount";
                 var data = {
                     "userId": id
                 };
@@ -281,6 +281,10 @@
             $("#changefirstname").click(function(){
                 change("firstname");
             });
+            $("#changeaddress span").html(id);
+            $("#changeaddress").click(function(){
+                change("address");
+            });
             $("#changelastname span").html(id);
             $("#changelastname").click(function(){
                 change("lastname");
@@ -306,22 +310,28 @@
                 change("password");
             });
 
-            var url = "[your url]?id="+id;
+            var url = "http://127.0.0.1:8000"+"/myaccount/";
+            var data={"userId":id};
+            console.log(JSON.stringify(data));
             $.ajax({
                 type: "GET",
                 dataType: "json",
-                url: url,
+                url: url+id,
+                data:JSON.stringify(data),
                 success: function (response) {
+                    console.log(response);
                     if(response.success){
-                        $("email").html(response.email);
-                        $("firstname").html(response.firstname);
-                        $("lastname").html(response.lastname);
-                        $("address").html(response.address);
-                        $("city").html(response.city);
-                        $("state").html(response.state);
-                        $("zipcode").html(response.zipcode);
-                        $("bankAccount").html(response.bankAccount);
-                        $("rating").html(response.rating);
+                        $("#email").val(response.email);
+                        $("#firstname").val(response.firstname);
+                        $("#lastname").val(response.lastname);
+                        $("#address").val(response.address);
+                        $("#city").val(response.city);
+                        $("#state").val(response.state);
+                        if(response.zipcode!=-1)
+                            $("#zipcode").val(response.zipcode);
+                        if(response.bankAccount!=-1)
+                            $("#bankAccount").val(response.bankAccount);
+                        $("#rating").val(response.rating);
                     }
                 },
                 error: function () {
@@ -332,7 +342,7 @@
 
         function change(name){
             name = String(name);
-            var id = $(this).find("span").text();
+            var id = $("#change"+name).find("span").text();
             var temp1 = $("#new_"+name).val();
             var temp2 = $("#con_"+name).val();
             if(temp1==undefined ||temp1==null||temp1==""){
@@ -348,7 +358,7 @@
                 return;
             }
             var key = "";
-            var url = "[Your url]";
+            var url = "http://127.0.0.1:8000";
             switch(name) {
                 case "email":
                     key = "email";
@@ -360,6 +370,7 @@
                     break;
                 case "lastname":
                     key = "lastName";
+                    url +="/setlastname"; 
                     break;
                 case "address":
                     key = "address";
@@ -371,7 +382,7 @@
                     break;
                 case "city":
                     key = "city";
-                    url +="/setCity"; 
+                    url +="/setcity"; 
                     break;
                 case "state":
                     key = "state";
@@ -381,10 +392,16 @@
                     key = "BankAccNum";
                     url +="/setbankaccountnum";
                     break;
+                case "password":
+                    key = "password";
+                    url +="/setpassword";
+                    break;
                 default:
                 // code block
             }
-            var data = {key: temp1, "userId":id};
+            var data = {"userId":id};
+            data[key] = temp1;
+            console.log(data);
             $.ajax({
                 type: "POST",
                 dataType: "json",
@@ -393,7 +410,7 @@
                 contentType: "application/json",
                 success: function (response) {
                     if(response.success){
-                        alert("You've already changed your email");
+                        alert("Your update was successful.");
                         window.location.href="myaccount.html?id="+id;
                     }
                 },

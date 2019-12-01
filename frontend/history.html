@@ -8,7 +8,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="js/bootstrap.min.js"></script>
         <!-- <link href="css/easyaunc.css" rel="stylesheet" media="screen"> -->
-        <script src="js/easyaunc.js"></script>
+        <script src="js/easyauc.js"></script>
     </head>
     <body>
         <div class="container">
@@ -112,11 +112,14 @@
         });
 
         function getHistoryList(id){
-            var url = "[your url]"+"/history.html?id="+id;
+            var url = "http://127.0.0.1:8000"+"/history/";
+            var data={"userId":id};
+            console.log(JSON.stringify(data));
             $.ajax({
                 type: "GET",
                 dataType: "json",
-                url: url,
+                url: url+id,
+                data:JSON.stringify(data),
                 success: function (response) {
                     if(response.success)
                         createHistoryList(response);
@@ -177,7 +180,8 @@
                 "sellerId": sellerId,
                 "rate": parseInt(rating)
             };
-            var url = "[your url]"+"/addsellerrate";
+            var url = "http://127.0.0.1:8000"+"/addsellerrate";
+            console.log(data);
             $.ajax({
                 type: "POST",
                 dataType: "json",

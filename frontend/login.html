@@ -4,13 +4,11 @@
         <title>EasyAuc</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-        <link href="css/login.css" rel="stylesheet" media="screen">
         <script src="js/jquery-3.4.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="js/bootstrap.min.js"></script>
-        <script src="js/bootstrap.bundle.min.js"></script>
         <!-- <link href="css/easyaunc.css" rel="stylesheet" media="screen"> -->
-        <script src="js/easyaunc.js"></script>
+        <script src="js/easyauc.js"></script>
     </head>
     <body>
         <div class="container-fluid">
@@ -22,20 +20,20 @@
                             <div class="row">
                                 <div class="col-md-9 col-lg-8 mx-auto">
                                     <h3 class="login-heading mb-4">Welcome back!</h3>
-                                    <form>
-                                        <div class="form-label-group">
-                                            <label for="inputEmail">Email address</label>
-                                            <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-                                        </div>
-                                        <br>
-                                        <div class="form-label-group">
-                                            <label for="inputPassword">Password</label>
-                                            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-                                        </div>
-                                        <br>
-                                        <button id="signin" class="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2" type="submit">Sign in</button>
-                                        <button id="register" class="btn btn-lg btn-warning btn-block btn-login text-uppercase font-weight-bold mb-2" type="submit">Register</button>
-                                    </form>
+                                    
+                                    <div class="form-label-group">
+                                        <label for="inputEmail">Email address</label>
+                                        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+                                    </div>
+                                    <br>
+                                    <div class="form-label-group">
+                                        <label for="inputPassword">Password</label>
+                                        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                                    </div>
+                                    <br>
+                                    <button id="signin" class="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2" >Sign in</button>
+                                    <button id="register" class="btn btn-lg btn-warning btn-block btn-login text-uppercase font-weight-bold mb-2">Register</button>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -50,21 +48,21 @@
     <script type="text/javascript">
         $(function(){
             $("#signin").click(function(){
-                var url = "[Your url]" + "/checkpassword";
+                var url = "http://127.0.0.1:8000" + "/checkpassword";
                 var email = $("#inputEmail").val();
-                var password = $("inputPassword").val();
+                var password = $("#inputPassword").val();
                 var data = {
                     "email": email,
                     "password": password
                 };
                 $.ajax({
                     type: "POST",
-                    dataType: "json",
                     url: url,
                     data: JSON.stringify(data),
                     contentType: "application/json",
                     success: function (response) {
                         if(response.success){
+                            console.log(response);
                             if (response.isAdmin==0)
                                 window.location.href="home.html?id="+response.userId;
                             else
@@ -72,7 +70,7 @@
                         }
                     },
                     error: function () {
-                        //alert("Sorry, we have some problem.");
+                        alert("Sorry, we have some problem.");
                     }
                 });
             });

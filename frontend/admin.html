@@ -8,7 +8,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="js/bootstrap.min.js"></script>
         <!-- <link href="css/easyaunc.css" rel="stylesheet" media="screen"> -->
-        <script src="js/easyaunc.js"></script>
+        <script src="js/easyauc.js"></script>
     </head>
     <body>
         <div class="container">
@@ -97,6 +97,7 @@
                                 Category
                             </th>
                             <th class="col-md-3">
+                                Flag
                             </th>
                         </tr>
                     </thead>
@@ -117,11 +118,12 @@
             var id = getQueryVariable("id");
             $("#id_span").html(id);
             $("#remove_user_btn").click(function(){
-                var id = parseInt($("remove_user").val());
-                var url = "[your url]"+"/deleteaccount";
+                var id = parseInt($("#remove_user").val());
+                var url = "http://127.0.0.1:8000"+"/deleteaccount";
                 var data = {
                     "userId": id
                 };
+                console.log(data);
                 $.ajax({
                     type: "POST",
                     dataType: "json",
@@ -139,8 +141,8 @@
                 });
             });
             $("#block_user_btn").click(function(){
-                var id = parseInt($("block_user").val());
-                var url = "[your url]"+"/blockaccount";
+                var id = parseInt($("#block_user").val());
+                var url = "http://127.0.0.1:8000"+"/blockaccount";
                 var data = {
                     "userId": id
                 };
@@ -161,15 +163,15 @@
                 });
             });
             $("#add_category_btn").click(function(){
-                var name = $("add_category").val();
-                var url = "[your url]"+"/searchbycategory";
+                var name = $("#add_category").val();
+                var url = "http://localhost:9000"+"/addcategory";
                 var data = {
                     "name": name
                 };
                 $.ajax({
+                    url: url,
                     type: "POST",
                     dataType: "json",
-                    url: url,
                     contentType:"application/json",
                     data: JSON.stringify(data),
                     success: function (response) {
@@ -185,15 +187,15 @@
                 });
             });
             $("#modify_category_btn").click(function(){
-                var old_name = $("modify_category_old").val();
-                var new_name = $("modify_category_new").val();
-                var url = "[your url]"+"/modifycategory";
+                var old_name = $("#modify_category_old").val();
+                var new_name = $("#modify_category_new").val();
+                var url = "http://localhost:9000"+"/modifycategory";
                 var data = {
                     "old_name": old_name,
                     "new_name": new_name
                 };
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     dataType: "json",
                     url: url,
                     contentType:"application/json",
@@ -209,13 +211,13 @@
                 });
             });
             $("#remove_category_btn").click(function(){
-                var name = $("remove_category").val();
-                var url = "[your url]"+"/deletecategory";
+                var name = $("#remove_category").val();
+                var url = "http://localhost:9000"+"/deletecategory";
                 var data = {
                     "name": name
                 };
                 $.ajax({
-                    type: "POST",
+                    type: "DELETE",
                     dataType: "json",
                     url: url,
                     contentType:"application/json",
@@ -230,13 +232,11 @@
                     }
                 });
             });
-            var url = "[your url]"+"/searchbyflag";
+            var url = "http://localhost:9000"+"/searchbyflag";
             $.ajax({
                 type: "GET",
                 dataType: "json",
                 url: url,
-                contentType:"application/json",
-                data: JSON.stringify(data),
                 success: function (response) {
                     if(response.success){
                         createFlaggedItem(response);
@@ -249,7 +249,19 @@
         });
 
         function createFlaggedItem(data){
-
+            var str = "";
+            for (var id in data.message) {
+                str = str + "<tr class='row mx-0'><td class='col-3'></td>"
+                        + "<td class='col-3'>" + createName(data.message[id][0],data.message[id][3]) + "</td>"
+                        + "<td class='col-3'>" + data.message[id][1] + "</td>"
+                        + "<td class='col-3'>" + data.message[id][2] + "</td>"
+                        + "</tr>";
+            }
+            $("#dataTable").html(str);
+        }
+        function createName(name, url){
+            var str="<a href='"+url+"'>"+name+"</a>";
+            return str;
         }
     </script>
 </html>

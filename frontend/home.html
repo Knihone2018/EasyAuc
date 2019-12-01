@@ -6,10 +6,8 @@
         <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
         <script src="js/jquery-3.4.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="js/bootstrap.bundle.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
-        <script src="js/easyaunc.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="js/easyauc.js"></script>
     </head>
     <body>
         <div class="container">
@@ -49,8 +47,10 @@
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="add_category">
                     Category
                     </button>
-                    <div class="dropdown-menu" id="category">
-                    </div>
+                    <ul class="dropdown-menu" id="category">
+                        <li>1</li>
+                            <li>2</li>
+                    </ul>
                 </div>
                 <button id="searchbycategory" type="button" class="btn btn-info">Search</button>
             </div>
@@ -110,7 +110,7 @@
                     type: "POST",
                     dataType: "json",
                     url: url,
-                    data:JSON.stringify(data)
+                    data:JSON.stringify(data),
                     success: function (response) {
                         if (response.success)
                             createItem(response);
@@ -130,7 +130,7 @@
                     type: "POST",
                     dataType: "json",
                     url: url,
-                    data:JSON.stringify(data)
+                    data:JSON.stringify(data),
                     success: function (response) {
                         if (response.success)
                             createItem(response);
@@ -156,19 +156,28 @@
                 },
                 error: function () {
                     //alert("Sorry, we have some problem.");
+                    createCategory("");
                 }
             });
         }
 
         function createCategory(data){
+            data={"123":"drink","1233":"food"};
             var str = "";
-            var len = data.message.length;
-            for (var i = 0; i < len; i++) {
-                str = str + "<div class='dropdown-item'><div>"+data.message[i].name
-                    +"</div><span style='display:none'>"+data.message[i].ID+"</span>"
-                    +"</div>";
+            for (var i in data) {
+                str = str + "<li>"+data[i]
+                    +"<span style='display:none'>"+i+"</span>"
+                    +"</li>";
             }
+            alert(str);
             $("#category").html(str);
+            $("#category li").click(function(){
+                alert(1);
+                var selText = $(this).find("div").text();
+                var id = $(this).find("span").text();
+                $(this).parents(".btn-group").find(".dropdown-toggle").html(selText);
+                $("#categoryId").html(id);
+            });
         }
 
         function createItem(data){
