@@ -4,9 +4,9 @@ from datetime import datetime
 import threading
 import json
 import os,base64
-from flask_cors import CORS #pip install -U flask-cors
-# import pika
-# import uuid
+from flask_cors import CORS #pip3 install -U flask-cors
+import pika
+import uuid
 
 
 
@@ -63,12 +63,10 @@ class DatabaseControl:
 	def CreateCategoryTable(self):
 		self.db.cursor().execute("create table if not exists Category (ID int auto_increment primary key,\
 			 					name varchar(255), index(name))")
-		# self.db.cursor().execute("create unique index cate_name on Category (name)")
-		# self.db.commit()
 
 	def CreateItemTable(self):
 		self.db.cursor().execute("create table if not exists Item (\
-										ID int auto_increment primary key,\
+										ID int not null auto_increment primary key,\
 										sellerID int,\
 		 								name varchar(255) unique,\
 		 								category int,\
@@ -83,12 +81,15 @@ class DatabaseControl:
 										sent_to_auc boolean default False,\
 										shipping_cost int,\
 										description varchar(1000),\
-										url varchar(1000),\
+										url varchar(255),\
 										status boolean default True,\
-										photo varchar(1000),\
+										photo varchar(255),\
 										index(name,url),index(category),\
 										index(start_time,buy_now,sent_to_auc),\
 										foreign key(category) references Category(ID))")
+
+
+
 
 class ItemControl(DatabaseControl):
 	def AddItem(self, item):
@@ -100,8 +101,8 @@ class ItemControl(DatabaseControl):
 			return "Name Already Exists"
         
 		#insert
-		sql = "insert into Item (sellerID, name, category, quantity, cur_price, start_time, end_time, buy_now, buy_now_price, shipping_cost, description)\
-			 	values (%(sellerID)s, %(name)s, %(category)s,%(quantity)s,%(cur_price)s,%(start_time)s,%(end_time)s,%(buy_now)s,%(buy_now_price)s,%(shipping_cost)s,%(description)s)"
+		sql = "insert into Item (sellerID, name, category, quantity, cur_price, price_step, start_time, end_time, buy_now, buy_now_price, shipping_cost, description)\
+			 	values (%(sellerID)s, %(name)s, %(category)s,%(quantity)s,%(cur_price)s,%(price_strp)s,%(start_time)s,%(end_time)s,%(buy_now)s,%(buy_now_price)s,%(shipping_cost)s,%(description)s)"
 		cursor.execute(sql,item)
 		db.commit()
 		
@@ -118,19 +119,27 @@ class ItemControl(DatabaseControl):
 		db.commit()			
 		return res
 	
-	def UpdatePrice(self, info):
+	def UpdateURL(self,itemID,url):
 		db = self.Getdb()
-		#update cur_price
-		sql = "UPDATE Item SET cur_price = %(cur_price)s WHERE ID = %(ID)s"
-		db.cursor().execute(sql,info)
+		#update url
+		sql = "UPDATE Item SET url = {} WHERE ID = {}".format(url,itemID)
+		db.cursor().execute(sql)
 		db.commit()
 		return True		
 
-	def UpdateStatus(self, info):
+	def UpdatePrice(self, itemID, price):
+		db = self.Getdb()
+		#update cur_price
+		sql = "UPDATE Item SET cur_price = {} WHERE ID = {}".format(price,itemID)
+		db.cursor().execute(sql)
+		db.commit()
+		return True		
+
+	def UpdateStatus(self, itemID):
 		db = self.Getdb()
 		#update status
-		sql = "UPDATE Item SET status = False WHERE ID = %(ID)s"
-		db.cursor().execute(sql,info)
+		sql = "UPDATE Item SET status = False WHERE ID = {}".format(itemID)
+		db.cursor().execute(sql)
 		db.commit()
 		return True	
 
@@ -139,6 +148,35 @@ class ItemControl(DatabaseControl):
 		#update status
 		sql = "UPDATE Item SET quantity = %(quantity)s WHERE ID = %(ID)s"
 		db.cursor().execute(sql,info)
+		db.commit()
+		return True	
+
+	def UpdateDescription(self,itemID,desc):
+		db = self.Getdb()
+		sql = "UPDATE Item SET description = {} WHERE ID = {}".format(desc,itemID)
+		db.cursor().execute(sql)
+		db.commit()
+		return True			
+
+	def UpdateShipping(self,itemID,ship):
+		db = self.Getdb()
+		sql = "UPDATE Item SET shipping_cost = {} WHERE ID = {}".format(ship,itemID)
+		db.cursor().execute(sql)
+		db.commit()
+		return True
+
+	######################problem
+	def UpdateBuyNow(self,itemID):
+		db = self.Getdb()
+		sql = "UPDATE Item SET buy_now = True WHERE ID = {}".format(itemID)
+		db.cursor().execute(sql)
+		db.commit()
+		return True
+
+	def UpdateFlag(self,itemID):
+		db = self.Getdb()
+		sql = "UPDATE Item SET flag = flag+1 WHERE ID = {}".format(itemID)
+		db.cursor().execute(sql)
 		db.commit()
 		return True	
 
@@ -247,15 +285,19 @@ class CategoryControl(DatabaseControl):
 	def DeleteCategory(self, name):
 		db = self.Getdb()
 		mycursor = db.cursor()
-		if not self.GetId(name):
+		ID = self.GetId(name)
+		if not ID:
 			return "Not Exist"
-		try:
-			sql = "DELETE FROM Category WHERE name = {}".format(name)
-			mycursor.execute(sql)
-			db.commit()
-			return True
-		except:
+		
+		ctl = ItemControl()
+		if ctl.SearchByCategory(ID):
 			return "Existing Item Related"
+
+		sql = "DELETE FROM Category WHERE name = {}".format(name)
+		mycursor.execute(sql)
+		db.commit()
+		return True
+			
 
 	def GetId(self,name):
 		db = self.Getdb()
@@ -280,20 +322,55 @@ class CategoryControl(DatabaseControl):
 
 
 #RabitMQ connection
+'''
+point to point
+get url
+update current price
+json: {'head':'price','itemID':10,'new_price':15.5}
+
+update status
+json: {'head':'status','itemID':10}
+'''
+class RabitMQ_Point:
+	def callback(self,ch, method, properties, body):
+		print(" [x] Received %r" % body)
+		content = json.loads(body)
+		ctl = ItemControl()
+		if content['head'] == 'price':
+			ctl.UpdatePrice(content['itemID'],content['new_price'])
+		elif content['head'] == 'status':
+			ctl.UpdateStatus(content['itemID'])
+
+	def updateWithAuction(self):
+		connection = pika.BlockingConnection(pika.ConnectionParameters(host='172.17.0.3'))
+		channel = connection.channel()
+		channel.queue_declare(queue='ItemAuction')
+
+		channel.basic_consume(queue='ItemAuction', on_message_callback=self.callback, auto_ack=True)
+
+		print('Thread Waiting for Auction to Update')
+		channel.start_consuming()
+
+# run in a thread
+def withAuction():
+	point = RabitMQ_Point()
+	point.updateWithAuction()
+
+
+
 class RabitMQ_PUB:
-	# point to point
 	def start_auction(self,message):
-		connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+		print(" Start an auction: %r" % message)
+		connection = pika.BlockingConnection(pika.ConnectionParameters(host='172.17.0.3'))
 		channel = connection.channel()
 		channel.exchange_declare(exchange='AuctionStart', exchange_type='fanout')
 		channel.basic_publish(exchange='AuctionStart', routing_key='', body=message)
-		print(" Start an auction: %r" % message)
 		connection.close()
 
 
 class RabitMQ_RPC():
     def __init__(self):
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='172.17.0.3'))
         self.channel = self.connection.channel()
         result = self.channel.queue_declare(queue='', exclusive=True)
         self.callback_queue = result.method.queue
@@ -328,6 +405,8 @@ class RabitMQ_RPC():
 
 
 #Check Auction Start in DB
+#json: {"ID":10,"buy_now":False/True}
+
 def CheckAuctionStart():
 	db = DatabaseControl().Getdb()
 	mycursor = db.cursor()
@@ -343,13 +422,7 @@ def CheckAuctionStart():
 
 
 
-############################################# with auction
-#change to point to point
-#get url
 
-#update current price
-
-#update status
 #############################################
 
 # Update an item properties, including quantity, description, shipping costs, buy now feature
@@ -415,6 +488,7 @@ def additem():
 	message = {"success":True,"message":res}
 	return jsonify(message)
 
+
 #get Item by ID
 @app.route("/getitembyid", methods=["GET"])
 # ID: int
@@ -424,6 +498,7 @@ def getitembyid():
 	ctl = ItemControl()
 	res = ctl.SearchByID(req["ID"])
 	return jsonify(res)
+
 
 #get items by category
 @app.route("/searchbycategory", methods=["GET"])
@@ -456,11 +531,22 @@ def searchbyname():
 	return jsonify(message)
 
 
-#get auctions by name
+#increase flag on an item
+@app.route("/setflag", methods=["PUT"])
+# categoryID : int
+def setflag():
+	req = request.json
+	#item control
+	ctl = ItemControl()
+	ctl.UpdateFlag(req["ID"])
+	message = {"success":True}
+	return jsonify(message)
+
+
+#get all flaged items
 @app.route("/searchbyflag", methods=["GET"])
 # categoryID : int
 def searchbyflag():
-	req = request.json
 	#item control
 	ctl = ItemControl()
 	res = ctl.SearchByFlag()
@@ -543,8 +629,12 @@ if __name__ == "__main__":
 	DBctl.CreateTable()
 
 	#check auction start
-	t = threading.Timer(60, CheckAuctionStart)
-	t.start()
+	t1 = threading.Timer(60, CheckAuctionStart)
+	t1.start()
+
+	#update with auction
+	t2 = threading.Thread(target = withAuction)
+	t2.start()
 
 	#create a photo directory
 	filename = "/photo"
