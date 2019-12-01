@@ -110,7 +110,7 @@ class ItemControl(DatabaseControl):
 		res = self.SearchByName(item['name'])
 
 		# add photo
-		png = "/photo/%d.png"%res
+		png = "/src/photo/%d.png"%res
 		with open(png,'wb') as f:
 			f.write(base64.b64decode(item["photo"]))
 
@@ -635,10 +635,6 @@ if __name__ == "__main__":
 	#update with auction
 	t2 = threading.Thread(target = withAuction)
 	t2.start()
-
-	#create a photo directory
-	filename = "/photo"
-	os.makedirs(os.path.dirname(filename), exist_ok=True)
 
 	#flask
 	p = 9000
