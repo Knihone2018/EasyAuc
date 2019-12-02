@@ -8,7 +8,7 @@ class Test(object):
 
     def __init__(self):
         self.connection = pika.BlockingConnection(
-            pika.ConnectionParameters(host='172.17.0.2'))
+            pika.ConnectionParameters(host='localhost'))
 
         self.channel = self.connection.channel()
 
@@ -33,7 +33,7 @@ class Test(object):
         self.corr_id = str(uuid.uuid4())
         self.channel.basic_publish(
             exchange='',
-            routing_key='emailaddress',
+            routing_key='email-address',
             properties=pika.BasicProperties(
                 reply_to=self.callback_queue,
                 correlation_id=self.corr_id,

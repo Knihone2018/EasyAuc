@@ -1,13 +1,12 @@
 from flask import Flask, request, Response, jsonify
 from flask_cors import CORS
-#from flasgger import Swagger
 from user import *
+import requests
 
 
 
 app = Flask(__name__)
 CORS(app)
-#Swagger(app)
 Port = 8000
 
 
@@ -682,7 +681,7 @@ def getAllItemInfoInCart(userId):
         for i in xrange(len(res)):
             # itemId, quantity, isBid
             try:
-                resItem = requests.get(url="http://localhost:9000/getitembyid", json = {"ID": res[i][0]})
+                resItem = requests.get(url="http://localhost:9001/getitembyid", json = {"ID": res[i][0]})
                 itemInfo = resItem.json()
                 sellerID = itemInfo['sellerID']
                 name = itemInfo['name']
@@ -699,7 +698,7 @@ def getAllItemInfoInCart(userId):
                 url = itemInfo['url']
                 status = itemInfo['status']
                 photo = itemInfo['photo']
-                result.append({'itemId':res[i][0], 'quantity':res[i][1], 'isBid': res[i][2], 'sellerID':sellerID, 
+                result.append({'itemId':res[i][0], 'quantity':res[i][1], 'isBid': res[i][2], 'sellerId':sellerID, 
                     'name':name, 'category':category, 'cur_price':cur_price, 'price_step':price_step,
                     'start_time':start_time, 'end_time':end_time, 'flag':flag, 'buy_now':buy_now, 'buy_now_price':buy_now_price,
                     'shipping_cost':shipping_cost, 'description':description, 'url':url, 'status':status, 'photo':photo, 'success': True})
@@ -725,7 +724,7 @@ def getAllBoughtItems(userId):
         for i in xrange(len(res)):
             # itemId, quantity, checkOutTime
             try:
-                resItem = requests.get(url="http://localhost:9000/getitembyid", json = {"ID": res[i][0]})
+                resItem = requests.get(url="http://localhost:9001/getitembyid", json = {"ID": res[i][0]})
                 itemInfo = resItem.json()
                 sellerID = itemInfo['sellerID']
                 name = itemInfo['name']
@@ -743,7 +742,7 @@ def getAllBoughtItems(userId):
                 status = itemInfo['status']
                 photo = itemInfo['photo']
                 result.append({'itemId':res[i][0], 'quantity':res[i][1], 'checkOutTime': res[i][2].strftime("%m/%d/%Y, %H:%M:%S")
-                    , 'sellerID':sellerID, 'name':name, 'category':category, 'cur_price':cur_price, 'price_step':price_step,
+                    , 'sellerId':sellerID, 'name':name, 'category':category, 'cur_price':cur_price, 'price_step':price_step,
                     'start_time':start_time, 'end_time':end_time, 'flag':flag, 'buy_now':buy_now, 'buy_now_price':buy_now_price,
                     'shipping_cost':shipping_cost, 'description':description, 'url':url, 'status':status, 'photo':photo, 'success': True})
             except:

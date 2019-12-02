@@ -40,6 +40,6 @@ db.cursor().execute("create table if not exists Account (\
                                         numOfRates int);")
 db.commit()
 
-db.cursor().execute("insert into Account (email, password) values ('admin@easyauc.com','123');")
+db.cursor().execute("insert into Account (email, password, isAdmin) values ('admin@easyauc.com','123', 1);")
 db.commit()
 

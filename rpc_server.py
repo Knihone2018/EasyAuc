@@ -3,7 +3,7 @@ from user import *
 
 #docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(host='172.17.0.2'))
+connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 channel = connection.channel()
 
 
@@ -39,7 +39,7 @@ channel.basic_consume(queue='checkuser', on_message_callback=check_user_valid_re
     Incoming json requirement: 
         userId: int
 """
-channel.queue_declare(queue='emailaddress')
+channel.queue_declare(queue='email-address')
 def get_user_email(ch, method, props, body):
     b = json.loads(body)
     userId = b['userId']
@@ -55,7 +55,7 @@ def get_user_email(ch, method, props, body):
                      body=str(response))
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
-channel.basic_consume(queue='emailaddress', on_message_callback=get_user_email)
+channel.basic_consume(queue='email-address', on_message_callback=get_user_email)
 
 
 
