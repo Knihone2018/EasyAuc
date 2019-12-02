@@ -27,6 +27,7 @@
                         <div class="col-md-3 column">
                             <br>
                             <button id="myaccount" type="button" class="btn btn-info btn-sm" style="display:none">My Account<span style="display: none"></span></button>
+                            <button id="additem" type="button" class="btn btn-success btn-sm" style="display:none">Add Item<span style="display: none"></span></button>
                             <button id="login" type="button" class="btn btn-primary btn-sm pull-right" style="display:none">Login</span></button>
                         </div>
                     </div>
@@ -81,6 +82,11 @@
                 $("#myaccount span").html(id);
                 $("#myaccount").click(function(){
                     window.location.href="myaccount.html?userId="+id;
+                });
+                $("#additem").removeAttr("style");
+                $("#additem span").html(id);
+                $("#additem").click(function(){
+                    window.location.href="additem.html?userId="+id;
                 });
             }else{
                 $("#login").removeAttr("style");
