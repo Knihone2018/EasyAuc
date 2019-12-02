@@ -351,7 +351,7 @@
             $.ajax({
                 type: "POST",
                 dataType: "json",
-                url: ""+"/progressitems",
+                url: "http://localhost:9000"+"/progressitems",
                 contentType:"application/json",
                 data: JSON.stringify(data),
                 success: function (response) {
@@ -373,7 +373,7 @@
             $.ajax({
                 type: "POST",
                 dataType: "json",
-                url: ""+"/progressitems",
+                url: "http://localhost:9000"+"/progressitems",
                 contentType:"application/json",
                 data: JSON.stringify(data),
                 success: function (response) {
@@ -387,11 +387,11 @@
 
         function createCurrentAuction(data){
             var str = "";
-            for (var i=0;i<data.length;i++) {
-                str = str + "<tr class='row mx-0'><td class='col-3'>"+createImage(data[i][5])+"</td>"
-                        + "<td class='col-3'>" + createName(data[id][1],data[id][3]) + "</td>"
-                        + "<td class='col-3'>" + data[id][2] + "</td>"
-                        + "<td class='col-3'>" + createStopButton() + "<span style='display:none'>"+data[id][0]
+            for (var i=0;i<data.message.length;i++) {
+                str = str + "<tr class='row mx-0'><td class='col-3'>"+createImage(data.message[i][4])+"</td>"
+                        + "<td class='col-3'>" + createName(data.message[i][1],data.message[i][3]) + "</td>"
+                        + "<td class='col-3'>" + data.message[i][2] + "</td>"
+                        + "<td class='col-3'>" + createStopButton() + "<span style='display:none'>"+data.message[i][0]
                         +"</span></td>"
                         + "</tr>";
             }
@@ -400,10 +400,10 @@
 
         function createHistoryAuction(data){
             var str = "";
-            for (var i=0;i<data.length;i++) {
-                str = str + "<tr class='row mx-0'><td class='col-3'>"+createImage(data[i][5])+"</td>"
-                        + "<td class='col-3'>" + createName(data.message[id][1],data.message[id][3]) + "</td>"
-                        + "<td class='col-3'>" + data.message[id][2] + "</td>"
+            for (var i=0;i<data.message.length;i++) {
+                str = str + "<tr class='row mx-0'><td class='col-3'>"+createImage(data.message[i][4])+"</td>"
+                        + "<td class='col-3'>" + createName(data.message[i][1],data.message[i][3]) + "</td>"
+                        + "<td class='col-3'>" + data.message[i][2] + "</td>"
                         + "<td class='col-3'></td>"
                         + "</tr>";
             }
@@ -427,12 +427,12 @@
         }
 
         function createImage(url){
-            var str="<img src="+url+"/>"
+            var str="<img src="+url+" class='img-rounded' style='width:200px;height:200px'></img>"
             return str;
         }
 
         function createStopButton(){
-            var str="<button class='btn btn-sm btn-danger'></button>";
+            var str="<button class='btn btn-sm btn-danger'>Stop</button>";
             return str;
         }
 

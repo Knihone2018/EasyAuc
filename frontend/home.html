@@ -78,6 +78,10 @@
         $(function(){
             var id = getQueryVariable("userId");
             if (id){
+                $("#home span").html(id);
+                $("#home").click(function(){
+                    window.location.href="home.html?userId="+id;
+                });
                 $("#myaccount").removeAttr("style");
                 $("#myaccount span").html(id);
                 $("#myaccount").click(function(){
