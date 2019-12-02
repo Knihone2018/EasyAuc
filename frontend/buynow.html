@@ -123,6 +123,7 @@
                 success: function (response) {
                     if(response.success){
                         alert("Buy successfully!");
+                        window.location.href="cart.html?userId="+userId;
                     }else{
                         alert("Failed to buy now!");
                     }
