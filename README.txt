@@ -1,6 +1,6 @@
 
 
-sudo docker run --name Item -e MYSQL_ROOT_PASSWORD=123456 -p 9000:9000 -p 9100:3306 -d mysql:latest
+sudo docker run --name Item -e MYSQL_ROOT_PASSWORD=123456 -p 9000:9000 -p 9001:9001 -p 9100:3306 -d mysql:latest
 
 sudo docker exec -it Item bash
 
@@ -20,4 +20,5 @@ sudo docker cp client.py Item:/src/app
 sudo docker commit Item easyauc:item
 sudo docker save easyauc:item > item.tar
 docker load < item.tar
-sudo docker run --name Item -e MYSQL_ROOT_PASSWORD=123456 -p 9000:9000 -p 9100:3306 -d easyauc:item
+sudo docker run --name Item -e MYSQL_ROOT_PASSWORD=123456 -p 9000:9000 -p 9001:9001 -p 9100:3306 -d easyauc:item
+
