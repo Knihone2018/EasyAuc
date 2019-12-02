@@ -28,6 +28,7 @@
                             <br>
                             <button id="home" type="button" class="btn btn-warning btn-sm">Home<span style="display: none"></span></button>
                             <button id="mycart" type="button" class="btn btn-info btn-sm">My Cart<span style="display: none"></span></button>
+                            <button id="myhistory" type="button" class="btn btn-info btn-sm">My History<span style="display: none"></span></button>
                             <button id="mywatchlist" type="button" class="btn btn-success btn-sm">My Watchlist<span style="display: none"></span></button>
                         </div>
                     </div>
@@ -245,6 +246,10 @@
             $("#mycart span").html(id);
             $("#mycart").click(function(){
                 window.location.href="cart.html?userId="+id;
+            });
+            $("#myhistory span").html(id);
+            $("#myhistory").click(function(){
+                window.location.href="history.html?userId="+id;
             });
             $("#mywatchlist span").html(id);
             $("#mywatchlist").click(function(){

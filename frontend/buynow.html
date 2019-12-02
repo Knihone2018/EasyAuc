@@ -94,7 +94,7 @@
             $.ajax({
                 type: "GET",
                 dataType: "json",
-                url: "http://127.0.0.1:5000"+"/auction/"+itemId+"?userId="+userId,
+                url: "http://localhost:5000"+"/auction/"+itemId+"?userId="+userId,
                 success: function (response) {
                     if(response.success){
                         $("#image").html(createImage(response.image_url));
@@ -104,7 +104,7 @@
                     }
                 },
                 error: function () {
-                    //alert("Sorry, we have some problem.");
+                    alert("Sorry, we have some problem.");
                 }
             });
         });
@@ -115,11 +115,18 @@
         }
 
         $("#buynow").click(function(){
-            var url = "http://127.0.0.1:5000"+"/auction/"+itemId+"?userId="+userId;
+            var url = "http://localhost:5000"+"/buy_now";
+            var data={
+                "item_id":itemId,
+                "user_id":userId,
+                "quantity":parseInt($("#quantity").text())
+            };
             $.ajax({
-                type: "GET",
+                type: "POST",
                 dataType: "json",
                 url: url,
+                data:JSON.stringify(data),
+                contentType:"application/json",
                 success: function (response) {
                     if(response.success){
                         alert("Buy successfully!");
@@ -137,7 +144,7 @@
 
         $("#addwatchlist").click(function(){
             var id = $("#home span").html();
-            var url = "[your url]"+"/watchlist";
+            var url = "http://0.0.0.0:7000"+"/watchlist";
             var data={
                 "user_id": id,
                 "item_id": itemId
@@ -164,9 +171,9 @@
 
         $("#flag").click(function(){
             var id = $("#home span").html();
-            var url = "[your url]"+"/setflag";
+            var url = "http://localhost:9000"+"/setflag";
             var data={
-                "item_id": itemId
+                "ID": itemId
             };
             $.ajax({
                 type: "PUT",

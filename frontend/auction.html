@@ -227,7 +227,7 @@
 
         $("#addwatchlist").click(function(){
             var id = $("#home span").html();
-            var url = "[your url]"+"/watchlist";
+            var url = "http://0.0.0.0:7000"+"/watchlist";
             var data={
                 "user_id": id,
                 "item_id": itemId
@@ -254,9 +254,9 @@
 
         $("#flag").click(function(){
             var id = $("#home span").html();
-            var url = "[your url]"+"/setflag";
+            var url = "http://localhost:9000"+"/setflag";
             var data={
-                "item_id": itemId
+                "ID": itemId
             };
             $.ajax({
                 type: "PUT",
