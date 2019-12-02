@@ -3,13 +3,7 @@ sudo docker run --name EasyAuc-User -e MYSQL_ROOT_PASSWORD=a1s2d3f4 -p 8000:8000
 
 Set admin:
 
-    mysql -u root -p
-
-    password: a1s2d3f4
-
-    use USER;
-
-    insert into Account (email, password) values ("admin@easyauc.com","123");
+    python create_admin.py
 
 
 
