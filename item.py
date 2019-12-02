@@ -145,12 +145,14 @@ class ItemControl(DatabaseControl):
 		db.commit()
 		return True	
 
+
 	def UpdateDescription(self,itemID,desc):
 		db = self.Getdb()
 		sql = "UPDATE Item SET description = '{}' WHERE ID = {}".format(desc,itemID)
 		db.cursor().execute(sql)
 		db.commit()
 		return True			
+
 
 	def UpdateShipping(self,itemID,ship):
 		db = self.Getdb()
@@ -159,13 +161,6 @@ class ItemControl(DatabaseControl):
 		db.commit()
 		return True
 
-	######################problem
-	def UpdateBuyNow(self,itemID):
-		db = self.Getdb()
-		sql = "UPDATE Item SET buy_now = True WHERE ID = {}".format(itemID)
-		db.cursor().execute(sql)
-		db.commit()
-		return True
 
 	def UpdateFlag(self,itemID):
 		db = self.Getdb()
@@ -173,6 +168,7 @@ class ItemControl(DatabaseControl):
 		db.cursor().execute(sql)
 		db.commit()
 		return True	
+
 
 	def SearchByName(self, name):
 		db = self.Getdb()
@@ -184,6 +180,7 @@ class ItemControl(DatabaseControl):
 			return res[0]
 		else:
 			return None
+
 
 	def GetItemByName(self,name):
 		db = self.Getdb()
@@ -210,38 +207,6 @@ class ItemControl(DatabaseControl):
 		else:
 			return None	
 
-
-	def SearchByID(self, ID):
-		db = self.Getdb()
-		cursor = db.cursor(buffered=True)
-		#get item
-		sql = "select * from Item where ID = %d" %ID
-		cursor.execute(sql)
-		res = cursor.fetchone()
-		Item = {
-			"ID":res[0],
-			"sellerID":res[1],
-			"name":res[2],
-			"category":res[3],
-			"quantity":res[4],
-			"cur_price":res[5],
-			"price_step":res[6],
-			"start_time":res[7],
-			"end_time":res[8],
-			"flag":res[9],
-			"buy_now":res[10],
-			"buy_now_price":res[11],
-			"sent_to_auc":res[12],
-			"shipping_cost":res[13],
-			"description":res[14],
-			"url":res[15],
-			"status":res[16],
-			"photo":res[17]
-			}
-		ctl = CategoryControl()
-		name = ctl.GetName(Item["category"])
-		Item["category"] = name
-		return Item
 
 	def SearchByCategory(self,category):
 		db = self.Getdb()
@@ -322,16 +287,6 @@ class CategoryControl(DatabaseControl):
 		else:
 			return None
 
-	def GetName(self,id):
-		db = self.Getdb()
-		mycursor = db.cursor()
-		mycursor.execute("select name from Category where ID=\"%s\""%id)
-		res = mycursor.fetchone()
-		if res:
-			return res[0]
-		else:
-			return None
-
 	def GetCategory(self):
 		db = self.Getdb()
 		mycursor = db.cursor()
@@ -365,7 +320,7 @@ class RabitMQ_Point:
 			ctl.UpdateStatus(content['itemID'])
 
 	def updateWithAuction(self):
-		connection = pika.BlockingConnection(pika.ConnectionParameters(host='172.17.0.3'))
+		connection = pika.BlockingConnection(pika.ConnectionParameters(host='172.17.0.2'))
 		channel = connection.channel()
 		channel.queue_declare(queue='ItemAuction')
 
@@ -384,7 +339,7 @@ def withAuction():
 class RabitMQ_PUB:
 	def start_auction(self,message):
 		print(" Start an auction: %r" % message)
-		connection = pika.BlockingConnection(pika.ConnectionParameters(host='172.17.0.3'))
+		connection = pika.BlockingConnection(pika.ConnectionParameters(host='172.17.0.2'))
 		channel = connection.channel()
 		channel.exchange_declare(exchange='AuctionStart', exchange_type='fanout')
 		channel.basic_publish(exchange='AuctionStart', routing_key='', body=message)
@@ -393,7 +348,7 @@ class RabitMQ_PUB:
 
 class RabitMQ_RPC():
     def __init__(self):
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='172.17.0.3'))
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='172.17.0.2'))
         self.channel = self.connection.channel()
         result = self.channel.queue_declare(queue='', exclusive=True)
         self.callback_queue = result.method.queue
@@ -534,17 +489,6 @@ def updateitem():
 	ctl.UpdateShipping(req["ID"],req["shipping_cost"])
 	message = {"success":True}
 	return jsonify(message)
-
-
-#get Item by ID
-@app.route("/getitembyid", methods=["GET"])
-# ID: int
-def getitembyid():
-	req = request.json
-	#item control
-	ctl = ItemControl()
-	res = ctl.SearchByID(req["ID"])
-	return jsonify(res)
 
 
 #get items by category
@@ -692,4 +636,4 @@ if __name__ == "__main__":
 
 	#flask
 	p = 9000
-	app.run(port=p)
+	app.run(host="0.0.0.0",port=p)
