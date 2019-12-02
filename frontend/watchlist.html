@@ -236,19 +236,20 @@
 
 		function getCategory(){
 			var id = $("#myaccount span").text();
-			var url = "[Your url]"+"/allcategory";
-			$.ajax({
-	            type: "GET",
-	            dataType: "json",
-	            url: url,
-	            success: function (response) {
-	            	if (response.success)
-	                	createCategory(response);
-	            },
-	            error: function () {
-	            	//alert("Sorry, we have some problem.");
-	            }
-	        });
+            var url = "http://localhost:9000"+"/allcategory";
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: url,
+                success: function (response) {
+                    if (response.success){
+                        createCategory(response);
+                    }
+                },
+                error: function () {
+                    //alert("Sorry, we have some problem.");
+                }
+            });
 		}
 
         function createWatchlist(data){
@@ -285,13 +286,18 @@
 
 		function createCategory(data){
         	var str = "";
-		    var len = data.message.length;
-		    for (var i = 0; i < len; i++) {
-		        str = str + "<div class='dropdown-item'><div>"+data.message[i].name
-		        	+"</div><span style='display:none'>"+data.message[i].ID+"</span>"
-		        	+"</div>";
-		    }
-		    $("#category").html(str);
+            for (var i in data.message) {
+                str = str + "<div class='dropdown-item'><div>"+data.message[i]
+                    +"</div><span style='display:none'>"+i+"</span>"
+                    +"</div>";
+            }
+            $("#category").html(str);
+            $("#category div").click(function(){
+				var selText = $(this).find("div").text();
+				var id = $(this).find("span").text();
+				$(this).parents(".btn-group").find(".dropdown-toggle").html(selText);
+				$("#categoryId").html(id);
+			});
 		}
 
 		function createName(name, url){
