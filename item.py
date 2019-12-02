@@ -421,7 +421,7 @@ def CheckAuctionStart():
 		mycursor.execute("update Item set sent_to_auc=true where ID = {}".format(id[0]))
 		db.commit()
 		#publish
-		message = {"ID":id[0],"buy_now":False,'end_time':id[1]}
+		message = {"ID":id[0],"buy_now":False,'end_time':str(id[1])}
 		RabitMQ_PUB().start_auction(json.dumps(message))
 
 
@@ -458,6 +458,7 @@ CORS(app)
 def additem():
 	req = request.json
 	#check if user valid first
+	print(req)
 	RPC = RabitMQ_RPC()
 	if RPC.checkuser(req['sellerId']) == 'True':
 		message = {"success":False,"message":"sellerID is invalid"}
@@ -485,7 +486,7 @@ def additem():
 	Publish = RabitMQ_PUB()		
 	#send to auction immediately if buy now item
 	if req["buy_now"]:
-		message = {'ID':res,"buy_now":req["buy_now"],'end_time':req["end_time"]}
+		message = {'ID':res,"buy_now":req["buy_now"],'end_time':str(req["end_time"])}
 		Publish.start_auction(json.dumps(message))
 
 	message = {"success":True,"message":res}
