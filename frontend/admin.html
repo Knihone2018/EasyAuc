@@ -121,7 +121,7 @@
                     <option value="asc">asc</option>
                     <option value="desc">desc</option>
                 </select>&nbsp
-                <button id="search" type="button" class="btn btn-secondary btn-sm">Search<span style="display: none"></span></button>
+                <button id="currsearch" type="button" class="btn btn-secondary btn-sm">Search<span style="display: none"></span></button>
             </div>
             <br>
             <div style="text-align:center">
@@ -159,7 +159,7 @@
                     <option value="asc">asc</option>
                     <option value="desc">desc</option>
                 </select>&nbsp
-                <button id="search" type="button" class="btn btn-secondary btn-sm">Search<span style="display: none"></span></button>
+                <button id="hissearch" type="button" class="btn btn-secondary btn-sm">Search<span style="display: none"></span></button>
             </div>
             <br>
             <div style="text-align:center">
@@ -317,6 +317,12 @@
                     }
                 });
             });
+            $("#currsearch").click(function(){
+                getCurrentAuction();
+            });
+            $("#hissearch").click(function(){
+                getHistoryAuction();
+            });
             var url = "http://localhost:9000"+"/searchbyflag";
             $.ajax({
                 type: "GET",
@@ -331,6 +337,8 @@
                     //alert("Sorry, we have some problem.");
                 }
             });
+            getCurrentAuction();
+            getHistoryAuction();
         });
 
         function getCurrentAuction(){
