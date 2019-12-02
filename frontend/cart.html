@@ -136,7 +136,7 @@
             var len = data.items.length;
             for (var i = 0; i < len; i++) {
                 tableStr = tableStr + "<tr class='row mx-0'>"
-                        + "<td class='col-4'>" + createName(data.items[i].name, data.items[i].itemId) + "</td>"
+                        + "<td class='col-4'>" + createName(data.items[i].name, data.items[i].url) + "</td>"
                         + "<td class='col-4'>" + data.items[i].category + "</td>"
                         + "<td class='col-4 quantity'>" + data.items[i].quantity + "</td>";
                 if (data.items[i].isBid==0){
@@ -150,9 +150,9 @@
             $("#dataTable").html(tableStr);
         }
 
-        function createName(name, id){
+        function createName(name, url){
             var userId = $("#myaccount span").text();
-            var url = "auction.html?itemId="+id+"&userId="+userId;
+            var url = url+"&userId="+userId;
             var link = "<a href='"+url+"'>"+name+"</a>";
             return link;
         }
