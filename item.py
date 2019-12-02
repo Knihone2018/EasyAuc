@@ -601,7 +601,7 @@ def allitem():
 	res = ctl.GetAllItem()
 	dic = {}
 	for category in res:
-		dic[category[0]] = category[1]
+		dic[category[0]] = category[1:]
 	message = {"success":True,"message":dic}
 	return jsonify(message)
 
