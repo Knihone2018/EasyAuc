@@ -113,7 +113,7 @@ def getitembyid():
 #get Item by ID
 @app.route("/getemail", methods=["GET"])
 # ID: int
-def getemail(id):
+def getemail():
   req = request.json
   res = RabitMQ_RPC().getemail(req["ID"])
   dic = {"Email":res}
@@ -124,4 +124,4 @@ def getemail(id):
 if __name__ == "__main__":
 	#flask
 	p = 9001
-	app.run(host="172.17.0.3",port=p)
+	app.run(host="172.17.0.5",port=p)
