@@ -140,6 +140,7 @@
                         + "<td class='col-2'>" + data.items[i].checkOutTime + "</td>"
                         + "<td class='col-1'>" + createRatingButton()+"<span style='display:none'>"+data.items[i].sellerId+"</span></td>"
                         + "</tr>";
+
             }
             $("#dataTable").html(tableStr);
         }
@@ -177,13 +178,14 @@
                 "sellerId": sellerId,
                 "rate": parseInt(rating)
             };
+        console.log(JSON.stringify(data));
             var url = "http://127.0.0.1:8000"+"/addsellerrate";
             $.ajax({
                 type: "POST",
                 dataType: "json",
                 url: url,
+                contentType : "application/json",
                 data: JSON.stringify(data),
-                contentType:"application/json",
                 success: function (response) {
                     if(response.success)
                         window.location.href="history.html?userId="+id;
