@@ -4,6 +4,7 @@ from datetime import datetime
 import threading
 import json
 from flask_cors import CORS
+import time
 import pika
 import uuid
 
@@ -207,6 +208,15 @@ class ItemControl(DatabaseControl):
 		else:
 			return None	
 
+	def GetAllItem(self):
+		db = self.Getdb()
+		cursor = db.cursor(buffered=True)		
+		#get item
+		sql = "select ID,name,cur_price,url,photo from Item where status=True"
+		cursor.execute(sql)
+		res = cursor.fetchall() # a tuple of tuples
+		return res
+
 
 	def SearchByCategory(self,category):
 		db = self.Getdb()
@@ -233,11 +243,18 @@ class ItemControl(DatabaseControl):
 		db = self.Getdb()
 		cursor = db.cursor(buffered=True)		
 		#get item
-		sql = "select i.ID, i.name, c.name, i.url, i.photo from Item i join Category c on i.category = c.ID\
-				where i.status = {} and end_time between '{}' and '{}' order by time {}".format(status,start,end,order)
+		sql = ''
+		if start and end:
+			sql = "select i.ID, i.name, c.name, i.url, i.photo from Item i join Category c on i.category = c.ID\
+				where i.status = {} and end_time between '{}' and '{}' order by end_time {}".format(status,start,end,order)
+		else:
+			sql = "select i.ID, i.name, c.name, i.url, i.photo from Item i join Category c on i.category = c.ID\
+				where i.status = {} order by end_time {}".format(status,order)
 		cursor.execute(sql)
 		res = cursor.fetchall() # a tuple of tuples
-		return res		
+		return res	
+	
+	
 
 
 
@@ -395,7 +412,6 @@ class RabitMQ_RPC():
 
 #Check Auction Start in DB
 #json: {"ID":10,"buy_now":False/True}
-
 def CheckAuctionStart():
 	db = DatabaseControl().Getdb()
 	mycursor = db.cursor()
@@ -410,9 +426,10 @@ def CheckAuctionStart():
 		RabitMQ_PUB().start_auction(json.dumps(message))
 
 
-
-
-
+def CheckAuction():
+	while True:
+		CheckAuctionStart()
+		time.sleep(60)
 
 
 
@@ -467,6 +484,10 @@ def additem():
 	ctl = ItemControl()
 	res = ctl.AddItem(req)
 
+	if res == "Name Already Exists":
+		message = {"success":False,"message":res}
+		return jsonify(message)
+
 	Publish = RabitMQ_PUB()		
 	#send to auction immediately if buy now item
 	if req["buy_now"]:
@@ -505,8 +526,9 @@ def updateitem():
 #get items by status
 @app.route("/progressitems", methods=["POST"])
 # input: {'status':True/False,'start_time':'11/01/2019','end_time':'12/01/2019','sort':'desc/asc'}
-def progressitems(progress):
+def progressitems():
 	req = request.json
+	print(req)
 	#item control
 	ctl = ItemControl()
 	res = ctl.SearchByStatus(req['status'],req['start_time'],req['end_time'],req['sort'])
@@ -572,6 +594,19 @@ def searchbyflag():
 	dic = {}
 	for item in res:
 		dic[item[0]] = item[1:]
+	message = {"success":True,"message":dic}
+	return jsonify(message)
+
+
+#get all items
+@app.route("/allitem", methods=["GET"])
+def allitem():
+	#category control
+	ctl = ItemControl()
+	res = ctl.GetAllItem()
+	dic = {}
+	for category in res:
+		dic[category[0]] = category[1]
 	message = {"success":True,"message":dic}
 	return jsonify(message)
 
@@ -651,7 +686,7 @@ if __name__ == "__main__":
 	DBctl.CreateTable()
 
 	#check auction start
-	t1 = threading.Timer(60, CheckAuctionStart)
+	t1 = threading.Thread(target = checkAuction)
 	t1.start()
 
 	#update with auction
@@ -660,4 +695,4 @@ if __name__ == "__main__":
 
 	#flask
 	p = 9000
-	app.run(host="0.0.0.0",port=p)
+	app.run(host='0.0.0.0',port=p)
