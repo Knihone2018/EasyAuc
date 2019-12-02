@@ -47,8 +47,7 @@
                     </div>
                 </div>
             </div>
-            <div class="mb-3">
-                <img src="https://static.runoob.com/images/demo/demo1.jpg" style="width:250px; height:200px"></img>
+            <div class="mb-3" id="image">
             </div>
             <div class="mb-3">
                 <h1 id="name" class="text-info">Item Name</h1>
@@ -63,7 +62,7 @@
                 <div id="currentprice" class="text-warning">US $35.0</div>
             </div>
             <div class="mb-3">
-                <label>Bid (US $)</label>&nbsp<a class="text-info" data-toggle='modal' data-target='#bidInfoModal' id="bidinfo">bid info</a>
+                <label>Bid (US $)</label>&nbsp<a class="text-info" data-toggle='modal' data-target='#bidInfoModal' id="bidinfo">10 bids</a>
                 <input class="form-control" id="bid">
             </div>
             <div class="mb-3">
@@ -123,63 +122,74 @@
     <script type="text/javascript">
         var time=0;
         var itemId=0;
+        var userId=0;
         $(function(){
-            auctionId = getQueryVariable("itemId");
-            var userId = getQueryVariable("userId");
+            itemId = getQueryVariable("itemId");
+            userId = getQueryVariable("userId");
             $("#home span").html(userId);
             $("#home").click(function(){
-                window.location.href="home.html?id="+userId;
+                window.location.href="home.html?userId="+userId;
             });
             $("#myaccount span").html(userId);
             $("#myaccount").click(function(){
-                window.location.href="myaccount.html?id="+userId;
+                window.location.href="myaccount.html?userId="+userId;
             });
-            
-        });
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: "[your url]"+"/auction/"+itemId,
-            success: function (response) {
-                if(response.success){
-                    time=response.time_left;
-                    setInterval("setTime();",1000);
-                    $("#currentprice").html(response.current_price);
-                    $("#pricestep").html("Enter US $"+response.price_step+" or more");
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "http://127.0.0.1:5000"+"/auction/"+itemId+"?userId="+userId,
+                success: function (response) {
+                    
+                    if(response.success==1){
+                        $("#name").html(response.item_name);
+                        $("#image").html(createImage(response.image_url));
+                        time=response.time_left;
+                        if(time>0)
+                            setInterval("setTime();",1000);
+                        else{
+                            $("#timeleft").html("Bid ended at "+response.end_time);
+                            $("#placebid").attr("disabled","false");
+                        }
+                        $("#currentprice").html(response.current_price);
+                        $("#pricestep").html("Enter US $"+(response.current_price + response.price_step)+" or more");
+                    }
+                },
+                error: function () {
+                    //alert("Sorry, we have some problem.");
                 }
-            },
-            error: function () {
-                //alert("Sorry, we have some problem.");
-            }
+            });
+
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "http://127.0.0.1:5000"+"/auction/"+itemId+"/bids?userId="+userId,
+                success: function (response) {
+                    if(response.success){
+                        //response={"bids":[{"bidder_id":"123","bid_amount":"123","time_stamp":123213}]}
+                        $('#bidinfo').html(response.bids.length+" bids");
+                        var str="";
+                        for(var i=0;i<response.bids.length;i++)
+                            str+="<tr class='row mx-0'><th class='col-md-4'>"+response.bids[i].bidder_id+"</th><th class='col-md-4'>"+response.bids[i].bid_amount+"</th><th class='col-md-4'>"+response.bids[i].time_stamp+"</th></tr>"
+                        $("#bidtable").html(str);
+                    }
+                },
+                error: function () {
+                    //alert("Sorry, we have some problem.");
+                }
+            });
         });
 
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: "[your url]"+"/auction/"+itemId+"/bids",
-            success: function (response) {
-                if(response.success){
-                    var str="";
-                    for(var i=0;i<response.bids.length;i++)
-                        str+="<li>"+response.bids.bidder_id+" "+response.bids.bid_amount+" "+response.bids.time_stamp+"</li>"
-                    $("#bidinfo").html(str);
-                }
-            },
-            error: function () {
-                //alert("Sorry, we have some problem.");
-                response={"bids":[{"bidder_id":"123","bid_amount":"123","time_stamp":123213}]}
-                var str="";
-                for(var i=0;i<response.bids.length;i++)
-                    str+="<tr class='row mx-0'><th class='col-md-4'>"+response.bids[i].bidder_id+"</th><th class='col-md-4'>"+response.bids[i].bid_amount+"</th><th class='col-md-4'>"+response.bids[i].time_stamp+"</th></tr>"
-                $("#bidtable").html(str);
-            }
-        });
+        function createImage(url){
+            var str="<img src="+url+" style='width:250px; height:200px'></img>";
+            return str;
+        }
 
         function setTime(){
             time=time-1;
-            if (time==0)
+            if (time<=0){
                 $("#timeleft").html("Bid ended at "+new Date());
-            else{
+                $("#placebid").attr("disabled","false");
+            }else{
                 var date= new Date(time * 1000).toISOString().substr(11, 8);
                 $("#timeleft").html(date);
             }
@@ -187,10 +197,11 @@
 
         $("#placebid").click(function(){
             var bid = parseInt($("#bid").val());
-            var url = "[your url]"+"/additem";
+            var url = "http://127.0.0.1:5000"+"/place_bid";
             var data={
                 "bid":bid,
-                "auction_id":auctionId
+                "item_id":itemId,
+                "user_id":userId
             };
             $.ajax({
                 type: "POST",
@@ -199,6 +210,7 @@
                 contentType:"application/json",
                 data: JSON.stringify(data),
                 success: function (response) {
+                    console.log(response.success);
                     if(response.success){
                         alert("Bid successfully!");
                     }else{

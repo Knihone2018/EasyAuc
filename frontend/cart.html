@@ -81,10 +81,10 @@
     </footer>
     <script type="text/javascript">
         $(function(){
-            var id = getQueryVariable("id");
-            $("#myaccount span").html(getQueryVariable("id"));
+            var id = getQueryVariable("userId");
+            $("#myaccount span").html(id);
             $("#myaccount").click(function(){
-                window.location.href="myaccount.html?id="+id;
+                window.location.href="myaccount.html?userId="+id;
             });
     
             $("#checkout").click(function(){
@@ -114,13 +114,10 @@
 
         function getCart(id){
             var url = "http://127.0.0.1:8000"+"/cart/";
-            var data={"userId":id}
-            console.log(JSON.stringify(data));
             $.ajax({
                 type: "GET",
                 dataType: "json",
                 url: url+id,
-                data:JSON.stringify(data),
                 success: function (response) {
                     if (response.success)
                         createCartList(response);
@@ -153,7 +150,7 @@
 
         function createName(name, id){
             var userId = $("#myaccount span").text();
-            var url = "item.html?itemId="+id+"&userId="+userId;
+            var url = "auction.html?itemId="+id+"&userId="+userId;
             var link = "<a href='"+url+"'>"+name+"</a>";
             return link;
         }

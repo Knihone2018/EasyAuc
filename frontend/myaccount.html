@@ -237,18 +237,18 @@
     </footer>
     <script type="text/javascript">
         $(function(){
-            var id = getQueryVariable("id");
+            var id = getQueryVariable("userId");
             $("#home span").html(id);
             $("#home").click(function(){
-                window.location.href="home.html?id="+id;
+                window.location.href="home.html?userId="+id;
             });
             $("#mycart span").html(id);
             $("#mycart").click(function(){
-                window.location.href="cart.html?id="+id;
+                window.location.href="cart.html?userId="+id;
             });
             $("#mywatchlist span").html(id);
             $("#mywatchlist").click(function(){
-                window.location.href="watchlist.html?id="+id;
+                window.location.href="watchlist.html?userId="+id;
             });
             $("#deleteaccount span").html(id);
             $("#deleteaccount").click(function(){
@@ -411,7 +411,7 @@
                 success: function (response) {
                     if(response.success){
                         alert("Your update was successful.");
-                        window.location.href="myaccount.html?id="+id;
+                        window.location.href="myaccount.html?userId="+id;
                     }
                 },
                 error: function () {

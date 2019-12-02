@@ -47,8 +47,7 @@
                     </div>
                 </div>
             </div>
-            <div class="mb-3">
-                <img src="https://static.runoob.com/images/demo/demo1.jpg" style="width:250px; height:200px"></img>
+            <div class="mb-3" id="image">
             </div>
             <div class="mb-3">
                 <h1 id="name" class="text-info">Item Name</h1>
@@ -80,37 +79,43 @@
     <script type="text/javascript">
         var time=0;
         var itemId=0;
+        var userId=0;
         $(function(){
             itemId = getQueryVariable("itemId");
-            var userId = getQueryVariable("userId");
+            userId = getQueryVariable("userId");
             $("#home span").html(userId);
             $("#home").click(function(){
-                window.location.href="home.html?id="+userId;
+                window.location.href="home.html?userId="+userId;
             });
             $("#myaccount span").html(userId);
             $("#myaccount").click(function(){
-                window.location.href="myaccount.html?id="+userId;
+                window.location.href="myaccount.html?userId="+userId;
             });
-            
-        });
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: "[your url]"+"/auction/"+itemId,
-            success: function (response) {
-                if(response.success){
-                    $("#name").html(response.item_name);
-                    $("#currentprice").html(response.current_price);
-                    $("#quantity").html(response.quantity);
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "http://127.0.0.1:5000"+"/auction/"+itemId+"?userId="+userId,
+                success: function (response) {
+                    if(response.success){
+                        $("#image").html(createImage(response.image_url));
+                        $("#name").html(response.item_name);
+                        $("#currentprice").html(response.current_price);
+                        $("#quantity").html(response.quantity);
+                    }
+                },
+                error: function () {
+                    //alert("Sorry, we have some problem.");
                 }
-            },
-            error: function () {
-                //alert("Sorry, we have some problem.");
-            }
+            });
         });
 
+        function createImage(url){
+            var str="<img src="+url+" style='width:250px; height:200px'></img>";
+            return str;
+        }
+
         $("#buynow").click(function(){
-            var url = "[your url]"+"/auction/"+itemId;
+            var url = "http://127.0.0.1:5000"+"/auction/"+itemId+"?userId="+userId;
             $.ajax({
                 type: "GET",
                 dataType: "json",

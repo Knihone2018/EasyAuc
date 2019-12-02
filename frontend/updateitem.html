@@ -73,38 +73,39 @@
     </footer>
     <script type="text/javascript">
         $(function(){
-            var id = getQueryVariable("id");
+            var itemId = getQueryVariable("itemId");
+            var userId = getQueryVariable("userId");
             $("#home span").html(id);
             $("#home").click(function(){
-                window.location.href="home.html?id="+id;
+                window.location.href="home.html?userId="+userId;
             });
 
-        $("#submit").click(function(){
-            var quantity = parseInt($("#quantity").val());
-            var shipping_cost=parseInt($("#shipping_cost").val());
-            var description=$("#description").val();
-            var url = "http://localhost:9000"+"/updateitem";
-            var data={
-                "ID": id,
-                "quantity":quantity,
-                "shipping_cost": shipping_cost,
-                "description": description,
-            };
-            $.ajax({
-                url: url,
-                type: "PUT",
-                contentType:"application/json",
-                data: JSON.stringify(data),
-                success: function (response) {
-                    if(!response.success){
-                        alert(response.message);
+            $("#submit").click(function(){
+                var quantity = parseInt($("#quantity").val());
+                var shipping_cost=parseInt($("#shipping_cost").val());
+                var description=$("#description").val();
+                var url = "http://localhost:9000"+"/updateitem";
+                var data={
+                    "ID": id,
+                    "quantity":quantity,
+                    "shipping_cost": shipping_cost,
+                    "description": description,
+                };
+                $.ajax({
+                    url: url,
+                    type: "PUT",
+                    contentType:"application/json",
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        if(!response.success){
+                            alert(response.message);
+                        }
+                    },
+                    error: function () {
+                        //alert("Sorry, we have some problem.");
                     }
-                },
-                error: function () {
-                    //alert("Sorry, we have some problem.");
-                }
+                });
             });
         });
-    });
     </script>
 </html>

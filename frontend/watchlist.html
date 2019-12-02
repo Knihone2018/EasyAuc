@@ -126,14 +126,14 @@
 	</body>
 	<script type="text/javascript">
 		$(function(){
-			var id = getQueryVariable("id");
+			var id = getQueryVariable("userId");
 			$("#home span").html(id);
 		    $("#home").click(function(){
-				window.location.href="home.html?id="+id;
+				window.location.href="home.html?userId="+id;
 			});
 		    $("#myaccount span").html(id);
 		    $("#myaccount").click(function(){
-				window.location.href="myaccount.html?id="+id;
+				window.location.href="myaccount.html?userId="+id;
 			});
 			$("#category div").click(function(){
 				var selText = $(this).find("div").text();

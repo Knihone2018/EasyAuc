@@ -18,14 +18,15 @@
                         EasyAuc
                     </h2>
                     <div class="row clearfix">
-                        <div class="col-md-4 column">
+                        <div class="col-md-3 column">
                         </div>
-                        <div class="col-md-2 column">
+                        <div class="col-md-3 column">
                         </div>
                         <div class="col-md-3 column">
                         </div>
                         <div class="col-md-3 column">
-                            <span id="id_span" style="display: none"></span>
+                            <br>
+                            <button id="gotoemail" type="button" class="btn btn-info btn-sm float-right">Check Email</button>
                         </div>
                     </div>
                 </div>
@@ -105,6 +106,62 @@
                     </tbody>
                 </table>
             </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <p class="text-center font-weight-bold text-secondary">Current Auction</p>
+            <div style="text-align:center">
+                <table class="table row mx-0">
+                    <thead class="w-100">
+                        <tr class="row mx-0">
+                            <th class="col-md-3">
+                            </th>
+                            <th class="col-md-3">
+                                Name
+                            </th>
+                            <th class="col-md-3">
+                                Category
+                            </th>
+                            <th class="col-md-3">
+                                Flag
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTable" class="w-100">
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <p class="text-center font-weight-bold text-secondary">History Auction</p>
+            <div style="text-align:center">
+                <table class="table row mx-0">
+                    <thead class="w-100">
+                        <tr class="row mx-0">
+                            <th class="col-md-3">
+                            </th>
+                            <th class="col-md-3">
+                                Name
+                            </th>
+                            <th class="col-md-3">
+                                Category
+                            </th>
+                            <th class="col-md-3">
+                                Flag
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTable" class="w-100">
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <br>
             <br>
             <br>
             <br>
@@ -263,5 +320,9 @@
             var str="<a href='"+url+"'>"+name+"</a>";
             return str;
         }
+
+        $("#gotoemail").click(function(){
+            window.location.href="http://mail.google.com";
+        });
     </script>
 </html>

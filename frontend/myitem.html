@@ -81,14 +81,14 @@
     <script type="text/javascript">
 
         $(function(){
-            var id = getQueryVariable("id");
+            var id = getQueryVariable("userId");
             $("#home span").html(id);
             $("#home").click(function(){
-                window.location.href="home.html?id="+id;
+                window.location.href="home.html?userId="+id;
             });
             $("#myaccount span").html(id);
             $("#myaccount").click(function(){
-                window.location.href="myaccount.html?id="+id;
+                window.location.href="myaccount.html?userId="+id;
             });
 
             getHistoryList(id);
@@ -127,7 +127,7 @@
 
         function update(t){
             var itemId = t.nextSibling.textContent;
-            window.location.href="updateitem.html?id="+itemId;
+            window.location.href="updateitem.html?itemId="+itemId+"&userId="+$("#home span").text();;
         }
 
         function createUpdateButton(){

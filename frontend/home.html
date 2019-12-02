@@ -26,8 +26,7 @@
                         </div>
                         <div class="col-md-3 column">
                             <br>
-                            <button id="mycart" type="button" class="btn btn-info btn-sm" style="display:none">My Cart<span style="display: none"></span></button>
-                            <button id="mywatchlist" type="button" class="btn btn-success btn-sm" style="display:none">My Watchlist<span style="display: none"></span></button>
+                            <button id="myaccount" type="button" class="btn btn-info btn-sm" style="display:none">My Account<span style="display: none"></span></button>
                             <button id="login" type="button" class="btn btn-primary btn-sm pull-right" style="display:none">Login</span></button>
                         </div>
                     </div>
@@ -76,17 +75,12 @@
     </body>
     <script type="text/javascript">
         $(function(){
-            var id = getQueryVariable("id");
+            var id = getQueryVariable("userId");
             if (id){
-                $("#mycart").removeAttr("style");
-                $("#mywatchlist").removeAttr("style");
-                $("#mycart span").html(id);
-                $("#mycart").click(function(){
-                    window.location.href="cart.html?id="+id;
-                });
-                $("#mywatchlist span").html(id);
-                $("#mywatchlist").click(function(){
-                    window.location.href="watchlist.html?id="+id;
+                $("#myaccount").removeAttr("style");
+                $("#myaccount span").html(id);
+                $("#myaccount").click(function(){
+                    window.location.href="myaccount.html?userId="+id;
                 });
             }else{
                 $("#login").removeAttr("style");

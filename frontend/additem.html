@@ -20,13 +20,14 @@
                     <div class="row clearfix">
                         <div class="col-md-4 column">
                         </div>
-                        <div class="col-md-4 column">
+                        <div class="col-md-3 column">
                         </div>
                         <div class="col-md-3 column">
                         </div>
-                        <div class="col-md-1 column">
+                        <div class="col-md-2 column">
                             <br>
                             <button id="home" type="button" class="btn btn-warning btn-sm">Home<span style="display: none"></span></button>
+                            <button id="myaccount" type="button" class="btn btn-info btn-sm">My Account<span style="display: none"></span></button>
                         </div>
                     </div>
                 </div>
@@ -124,10 +125,14 @@
 
         var settings={};
         $(function(){
-            var id = getQueryVariable("id");
+            var id = getQueryVariable("userId");
             $("#home span").html(id);
             $("#home").click(function(){
-                window.location.href="home.html?id="+id;
+                window.location.href="home.html?userId="+id;
+            });
+            $("#myaccount span").html(id);
+            $("#myaccount").click(function(){
+                window.location.href="myaccount.html?userId="+id;
             });
 
             $("#buy_now").click(function(){

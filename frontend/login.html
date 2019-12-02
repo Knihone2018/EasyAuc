@@ -64,9 +64,9 @@
                         if(response.success){
                             console.log(response);
                             if (response.isAdmin==0)
-                                window.location.href="home.html?id="+response.userId;
+                                window.location.href="home.html?userId="+response.userId;
                             else
-                                window.location.href="admin.html?id="+response.userId;
+                                window.location.href="admin.html?userId="+response.userId;
                         }
                     },
                     error: function () {
