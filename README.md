@@ -5,4 +5,4 @@ Implement email function and save the title and content of frequently used email
 
 Email: docker run -di --name EasyAucEmail easyauc:email
 
-Watchlist: docker run -di --name EasyAucWatchlist eastauc:watchlist
+Watchlist: docker run -di --name EasyAucWatchlist easyauc:watchlist
