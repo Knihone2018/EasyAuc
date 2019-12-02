@@ -2,6 +2,40 @@ import mysql.connector
 from flask import Flask, request, jsonify, Response
 import json
 from flask_cors import CORS
+import pika
+import uuid
+
+class RabitMQ_RPC():
+    def __init__(self):
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='172.17.0.2'))
+        self.channel = self.connection.channel()
+        result = self.channel.queue_declare(queue='', exclusive=True)
+        self.callback_queue = result.method.queue
+
+        self.channel.basic_consume(
+            queue = self.callback_queue,
+            on_message_callback = self.on_response,
+            auto_ack = True
+        )
+
+    def on_response(self, ch, method, props, body):
+        if self.corr_id == props.correlation_id:
+            self.response = body
+    
+    def getemail(self, user_id):
+        self.response = None
+        self.corr_id = str(uuid.uuid4())
+        self.channel.basic_publish(
+            exchange='',
+            routing_key='email-address',
+            properties=pika.BasicProperties(
+                reply_to=self.callback_queue,
+                correlation_id=self.corr_id,
+            ),
+            body=json.dumps({"userId":user_id}))
+        while self.response is None:
+            self.connection.process_data_events()
+        return self.response
 
 
 class DatabaseControl:
@@ -74,6 +108,17 @@ def getitembyid():
 	ctl = ItemControl()
 	res = ctl.SearchByID(req["ID"])
 	return jsonify(res)
+
+
+#get Item by ID
+@app.route("/getemail", methods=["GET"])
+# ID: int
+def getemail(id):
+  req = request.json
+  res = RabitMQ_RPC().getemail(req["ID"])
+  dic = {"Email":res}
+  return jsonify(dic)
+
 
 # Run the Flask application as a server.
 if __name__ == "__main__":
