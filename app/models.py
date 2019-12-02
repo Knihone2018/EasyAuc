@@ -7,6 +7,8 @@ class Auction(db.Model):
     end_time = db.Column(db.DateTime)
     completed = db.Column(db.Boolean, default=False)
     current_price = db.Column(db.Float)
+    buy_now = db.Column(db.Boolean, default=False)
+    
     # bids return all the bids on this auction
     # target can return all the bids that a user has bid on
     bids = db.relationship('Bid', backref='target', lazy='dynamic')

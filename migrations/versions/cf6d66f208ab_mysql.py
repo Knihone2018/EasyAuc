@@ -1,8 +1,8 @@
-"""add end_time
+"""mysql
 
-Revision ID: 45e9e48ecf96
+Revision ID: cf6d66f208ab
 Revises: 
-Create Date: 2019-11-20 11:50:08.927996
+Create Date: 2019-12-02 21:53:05.866765
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '45e9e48ecf96'
+revision = 'cf6d66f208ab'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,6 +24,7 @@ def upgrade():
     sa.Column('end_time', sa.DateTime(), nullable=True),
     sa.Column('completed', sa.Boolean(), nullable=True),
     sa.Column('current_price', sa.Float(), nullable=True),
+    sa.Column('buy_now', sa.Boolean(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('item_id')
     )
