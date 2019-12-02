@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>EasyAuc</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <script src="js/jquery-3.4.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <!-- <link href="css/easyaunc.css" rel="stylesheet" media="screen"> -->
+        <script src="js/easyauc.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <h2>
+                        EasyAuc
+                    </h2>
+                    <div class="row clearfix">
+                        <div class="col-md-4 column">
+                        </div>
+                        <div class="col-md-3 column">
+                        </div>
+                        <div class="col-md-3 column">
+                        </div>
+                        <div class="col-md-2 column">
+                            <br>
+                            <button id="home" type="button" class="btn btn-warning btn-sm">Home<span style="display: none"></span></button>
+                            <button id="myaccount" type="button" class="btn btn-primary btn-sm">My Account<span style="display: none"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <div class="jumbotron">
+                        <h1>
+                            <span class="text-primary">H</span>
+                            <span class="text-secondary">e</span>
+                            <span class="text-success">l</span>
+                            <span class="text-danger">l</span>
+                            <span class="text-warning">o</span>
+                            <span class="text-info">!</span>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <img src="https://static.runoob.com/images/demo/demo1.jpg" style="width:250px; height:200px"></img>
+            </div>
+            <div class="mb-3">
+                <h1 id="name" class="text-info">Item Name</h1>
+            </div>
+            <br>
+            <div class="mb-3">
+                <label>Current Price</label>
+                <div id="currentprice" class="text-warning">US $35.0</div>
+            </div>
+            <div class="mb-3">
+                <label>Quantity</label>
+                <div id="quantity" class="text-warning">50</div>
+            </div>
+            <br>
+            <button id="buynow" type="button" class="btn btn-success btn-sm">Buy Now</button>
+            &nbsp
+            <button id="addwatchlist" type="button" class="btn btn-primary btn-sm">Add to Watchlist</button>
+            &nbsp
+            <button id="flag" type="button" class="btn btn-danger btn-sm">Flag</button>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+    </body>
+    <footer class="footer navbar-fixed-bottom ">
+        <div class="footer-copyright text-center py-3">Copyright © 2019 EasyAuc. All rights reserved.</div>
+    </footer>
+    <script type="text/javascript">
+        var time=0;
+        var itemId=0;
+        $(function(){
+            itemId = getQueryVariable("itemId");
+            var userId = getQueryVariable("userId");
+            $("#home span").html(userId);
+            $("#home").click(function(){
+                window.location.href="home.html?id="+userId;
+            });
+            $("#myaccount span").html(userId);
+            $("#myaccount").click(function(){
+                window.location.href="myaccount.html?id="+userId;
+            });
+            
+        });
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "[your url]"+"/auction/"+itemId,
+            success: function (response) {
+                if(response.success){
+                    $("#name").html(response.item_name);
+                    $("#currentprice").html(response.current_price);
+                    $("#quantity").html(response.quantity);
+                }
+            },
+            error: function () {
+                //alert("Sorry, we have some problem.");
+            }
+        });
+
+        $("#buynow").click(function(){
+            var url = "[your url]"+"/auction/"+itemId;
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: url,
+                success: function (response) {
+                    if(response.success){
+                        alert("Buy successfully!");
+                    }else{
+                        alert("Failed to buy now!");
+                    }
+                },
+                error: function () {
+                    //alert("Sorry, we have some problem.");
+                    alert("Failed to buy now!");
+                }
+            });
+        });
+
+        $("#addwatchlist").click(function(){
+            var id = $("#home span").html();
+            var url = "[your url]"+"/watchlist";
+            var data={
+                "user_id": id,
+                "item_id": itemId
+            };
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: url,
+                contentType:"application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    if(response.success){
+                        alert("Added successfully!");
+                    }else{
+                        alert("Failed to add!");
+                    }
+                },
+                error: function () {
+                    //alert("Sorry, we have some problem.");
+                    alert("Failed to add!");
+                }
+            });
+        });
+
+        $("#flag").click(function(){
+            var id = $("#home span").html();
+            var url = "[your url]"+"/setflag";
+            var data={
+                "item_id": itemId
+            };
+            $.ajax({
+                type: "PUT",
+                dataType: "json",
+                url: url,
+                contentType:"application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    if(response.success){
+                        alert("Flagged successfully!");
+                    }else{
+                        alert("Failed to flag!");
+                    }
+                },
+                error: function () {
+                    //alert("Sorry, we have some problem.");
+                    alert("Failed to flag!");
+                }
+            });
+        });
+    </script>
+</html>
