@@ -541,8 +541,9 @@ def searchbycategory(categoryID):
 	ctl = ItemControl()
 	res = ctl.SearchByCategory(categoryID)
 	dic = {}
-	for item in res:
-		dic[item[0]] = item[1:]
+	if res:
+		for item in res:
+			dic[item[0]] = item[1:]
 	message = {"success":True,"message":dic}
 	print(message)
 	return jsonify(message)
@@ -588,8 +589,9 @@ def searchbyflag():
 	res = ctl.SearchByFlag()
 	print(res)
 	dic = {}
-	for item in res:
-		dic[item[0]] = item[1:]
+	if res:
+		for item in res:
+			dic[item[0]] = item[1:]
 	message = {"success":True,"message":dic}
 	return jsonify(message)
 
@@ -601,8 +603,9 @@ def allitem():
 	ctl = ItemControl()
 	res = ctl.GetAllItem()
 	dic = {}
-	for category in res:
-		dic[category[0]] = category[1:]
+	if res:
+		for category in res:
+			dic[category[0]] = category[1:]
 	message = {"success":True,"message":dic}
 	return jsonify(message)
 
@@ -616,8 +619,9 @@ def getcategory():
 	catectl = CategoryControl()
 	res = catectl.GetCategory()
 	dic = {}
-	for category in res:
-		dic[category[0]] = category[1]
+	if res:
+		for category in res:
+			dic[category[0]] = category[1]
 	message = {"success":True,"message":dic}
 	return jsonify(message)
 
