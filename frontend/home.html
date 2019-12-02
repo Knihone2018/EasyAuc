@@ -84,6 +84,9 @@
                 });
             }else{
                 $("#login").removeAttr("style");
+                $("#login").click(function(){
+                    window.location.href="login.html";
+                });
             }
             $("#searchbyname").click(function(){
                 var name = $("#searchbar").val();

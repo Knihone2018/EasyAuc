@@ -111,7 +111,19 @@
             <br>
             <br>
             <br>
+            <br>
             <p class="text-center font-weight-bold text-secondary">Current Auction</p>
+            <div>
+                <span>from&nbsp</span><input type="date" id="currfromtime"></input> &nbsp
+                <span>to&nbsp</span><input type="date" id="currtotime"></input>
+                &nbspsort by
+                <select id="currsortby">
+                    <option value="asc">asc</option>
+                    <option value="desc">desc</option>
+                </select>&nbsp
+                <button id="search" type="button" class="btn btn-secondary btn-sm">Search<span style="display: none"></span></button>
+            </div>
+            <br>
             <div style="text-align:center">
                 <table class="table row mx-0">
                     <thead class="w-100">
@@ -125,20 +137,31 @@
                                 Category
                             </th>
                             <th class="col-md-3">
-                                Flag
                             </th>
                         </tr>
                     </thead>
-                    <tbody id="dataTable" class="w-100">
+                    <tbody id="dataTable2" class="w-100">
                     </tbody>
                 </table>
             </div>
+            <br>
             <br>
             <br>
             <br>
             <br>
             <br>
             <p class="text-center font-weight-bold text-secondary">History Auction</p>
+            <div>
+                <span>from&nbsp</span><input type="date" id="hisfromtime"></input> &nbsp
+                <span>to&nbsp</span><input type="date" id="histotime"></input>
+                &nbspsort by
+                <select id="hissortby">
+                    <option value="asc">asc</option>
+                    <option value="desc">desc</option>
+                </select>&nbsp
+                <button id="search" type="button" class="btn btn-secondary btn-sm">Search<span style="display: none"></span></button>
+            </div>
+            <br>
             <div style="text-align:center">
                 <table class="table row mx-0">
                     <thead class="w-100">
@@ -152,14 +175,14 @@
                                 Category
                             </th>
                             <th class="col-md-3">
-                                Flag
                             </th>
                         </tr>
                     </thead>
-                    <tbody id="dataTable" class="w-100">
+                    <tbody id="dataTable3" class="w-100">
                     </tbody>
                 </table>
             </div>
+            <br>
             <br>
             <br>
             <br>
@@ -172,7 +195,7 @@
     </footer>
     <script type="text/javascript">
         $(function(){
-            var id = getQueryVariable("id");
+            var id = getQueryVariable("userId");
             $("#id_span").html(id);
             $("#remove_user_btn").click(function(){
                 var id = parseInt($("#remove_user").val());
@@ -180,7 +203,6 @@
                 var data = {
                     "userId": id
                 };
-                console.log(data);
                 $.ajax({
                     type: "POST",
                     dataType: "json",
@@ -189,7 +211,9 @@
                     data: JSON.stringify(data),
                     success: function (response) {
                         if(response.success){
-                            
+                            alert("Delete account successfully!");
+                        }else{
+                            alert("Failed to delete account!");
                         }
                     },
                     error: function () {
@@ -211,11 +235,14 @@
                     data: JSON.stringify(data),
                     success: function (response) {
                         if(response.success){
-                            
+                            alert("Block account successfully!");
+                        }else{
+                            alert("Failed to block account!");
                         }
                     },
                     error: function () {
                         //alert("Sorry, we have some problem.");
+                        alert("Failed to block account!");
                     }
                 });
             });
@@ -240,6 +267,7 @@
                     },
                     error: function () {
                         //alert("Sorry, we have some problem.");
+                        alert("Failed to add a category.");
                     }
                 });
             });
@@ -305,10 +333,79 @@
             });
         });
 
+        function getCurrentAuction(){
+            var data={
+                "status":true,
+                "start_time":$("#currfromtime").val(),
+                "end_time":$("#currtotime").val(),
+                "sort":$("#currsortby").val()
+            };
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: ""+"/progressitems",
+                contentType:"application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    createCurrentAuction(response);
+                },
+                error: function () {
+                    //alert("Sorry, we have some problem.");
+                }
+            });
+        }
+
+        function getHistoryAuction(){
+            var data={
+                "status":false,
+                "start_time":$("#hisfromtime").val(),
+                "end_time":$("#histotime").val(),
+                "sort":$("#hissortby").val()
+            };
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: ""+"/progressitems",
+                contentType:"application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    createHistoryAuction(response);
+                },
+                error: function () {
+                    //alert("Sorry, we have some problem.");
+                }
+            });
+        }
+
+        function createCurrentAuction(data){
+            var str = "";
+            for (var i=0;i<data.length;i++) {
+                str = str + "<tr class='row mx-0'><td class='col-3'>"+createImage(data[i][5])+"</td>"
+                        + "<td class='col-3'>" + createName(data[id][1],data[id][3]) + "</td>"
+                        + "<td class='col-3'>" + data[id][2] + "</td>"
+                        + "<td class='col-3'>" + createStopButton() + "<span style='display:none'>"+data[id][0]
+                        +"</span></td>"
+                        + "</tr>";
+            }
+            $("#dataTable2").html(str);
+        }
+
+        function createHistoryAuction(data){
+            var str = "";
+            for (var i=0;i<data.length;i++) {
+                str = str + "<tr class='row mx-0'><td class='col-3'>"+createImage(data[i][5])+"</td>"
+                        + "<td class='col-3'>" + createName(data.message[id][1],data.message[id][3]) + "</td>"
+                        + "<td class='col-3'>" + data.message[id][2] + "</td>"
+                        + "<td class='col-3'></td>"
+                        + "</tr>";
+            }
+            $("#dataTable3").html(str);
+        }
+
         function createFlaggedItem(data){
             var str = "";
             for (var id in data.message) {
-                str = str + "<tr class='row mx-0'><td class='col-3'></td>"
+                str = str + "<tr class='row mx-0'><td class='col-3'>"+createImage(data.message[id][4])+"</td>"
                         + "<td class='col-3'>" + createName(data.message[id][0],data.message[id][3]) + "</td>"
                         + "<td class='col-3'>" + data.message[id][1] + "</td>"
                         + "<td class='col-3'>" + data.message[id][2] + "</td>"
@@ -318,6 +415,16 @@
         }
         function createName(name, url){
             var str="<a href='"+url+"'>"+name+"</a>";
+            return str;
+        }
+
+        function createImage(url){
+            var str="<img src="+url+"/>"
+            return str;
+        }
+
+        function createStopButton(){
+            var str="<button class='btn btn-sm btn-danger'></button>";
             return str;
         }
 
