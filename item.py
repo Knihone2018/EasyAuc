@@ -426,7 +426,7 @@ def CheckAuctionStart():
 		RabitMQ_PUB().start_auction(json.dumps(message))
 
 
-def CheckAuction():
+def checkAuction():
 	while True:
 		CheckAuctionStart()
 		time.sleep(60)
@@ -460,7 +460,7 @@ def additem():
 	req = request.json
 	#check if user valid first
 	RPC = RabitMQ_RPC()
-	if RPC.checkuser(req['sellerID']) == 'True':
+	if RPC.checkuser(req['sellerId']) == 'True':
 		message = {"success":False,"message":"sellerID is invalid"}
 		return jsonify(message)
 
@@ -486,7 +486,7 @@ def additem():
 	Publish = RabitMQ_PUB()		
 	#send to auction immediately if buy now item
 	if req["buy_now"]:
-		message = {'itemID':res,"buy_now":req["buy_now"]}
+		message = {'ID':res,"buy_now":req["buy_now"]}
 		Publish.start_auction(json.dumps(message))
 
 	message = {"success":True,"message":res}
