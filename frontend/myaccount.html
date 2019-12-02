@@ -27,7 +27,7 @@
                         <div class="col-md-4 column">
                             <br>
                             <button id="home" type="button" class="btn btn-warning btn-sm">Home<span style="display: none"></span></button>
-                            <button id="mycart" type="button" class="btn btn-info btn-sm">My Cart<span style="display: none"></span></button>
+                            <button id="mycart" type="button" class="btn btn-primary btn-sm">My Cart<span style="display: none"></span></button>
                             <button id="myhistory" type="button" class="btn btn-info btn-sm">My History<span style="display: none"></span></button>
                             <button id="mywatchlist" type="button" class="btn btn-success btn-sm">My Watchlist<span style="display: none"></span></button>
                         </div>
@@ -92,6 +92,7 @@
                 <input class="form-control" id="rating" disabled="true">
             </div>
             <br>
+            <button id="logout" type="button" class="btn btn-secondary btn-sm">Log Out<span style="display: none"></span></button>
             <button id="deleteaccount" type="button" class="btn btn-danger btn-sm">Delete This Account<span style="display: none"></span></button>
             <br>
             <br>
@@ -343,6 +344,10 @@
                     //alert("Sorry, we have some problem.");
                 }
             });
+        });
+
+        $("#logout").click(function(){
+            window.location.href="home.html";
         });
 
         function change(name){
