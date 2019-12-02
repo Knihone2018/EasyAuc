@@ -500,8 +500,9 @@ def getselleritem(ID):
 	ctl = ItemControl()
 	res = ctl.GetUserItem(ID)
 	dic = {}
-	for item in res:
-		dic[item[0]] = item[1:]
+	if res:
+		for item in res:
+			dic[item[0]] = item[1:]
 	message = {"success":True,"message":dic}
 	return jsonify(message)
 
