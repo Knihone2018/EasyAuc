@@ -40,16 +40,16 @@
                 <table class="table row mx-0">
                     <thead class="w-100">
                         <tr class="row mx-0">
-                            <th class="col-md-4">
+                            <th class="col-md-3">
                                 Name
                             </th>
-                            <th class="col-md-4">
+                            <th class="col-md-3">
                                 Category
                             </th>
-                            <th class="col-md-4">
+                            <th class="col-md-3">
                                 Price
                             </th>
-                            <th class="col-md-4">
+                            <th class="col-md-3">
                             </th>
                         </tr>
                     </thead>
@@ -255,10 +255,10 @@
             var tableStr = "";
             var len = data.items.length;
             for (var i = 0; i < len; i++) {
-                tableStr = tableStr + "<tr class='row mx-0'>" + "<td class='col-4'>" + createName(data.items[i].item_name, data.items[i].auctionUrl) + "</td>"
-                        + "<td class='col-4'>" + data.items[i].category+ "</td>"
-                        + "<td class='col-4'>" + data.items[i].price+ "</td>"
-                        + "<td class='col-4'>" + createDelButton1()
+                tableStr = tableStr + "<tr class='row mx-0'>" + "<td class='col-3'>" + createName(data.items[i].item_name, data.items[i].auctionUrl) + "</td>"
+                        + "<td class='col-3'>" + data.items[i].category+ "</td>"
+                        + "<td class='col-3'>" + data.items[i].price+ "</td>"
+                        + "<td class='col-3'>" + createDelButton1()
                         + "<span style='display:none'>"+data.items[i].item_id+"</span></td>"
                         + "</tr>";
             }

@@ -40,16 +40,16 @@
                 <table class="table row mx-0">
                     <thead class="w-100">
                         <tr class="row mx-0">
-                            <th class="col-md-4">
+                            <th class="col-md-3">
                                 Name
                             </th>
-                            <th class="col-md-4">
+                            <th class="col-md-3">
                                 Category
                             </th>
-                            <th class="col-md-4">
+                            <th class="col-md-3">
                                 Quantity
                             </th>
-                            <th class="col-md-4">
+                            <th class="col-md-3">
                             </th>
                         </tr>
                     </thead>
@@ -136,11 +136,11 @@
             var len = data.items.length;
             for (var i = 0; i < len; i++) {
                 tableStr = tableStr + "<tr class='row mx-0'>"
-                        + "<td class='col-4'>" + createName(data.items[i].name, data.items[i].url) + "</td>"
-                        + "<td class='col-4'>" + data.items[i].category + "</td>"
-                        + "<td class='col-4 quantity'>" + data.items[i].quantity + "</td>";
+                        + "<td class='col-3'>" + createName(data.items[i].name, data.items[i].url) + "</td>"
+                        + "<td class='col-3'>" + data.items[i].category + "</td>"
+                        + "<td class='col-3 quantity'>" + data.items[i].quantity + "</td>";
                 if (data.items[i].isBid==0){
-                    tableStr=tableStr+"<td class='col-4'>" + createAddButton()+"&nbsp"+createDelButton()
+                    tableStr=tableStr+"<td class='col-3'>" + createAddButton()+"&nbsp"+createDelButton()
                         + "<span style='display:none'>"+data.items[i].itemId+"</span></td>"
                         + "</tr>";
                 }else{
