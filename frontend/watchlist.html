@@ -257,6 +257,7 @@
         	var tableStr = "";
 		    var len = data.items.length;
 		    for (var i = 0; i < len; i++) {
+		    	console.log(data.items[i].image);
 		        tableStr = tableStr + "<tr class='row mx-0'><td class='col-3'>" + createImage(data.items[i].image)
 		                + "</td>" + "<td class='col-3'>" + createName(data.items[i].item_name, data.items[i].item_id) + "</td>"
 		                + "<td class='col-2'>" + data.items[i].category+ "</td>"
