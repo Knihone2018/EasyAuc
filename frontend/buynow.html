@@ -54,6 +54,10 @@
             </div>
             <br>
             <div class="mb-3">
+                <label>Time Left</label>
+                <div id="timeleft" class="text-danger">00:00</div>
+            </div>
+            <div class="mb-3">
                 <label>Current Price</label>
                 <div id="currentprice" class="text-warning">US $35.0</div>
             </div>
@@ -98,6 +102,13 @@
                 success: function (response) {
                     if(response.success){
                         $("#image").html(createImage(response.image_url));
+                        time=response.time_left;
+                        if(time>0)
+                            setInterval("setTime();",1000);
+                        else{
+                            $("#timeleft").html("Buy now ended at "+response.end_time);
+                            $("#buynow").attr("disabled","false");
+                        }
                         $("#name").html(response.item_name);
                         $("#currentprice").html(response.current_price);
                         $("#quantity").html(response.quantity);
@@ -112,6 +123,17 @@
         function createImage(url){
             var str="<img src="+url+" style='width:250px; height:200px'></img>";
             return str;
+        }
+
+        function setTime(){
+            time=time-1;
+            if (time<=0){
+                $("#timeleft").html("Buy now ended at "+new Date());
+                $("#buynow").attr("disabled","false");
+            }else{
+                var date= new Date(time * 1000).toISOString().substr(11, 8);
+                $("#timeleft").html(date);
+            }
         }
 
         $("#buynow").click(function(){
