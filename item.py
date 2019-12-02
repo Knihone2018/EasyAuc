@@ -3,8 +3,7 @@ from flask import Flask, request, jsonify, Response
 from datetime import datetime
 import threading
 import json
-import os,base64
-from flask_cors import CORS #pip3 install -U flask-cors
+from flask_cors import CORS
 import pika
 import uuid
 
@@ -101,31 +100,21 @@ class ItemControl(DatabaseControl):
 			return "Name Already Exists"
         
 		#insert
-		sql = "insert into Item (sellerID, name, category, quantity, cur_price, price_step, start_time, end_time, buy_now, buy_now_price, shipping_cost, description)\
-			 	values (%(sellerID)s, %(name)s, %(category)s,%(quantity)s,%(cur_price)s,%(price_strp)s,%(start_time)s,%(end_time)s,%(buy_now)s,%(buy_now_price)s,%(shipping_cost)s,%(description)s)"
+		sql = "insert into Item (sellerID, name, category, quantity, cur_price, price_step,\
+			 					start_time, end_time, buy_now, buy_now_price, shipping_cost, description, photo)\
+			 	values (%(sellerId)s, %(name)s, %(category)s, %(quantity)s, %(cur_price)s, %(price_step)s,\
+					 	%(start_time)s, %(end_time)s, %(buy_now)s, %(buy_now_price)s, %(shipping_cost)s, %(description)s, %(photo)s)"
 		cursor.execute(sql,item)
 		db.commit()
 		
 		#get itemID
 		res = self.SearchByName(item['name'])
 
-		# add photo
-		png = "/src/photo/%d.png"%res
-		with open(png,'wb') as f:
-			f.write(base64.b64decode(item["photo"]))
-
-		sql = "update Item set photo = {} where ID = {}".format(png,res)
-		cursor.execute(sql,item)
-		db.commit()			
+		sql = "UPDATE Item SET url = 'auction.html?itemId={}' WHERE ID = {}".format(res,res)
+		db.cursor().execute(sql)
+		db.commit()		
 		return res
 	
-	def UpdateURL(self,itemID,url):
-		db = self.Getdb()
-		#update url
-		sql = "UPDATE Item SET url = {} WHERE ID = {}".format(url,itemID)
-		db.cursor().execute(sql)
-		db.commit()
-		return True		
 
 	def UpdatePrice(self, itemID, price):
 		db = self.Getdb()
@@ -143,17 +132,17 @@ class ItemControl(DatabaseControl):
 		db.commit()
 		return True	
 
-	def UpdateQuantity(self, info):
+	def UpdateQuantity(self,itemID,quantity):
 		db = self.Getdb()
 		#update status
-		sql = "UPDATE Item SET quantity = %(quantity)s WHERE ID = %(ID)s"
-		db.cursor().execute(sql,info)
+		sql = "UPDATE Item SET quantity = {} WHERE ID = {}".format(quantity,itemID)
+		db.cursor().execute(sql)
 		db.commit()
 		return True	
 
 	def UpdateDescription(self,itemID,desc):
 		db = self.Getdb()
-		sql = "UPDATE Item SET description = {} WHERE ID = {}".format(desc,itemID)
+		sql = "UPDATE Item SET description = '{}' WHERE ID = {}".format(desc,itemID)
 		db.cursor().execute(sql)
 		db.commit()
 		return True			
@@ -191,16 +180,31 @@ class ItemControl(DatabaseControl):
 		else:
 			return None
 
-	def GetUrl(self,name):
+	def GetItemByName(self,name):
 		db = self.Getdb()
-		cursor = db.cursor(buffered=True)
-		#get ID
-		cursor.execute("select url from Item where name=\"%s\""%name)
-		res = cursor.fetchone()
+		cursor = db.cursor(buffered=True)		
+		#get item
+		sql = "select ID,name,cur_price,url,photo from Item where status=True and url is not null and name = '{}'".format(name)
+		cursor.execute(sql)
+		res = cursor.fetchone() 
 		if res:
-			return res[0]
+			return res
 		else:
 			return None		
+
+
+	def GetUserItem(self,sellerID):
+		db = self.Getdb()
+		cursor = db.cursor(buffered=True)		
+		#get item
+		sql = "select ID,name,buy_now,quantity,shipping_cost,description from Item where status=True and sellerID = {}".format(sellerID)
+		cursor.execute(sql)
+		res = cursor.fetchall() 
+		if res:
+			return res
+		else:
+			return None	
+
 
 	def SearchByID(self, ID):
 		db = self.Getdb()
@@ -229,13 +233,16 @@ class ItemControl(DatabaseControl):
 			"status":res[16],
 			"photo":res[17]
 			}
+		ctl = CategoryControl()
+		name = ctl.GetName(Item["category"])
+		Item["category"] = name
 		return Item
 
 	def SearchByCategory(self,category):
 		db = self.Getdb()
 		cursor = db.cursor(buffered=True)		
 		#get item
-		sql = "select name,price,url,photo from Item where status=True and url is not null and category = {}".format(category)
+		sql = "select ID,name,cur_price,url,photo from Item where status=True and url is not null and category = {}".format(category)
 		cursor.execute(sql)
 		res = cursor.fetchall() # a tuple of tuples
 		return res
@@ -245,10 +252,11 @@ class ItemControl(DatabaseControl):
 		db = self.Getdb()
 		cursor = db.cursor(buffered=True)		
 		#get item
-		sql = "select ID,name,category,flag,url from Item where flag > 0"
+		sql = "select i.ID, i.name, c.name, i.flag, i.url from Item i join Category c on i.category = c.ID where i.flag > 0"
 		cursor.execute(sql)
 		res = cursor.fetchall() # a tuple of tuples
 		return res
+
 
 
 
@@ -262,7 +270,7 @@ class CategoryControl(DatabaseControl):
 		if self.GetId(name):
 			return False
 		#add
-		sql = "insert into Category (name) values {}".format(name)
+		sql = "insert into Category (name) values ('{}')".format(name)
 		mycursor.execute(sql)
 		db.commit()
 		return True
@@ -277,7 +285,7 @@ class CategoryControl(DatabaseControl):
 		if self.GetId(new):
 			return "New Name Duplicate"	
 		#add
-		sql = "update Category set name = {} where name = {}".format(new,old)
+		sql = "update Category set name = '{}' where name = '{}'".format(new,old)
 		mycursor.execute(sql)
 		db.commit()
 		return True
@@ -293,7 +301,7 @@ class CategoryControl(DatabaseControl):
 		if ctl.SearchByCategory(ID):
 			return "Existing Item Related"
 
-		sql = "DELETE FROM Category WHERE name = {}".format(name)
+		sql = "DELETE FROM Category WHERE name = '{}'".format(name)
 		mycursor.execute(sql)
 		db.commit()
 		return True
@@ -303,6 +311,16 @@ class CategoryControl(DatabaseControl):
 		db = self.Getdb()
 		mycursor = db.cursor()
 		mycursor.execute("select ID from Category where name=\"%s\""%name)
+		res = mycursor.fetchone()
+		if res:
+			return res[0]
+		else:
+			return None
+
+	def GetName(self,id):
+		db = self.Getdb()
+		mycursor = db.cursor()
+		mycursor.execute("select name from Category where ID=\"%s\""%id)
 		res = mycursor.fetchone()
 		if res:
 			return res[0]
@@ -324,6 +342,7 @@ class CategoryControl(DatabaseControl):
 #RabitMQ connection
 '''
 point to point
+get url
 update current price
 json: {'head':'price','itemID':10,'new_price':15.5}
 
@@ -413,7 +432,7 @@ def CheckAuctionStart():
 	res = mycursor.fetchall()
 
 	for id in res:
-		mycursor.execute("update table set sent_to_auc=true where ID = {}".format(id[0]))
+		mycursor.execute("update Item set sent_to_auc=true where ID = {}".format(id[0]))
 		db.commit()
 		#publish
 		message = {"ID":id[0],"buy_now":False}
@@ -422,11 +441,6 @@ def CheckAuctionStart():
 
 
 
-#############################################
-
-# Update an item properties, including quantity, description, shipping costs, buy now feature
-
-#############################################
 
 
 
@@ -453,22 +467,26 @@ CORS(app)
 # buy_now_price:int
 # shipping_cost:int
 # description:string
-# photo:string (base64)
+# photo:string
 def additem():
-	req = request.json
+	# store image
+	# img_file = request.files.get('file')
+	# png = "C:\\Uchicago\\Topics in Software Engineering\\iteration3\\%d.png"%1
+	# img_file.save(png)
 
+	req = request.json
 	#check if user valid first
 	RPC = RabitMQ_RPC()
 	if RPC.checkuser(req['sellerID']) == 'True':
 		message = {"success":False,"message":"sellerID is invalid"}
-		return Response(json.dumps(message), status=400)
+		return jsonify(message)
 
 	# check category
 	category = req['category']
 	cat_id = CategoryControl().GetId(category)
 	if not cat_id:
 		message = {"success":False,"message":"Category Not Exists"}
-		return Response(json.dumps(message), status=400)
+		return jsonify(message)
 
 	#update dictionary
 	req['category'] = cat_id
@@ -488,6 +506,31 @@ def additem():
 	return jsonify(message)
 
 
+#get seller items
+#{"success":True,"message":{ID:[name,buy_now,quantity,shipping_cost,description]}}
+@app.route("/getselleritem/<ID>", methods=["GET"])
+def getselleritem(ID):
+	ctl = ItemControl()
+	res = ctl.GetUserItem(ID)
+	dic = {}
+	for item in res:
+		dic[item[0]] = item[1:]
+	message = {"success":True,"message":dic}
+	return jsonify(message)
+
+
+#update Item
+@app.route("/updateitem", methods=["PUT"])
+def updateitem():
+	req = request.json
+	ctl = ItemControl()
+	ctl.UpdateDescription(req["ID"],req["description"])
+	ctl.UpdateQuantity(req["ID"],req["quantity"])
+	ctl.UpdateShipping(req["ID"],req["shipping_cost"])
+	message = {"success":True}
+	return jsonify(message)
+
+
 #get Item by ID
 @app.route("/getitembyid", methods=["GET"])
 # ID: int
@@ -500,33 +543,36 @@ def getitembyid():
 
 
 #get items by category
-@app.route("/searchbycategory", methods=["GET"])
+@app.route("/searchbycategory/<categoryID>", methods=["GET"])
 # categoryID : int
-def searchbycategory():
-	req = request.json
+def searchbycategory(categoryID):
 	#item control
 	ctl = ItemControl()
-	res = ctl.SearchByCategory(req['categoryID'])
+	res = ctl.SearchByCategory(categoryID)
 	dic = {}
 	for item in res:
 		dic[item[0]] = item[1:]
 	message = {"success":True,"message":dic}
+	print(message)
 	return jsonify(message)
 
 
 #get auctions by name
-@app.route("/searchbyname", methods=["GET"])
+@app.route("/searchbyname/<name>", methods=["GET"])
 # categoryID : int
-def searchbyname():
-	req = request.json
+def searchbyname(name):
 	#item control
 	ctl = ItemControl()
-	res = ctl.GetUrl(req['name'])
+	res = ctl.GetItemByName(name)
 	message = None
+	print(res)
 	if res:
-		message = {"success":True,"message":res}
+		dic = {}
+		dic[res[0]] = res[1:]
+		message = {"success":True,"message":dic}
 	else:
 		message = {"success":False}
+	print(message)
 	return jsonify(message)
 
 
@@ -549,6 +595,7 @@ def searchbyflag():
 	#item control
 	ctl = ItemControl()
 	res = ctl.SearchByFlag()
+	print(res)
 	dic = {}
 	for item in res:
 		dic[item[0]] = item[1:]
@@ -576,9 +623,10 @@ def getcategory():
 # name: string
 def addcategory():
 	req = request.json
+	print(req)
 	#category control
 	catectl = CategoryControl()
-	res = catectl.AddCategory(req)
+	res = catectl.AddCategory(req["name"])
 	message = {"success":res}
 	return jsonify(message)
 
@@ -588,6 +636,7 @@ def addcategory():
 # ID: int
 def modifycategory():
 	req = request.json
+	print(req)
 	#category control
 	catectl = CategoryControl()
 	res = catectl.ModifyCategory(req["old_name"],req["new_name"])
@@ -606,6 +655,7 @@ def modifycategory():
 # ID: int
 def deletecategory():
 	req = request.json
+	print(req)
 	#category control
 	catectl = CategoryControl()
 	res = catectl.DeleteCategory(req["name"])
