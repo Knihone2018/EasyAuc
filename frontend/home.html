@@ -170,8 +170,9 @@
             }
             $("#dataTable").html(tableStr);
         }
-        function createImage(photo){
-            return;
+        function createImage(url){
+            var image = "<img src='+" + url + "' class='img-rounded' width='150' height='150'>";
+            return image;
         }
         function createName(name, url){
             url +="&userId="+$("#home span").html();
