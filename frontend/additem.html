@@ -121,6 +121,8 @@
             var datum = Date.parse(toTimeStr(strDate));
             return datum/1000;
         }
+
+        var settings={};
         $(function(){
             var id = getQueryVariable("id");
             $("#home span").html(id);
@@ -134,8 +136,47 @@
                 else
                     $("#buy_now_price_div").css("display","none");
             });
+            $("#photo").on("change", function() {
+                var $files = $(this).get(0).files;
+                if ($files.length) {
+                  // Reject big files
+                  if ($files[0].size > $(this).data("max-size") * 1024) {
+                    console.log("Please select a smaller file");
+                    return false;
+                  }
+                  // Begin file upload
+                  console.log("Uploading file to Imgur..");
+
+                  // Replace ctrlq with your own API key
+                  var apiUrl = 'https://api.imgur.com/3/image';
+                  var apiKey = 'f91970012fbff99';
+
+                  settings = {
+                    async: false,
+                    crossDomain: true,
+                    processData: false,
+                    contentType: false,
+                    type: 'POST',
+                    url: apiUrl,
+                    headers: {
+                      Authorization: 'Client-ID ' + apiKey,
+                      Accept: 'application/json'
+                    },
+                    mimeType: 'multipart/form-data'
+                  };
+
+                  var formData = new FormData();
+                  formData.append("image", $files[0]);
+                  settings.data = formData;
+                }
+              });
         });
         $("#submit").click(function(){
+            $.ajax(settings).done(function(response) {
+                var json = JSON.parse(response);
+                if(json.success)
+                    photoUrl = json.data.link;
+            });
             var name = $("#name").val();
             var sellerId = parseInt($("#home span").val());
             var category = $("#category").val();
@@ -152,8 +193,7 @@
             }
             var shipping_cost=parseInt($("#shipping_cost").val());
             var description=$("#description").val();
-
-            var photo=$("#photo").get(0).files[0];
+;
             var url = "http://localhost:9000"+"/additem";
             var data={
                 "sellerId": sellerId,
@@ -168,7 +208,7 @@
                 "buy_now_price": buy_now_price,
                 "shipping_cost": shipping_cost,
                 "description": description,
-                "photo": photo
+                "photo": photoUrl
             };
             $.ajax({
                 url: url,
