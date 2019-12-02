@@ -218,15 +218,26 @@ class ItemControl(DatabaseControl):
 		return res
 
 
+	#res: {itemid:[itemname,category,flag,url,photo]}
 	def SearchByFlag(self):
 		db = self.Getdb()
 		cursor = db.cursor(buffered=True)		
 		#get item
-		sql = "select i.ID, i.name, c.name, i.flag, i.url from Item i join Category c on i.category = c.ID where i.flag > 0"
+		sql = "select i.ID, i.name, c.name, i.flag, i.url, i.photo from Item i join Category c on i.category = c.ID where i.flag > 0"
 		cursor.execute(sql)
 		res = cursor.fetchall() # a tuple of tuples
 		return res
 
+	#res: [[itemid,itemname,category,url,photo],...]
+	def SearchByStatus(self,status,start,end,order):
+		db = self.Getdb()
+		cursor = db.cursor(buffered=True)		
+		#get item
+		sql = "select i.ID, i.name, c.name, i.url, i.photo from Item i join Category c on i.category = c.ID\
+				where i.status = {} and end_time between '{}' and '{}' order by time {}".format(status,start,end,order)
+		cursor.execute(sql)
+		res = cursor.fetchall() # a tuple of tuples
+		return res		
 
 
 
@@ -488,6 +499,19 @@ def updateitem():
 	ctl.UpdateQuantity(req["ID"],req["quantity"])
 	ctl.UpdateShipping(req["ID"],req["shipping_cost"])
 	message = {"success":True}
+	return jsonify(message)
+
+
+#get items by status
+@app.route("/progressitems", methods=["POST"])
+# input: {'status':True/False,'start_time':'11/01/2019','end_time':'12/01/2019','sort':'desc/asc'}
+def progressitems(progress):
+	req = request.json
+	#item control
+	ctl = ItemControl()
+	res = ctl.SearchByStatus(req['status'],req['start_time'],req['end_time'],req['sort'])
+	message = {"success":True,"message":res}
+	print(message)
 	return jsonify(message)
 
 
