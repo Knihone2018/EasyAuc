@@ -103,6 +103,10 @@
 
         $(function(){
             var id = getQueryVariable("userId");
+            $("#home span").html(id);
+            $("#home").click(function(){
+                window.location.href="home.html?userId="+id;
+            });
             $("#myaccount span").html(id);
             $("#myaccount").click(function(){
                 window.location.href="myaccount.html?userId="+id;
@@ -152,7 +156,8 @@
         }
 
         function createImage(url){
-            var image = "<img src=" + url + " class='img-rounded' width='150' height='150'>";
+            var image = "<img src='" + url + "' class='img-rounded' width='150' height='150'>";
+            console.log(image);
             return image;
         }
 
