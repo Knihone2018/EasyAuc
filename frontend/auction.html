@@ -54,6 +54,14 @@
             </div>
             <br>
             <div class="mb-3">
+                <label>Description</label>
+                <div id="description" class="text-danger">hello</div>
+            </div>
+            <div class="mb-3">
+                <label>Shipping Cost</label>
+                <div id="shippingcost" class="text-danger">10</div>
+            </div>
+            <div class="mb-3">
                 <label>Time Left</label>
                 <div id="timeleft" class="text-danger">00:00</div>
             </div>
@@ -142,6 +150,8 @@
                     
                     if(response.success==1){
                         $("#name").html(response.item_name);
+                        $("#shippingcost").html("$"+response.shipping_cost);
+                        $("#description").html(response.description);
                         $("#image").html(createImage(response.image_url));
                         time=response.time_left;
                         if(time>0)
