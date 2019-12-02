@@ -115,6 +115,8 @@ def getitembyid():
 # ID: int
 def getemail():
   req = request.json
+  if not req["ID"]:
+    return {"success":False,"message":"Empty User"}
   res = RabitMQ_RPC().getemail(req["ID"])
   dic = {"Email":res}
   return jsonify(dic)
