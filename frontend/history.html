@@ -183,6 +183,7 @@
                 dataType: "json",
                 url: url,
                 data: JSON.stringify(data),
+                contentType:"application/json",
                 success: function (response) {
                     if(response.success)
                         window.location.href="history.html?userId="+id;
