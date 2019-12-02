@@ -110,7 +110,12 @@ class ItemControl(DatabaseControl):
 		#get itemID
 		res = self.SearchByName(item['name'])
 
-		sql = "UPDATE Item SET url = 'auction.html?itemId={}' WHERE ID = {}".format(res,res)
+		url = ''
+		if item['buy_now']:
+			url = 'buynow.html?itemId={}'.format(res)
+		else:
+			url = 'auction.html?itemId={}'.format(res)
+		sql = "UPDATE Item SET url = '{}' WHERE ID = {}".format(url,res)
 		db.cursor().execute(sql)
 		db.commit()		
 		return res
@@ -476,10 +481,10 @@ def additem():
 
 	req = request.json
 	#check if user valid first
-	RPC = RabitMQ_RPC()
-	if RPC.checkuser(req['sellerID']) == 'True':
-		message = {"success":False,"message":"sellerID is invalid"}
-		return jsonify(message)
+	# RPC = RabitMQ_RPC()
+	# if RPC.checkuser(req['sellerID']) == 'True':
+	# 	message = {"success":False,"message":"sellerID is invalid"}
+	# 	return jsonify(message)
 
 	# check category
 	category = req['category']
