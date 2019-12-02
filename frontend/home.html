@@ -131,6 +131,18 @@
                 });
             });
             getCategory();
+            $.ajax({
+                url: "http://localhost:9000" + "/allitem",
+                type: "GET",
+                dataType: "json",
+                success: function (response) {
+                    if (response.success)
+                        createItem(response);
+                },
+                error: function () {
+                    //alert("Sorry, we have some problem.");
+                }
+            });
         });
 
         function getCategory(){
