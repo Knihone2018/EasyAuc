@@ -223,6 +223,9 @@
                 success: function (response) {
                     if(!response.success){
                         alert(response.message);
+                    }else{
+                        alert("Add a new item successfully.");
+                        window.location.href="home.html?userId="+$("#home span").text();
                     }
                 },
                 error: function () {
