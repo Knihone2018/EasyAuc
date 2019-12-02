@@ -415,14 +415,14 @@ class RabitMQ_RPC():
 def CheckAuctionStart():
 	db = DatabaseControl().Getdb()
 	mycursor = db.cursor()
-	mycursor.execute("select ID from Item where buy_now = false and start_time <= \'%s\' and sent_to_auc = false"%datetime.now())
+	mycursor.execute("select ID,end_time from Item where buy_now = false and start_time <= \'%s\' and sent_to_auc = false"%datetime.now())
 	res = mycursor.fetchall()
 
 	for id in res:
 		mycursor.execute("update Item set sent_to_auc=true where ID = {}".format(id[0]))
 		db.commit()
 		#publish
-		message = {"ID":id[0],"buy_now":False}
+		message = {"ID":id[0],"buy_now":False,'end_time':id[1]}
 		RabitMQ_PUB().start_auction(json.dumps(message))
 
 
@@ -486,7 +486,7 @@ def additem():
 	Publish = RabitMQ_PUB()		
 	#send to auction immediately if buy now item
 	if req["buy_now"]:
-		message = {'ID':res,"buy_now":req["buy_now"]}
+		message = {'ID':res,"buy_now":req["buy_now"],'end_time':req["end_time"]}
 		Publish.start_auction(json.dumps(message))
 
 	message = {"success":True,"message":res}
