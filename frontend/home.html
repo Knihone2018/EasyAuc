@@ -194,7 +194,7 @@
             return image;
         }
         function createName(name, url){
-            url +="&userId="+$("#home span").html();
+            url +="&userId="+$("#home span").text();
             var str="<a href='"+url+"'>"+name+"</a>";
             return str;
         }
