@@ -51,6 +51,19 @@
                 var url = "http://127.0.0.1:8000" + "/checkpassword";
                 var email = $("#inputEmail").val();
                 var password = $("#inputPassword").val();
+                var reg = /^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/;
+                if(email==null||email==undefined||email==""){
+                    alert("Email can't be empty!");
+                    return;
+                }
+                if(!reg.test(email)){
+                    alert("Wrong email!");
+                    return;
+                }
+                if(password==null||password==undefined||password==""){
+                    alert("Password can't be empty!");
+                    return;
+                }
                 var data = {
                     "email": email,
                     "password": password

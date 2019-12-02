@@ -26,6 +26,7 @@
                         </div>
                         <div class="col-md-3 column">
                             <br>
+                            <span id="id_span" style='display:none'></span>
                             <button id="gotoemail" type="button" class="btn btn-info btn-sm float-right">Check Email</button>
                         </div>
                     </div>
@@ -199,6 +200,10 @@
             $("#id_span").html(id);
             $("#remove_user_btn").click(function(){
                 var id = parseInt($("#remove_user").val());
+                if(id==$("#id_span").text()){
+                    alert("Can't delete administrator!");
+                    return;
+                }
                 var url = "http://127.0.0.1:8000"+"/deleteaccount";
                 var data = {
                     "userId": id
@@ -223,6 +228,10 @@
             });
             $("#block_user_btn").click(function(){
                 var id = parseInt($("#block_user").val());
+                if(id==$("id_span").text()){
+                    alert("Can't block administrator!");
+                    return;
+                }
                 var url = "http://127.0.0.1:8000"+"/blockaccount";
                 var data = {
                     "userId": id
