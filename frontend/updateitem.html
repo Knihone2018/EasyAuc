@@ -91,7 +91,7 @@
                 var description=$("#description").val();
                 var url = "http://localhost:9000"+"/updateitem";
                 var data={
-                    "ID": id,
+                    "ID": itemId,
                     "quantity":quantity,
                     "shipping_cost": shipping_cost,
                     "description": description,
@@ -104,6 +104,8 @@
                     success: function (response) {
                         if(!response.success){
                             alert(response.message);
+                        }else{
+                            window.location.href="myitem.html?userId="+userId;
                         }
                     },
                     error: function () {
