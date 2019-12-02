@@ -3,7 +3,7 @@ from user import *
 
 #docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+connection = pika.BlockingConnection(pika.ConnectionParameters(host='172.17.0.2'))
 channel = connection.channel()
 
 
