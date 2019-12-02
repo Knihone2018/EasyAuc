@@ -457,11 +457,6 @@ CORS(app)
 # description:string
 # photo:string
 def additem():
-	# store image
-	# img_file = request.files.get('file')
-	# png = "C:\\Uchicago\\Topics in Software Engineering\\iteration3\\%d.png"%1
-	# img_file.save(png)
-
 	req = request.json
 	#check if user valid first
 	RPC = RabitMQ_RPC()
