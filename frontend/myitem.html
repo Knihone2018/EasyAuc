@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>EasyAuc</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <script src="js/jquery-3.4.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <!-- <link href="css/easyaunc.css" rel="stylesheet" media="screen"> -->
+        <script src="js/easyauc.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <h2>
+                        EasyAuc
+                    </h2>
+                    <div class="row clearfix">
+                        <div class="col-md-4 column">
+                        </div>
+                        <div class="col-md-2 column">
+                        </div>
+                        <div class="col-md-2 column">
+                        </div>
+                        <div class="col-md-2 column">
+                        </div>
+                        <div class="col-md-2 column">
+                            <br>
+                            <button id="home" type="button" class="btn btn-warning btn-sm">Home<span style="display: none"></span></button>
+                            <button id="myaccount" type="button" class="btn btn-primary btn-sm">My Account<span style="display: none"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <p class="text-center font-weight-bold text-secondary">My Items</p>
+            <div style="text-align:center">
+                <table class="table row mx-0">
+                    <thead class="w-100">
+                        <tr class="row mx-0">
+                            <th class="col-md-2">
+                                Name
+                            </th>
+                            <th class="col-md-2">
+                                Buy Now
+                            </th>
+                            <th class="col-md-2">
+                                Quantity
+                            </th>
+                            <th class="col-md-2">
+                                Shipping Cost
+                            </th>
+                            <th class="col-md-2">
+                                Desciption
+                            </th>
+                            <th class="col-md-2">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTable" class="w-100">
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+    </body>
+    <footer class="footer navbar-fixed-bottom ">
+        <div class="footer-copyright text-center py-3">Copyright © 2019 EasyAuc. All rights reserved.</div>
+    </footer>
+    <script type="text/javascript">
+
+        $(function(){
+            var id = getQueryVariable("id");
+            $("#home span").html(id);
+            $("#home").click(function(){
+                window.location.href="home.html?id="+id;
+            });
+            $("#myaccount span").html(id);
+            $("#myaccount").click(function(){
+                window.location.href="myaccount.html?id="+id;
+            });
+
+            getHistoryList(id);
+        });
+
+        function getItemList(id){
+            var url = "http://localhost:9000"+"/getselleritem/"+id;
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: url,
+                success: function (response) {
+                    if(response.success)
+                        createItemList(response);
+                },
+                error: function () {
+                    //alert("Sorry, we have some problem.");
+                    //createHistoryList("");
+                }
+            });
+        }
+
+        function createItemList(data){
+            var tableStr = "";
+            for(var i in data.message){
+                tableStr = tableStr + "<tr class='row mx-0'><td class='col-2'>" + data.message[i][0]
+                        + "</td>" + "<td class='col-2'>" + data.message[i][1] + "</td>"
+                        + "<td class='col-2'>" + data.message[i][2] + "</td>"
+                        + "<td class='col-2'>" + data.message[i][3] + "</td>"
+                        + "<td class='col-2'>" + data.message[i][4] + "</td>"
+                        + "<td class='col-2'>" + createUpdateButton()+"<span style='display:none'>"+i+"</span></td>"
+                        + "</tr>";
+            }
+            $("#dataTable").html(tableStr);
+        }
+
+        function update(t){
+            var itemId = t.nextSibling.textContent;
+            window.location.href="updateitem.html?id="+itemId;
+        }
+
+        function createUpdateButton(){
+            var button = "<button type='button' class='btn btn-info btn-sm' onclick=update(this)>Update</button>";
+            return button;
+        }
+    </script>
+</html>
