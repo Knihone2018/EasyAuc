@@ -464,10 +464,10 @@ def additem():
 
 	req = request.json
 	#check if user valid first
-	# RPC = RabitMQ_RPC()
-	# if RPC.checkuser(req['sellerID']) == 'True':
-	# 	message = {"success":False,"message":"sellerID is invalid"}
-	# 	return jsonify(message)
+	RPC = RabitMQ_RPC()
+	if RPC.checkuser(req['sellerID']) == 'True':
+		message = {"success":False,"message":"sellerID is invalid"}
+		return jsonify(message)
 
 	# check category
 	category = req['category']
