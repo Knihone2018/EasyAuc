@@ -340,7 +340,7 @@ json: {'head':'status','itemID':10}
 class RabitMQ_Point:
 	def callback(self,ch, method, properties, body):
 		print(" [x] Received %r" % body)
-		content = json.loads(body)
+		content = json.loads(body.decode('utf-8'))
 		ctl = ItemControl()
 		if content['head'] == 'price':
 			ctl.UpdatePrice(content['itemID'],content['new_price'])
